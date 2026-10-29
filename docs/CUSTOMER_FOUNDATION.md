@@ -43,7 +43,7 @@ The web preview is centred and capped at 480 logical pixels on larger displays.
 
 - Lint and TypeScript: passed.
 - Expo Doctor: all 21 checks passed.
-- Eight Playwright journey/responsive checks passed: guest navigation, window
+- Nine Playwright journey/responsive checks passed: guest navigation, window
   selection and honest action notices; salon/barber search and no results;
   sorting/filtering; planned visit/closed/invalid links; layout at 320, 393, 430
   and 1440 pixels. Page errors are checked in the core guest journey.
@@ -88,3 +88,8 @@ Review this feature PR and verify the iPhone build before advancing. Next:
 Supabase connection and minimal private profile schema/RLS (milestone 02), then
 optional sign-in/sign-up (milestone 03). Full salon persistence and QR entry remain
 in milestone 04. Figma queue/appointment/account designs resume when available.
+
+Cold browser loading: initial CI exposed controls before client handlers were
+attached. The app now shows its loading state through hydration; a regression
+check holds JavaScript requests, verifies controls stay hidden, then verifies
+search after scripts load. Native font-loading behavior is preserved.

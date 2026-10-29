@@ -1,5 +1,23 @@
 import { test, expect } from '@playwright/test';
 
+test('a cold load waits for JavaScript before offering interactive controls', async ({ page }) => {
+  let releaseScripts: () => void = () => {};
+  const scriptsReady = new Promise<void>(resolve => { releaseScripts = resolve; });
+  await page.route('**/*', async route => {
+    if (route.request().resourceType() === 'script') await scriptsReady;
+    await route.continue();
+  });
+  try {
+    await page.goto('/salons', { waitUntil: 'commit' });
+    await expect(page.getByLabel('Loading BookMyTurn')).toBeVisible();
+    await expect(page.getByRole('textbox', { name: 'Search salons or barbers' })).toHaveCount(0);
+  } finally {
+    releaseScripts();
+  }
+  await page.getByRole('textbox', { name: 'Search salons or barbers' }).fill('Sameer');
+  await expect(page.getByRole('button', { name: /^View / })).toHaveCount(1);
+});
+
 test('guest can browse, open availability, select a window and return', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));

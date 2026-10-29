@@ -578,7 +578,7 @@ Merge:
 - Scope adjustment: user explicitly approved implementing these three screens.
   Milestone 04 is only partially demonstrated; no persistence, QR entry, barber
   profile or live forecast is claimed. Milestones 02/03 remain next.
-- Validation: lint/types and Expo Doctor (21/21) passed; eight browser journeys
+- Validation: lint/types and Expo Doctor (21/21) passed; nine browser journeys
   passed including four viewport widths. Web, iOS and Android bundle export
   passed. See CUSTOMER_FOUNDATION.md and docs/reviews for evidence/limits.
 - Database: no migration or mutation. Supabase connectivity is not yet tested.
@@ -590,3 +590,8 @@ Merge:
   downgrade applied. Full Figma journey remains limited by its tool allowance.
 - User verification: Figma discovery approved; runnable app pending.
 - Merge: pending; do not tick the full validation/completion gates yet.
+
+Cold browser loading: initial CI exposed controls before client handlers were
+attached. The app now shows its loading state through hydration; a regression
+check holds JavaScript requests, verifies controls stay hidden, then verifies
+search after scripts load. Native font-loading behavior is preserved.
