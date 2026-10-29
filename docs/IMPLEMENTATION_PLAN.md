@@ -2,8 +2,9 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: planning PR. No application implementation or Supabase database
-changes have been made. Milestone 00 is awaiting user review.
+Current stage: [planning PR #1](https://github.com/nadhirhasan/BookMyTurn/pull/1).
+No application implementation or Supabase database changes have been made.
+Milestone 00 is validated and awaiting user review and merge.
 
 ## 1. Agreed direction
 
@@ -117,7 +118,7 @@ Store timestamps consistently and display salon schedules in Asia/Colombo.
 
 - [x] Implemented: write this plan, protect `.env`, document configuration names,
   preserve the original specifications and add a PR checklist.
-- [ ] Validated: review the planning diff, confirm `.env` is ignored and absent
+- [x] Validated: review the planning diff, confirm `.env` is ignored and absent
   from tracked files, and open the planning PR.
 - [ ] Complete: user accepts the plan and the planning PR is merged.
 
@@ -441,8 +442,9 @@ credentials, access tokens, real customer data or account passwords in this log.
 - Validation: staged diff passes `git diff --cached --check`; all 17 milestone
   sections are present; `.env` is ignored/untracked and its values are absent
   from staged files; remote `main` matches the local starting commit. Planning
-  PR creation is pending. No app/database tests apply to this documentation change.
-- PR: pending.
+  PR is open against `main`. No app/database tests apply to this documentation change.
+- PR: [#1](https://github.com/nadhirhasan/BookMyTurn/pull/1), branch
+  `docs/implementation-plan`.
 - User verification: pending.
 - Merge: pending.
 
