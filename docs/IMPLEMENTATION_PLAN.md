@@ -582,7 +582,10 @@ Merge:
   passed including four viewport widths. Web, iOS and Android bundle export
   passed. See CUSTOMER_FOUNDATION.md and docs/reviews for evidence/limits.
 - Database: no migration or mutation. Supabase connectivity is not yet tested.
-- Outstanding: physical iPhone/Android runtime verification, CI and user review.
+- PR: [#3](https://github.com/nadhirhasan/BookMyTurn/pull/3), stacked on design PR #2.
+- Clean installation: npm ci passed.
+- CI: see the checks on feature PR #3 for the current result.
+- Outstanding: physical iPhone/Android runtime verification and user review.
   Network audit reports 11 Expo dependency findings; no forced incompatible
   downgrade applied. Full Figma journey remains limited by its tool allowance.
 - User verification: Figma discovery approved; runnable app pending.

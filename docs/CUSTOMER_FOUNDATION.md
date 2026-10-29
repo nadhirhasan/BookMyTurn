@@ -50,7 +50,8 @@ The web preview is centred and capped at 480 logical pixels on larger displays.
 - Web static export: passed.
 - Android and iOS Hermes bundle export: passed. This proves compilation, not
   native runtime behavior, installation or signing.
-- Clean installation and CI: final results recorded in the PR.
+- Clean installation: npm ci passed from the lockfile.
+- CI: tracked on [feature PR #3](https://github.com/nadhirhasan/BookMyTurn/pull/3).
 - Physical iPhone and Android runtime verification: pending.
 - No Supabase migration, authentication, API call or database mutation performed.
 
