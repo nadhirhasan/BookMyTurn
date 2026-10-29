@@ -1,0 +1,37 @@
+name: Customer app checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: customer-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run export:web
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_placeholder
+      - run: npx playwright install --with-deps chromium
+        working-directory: apps/customer
+      - run: npm run test:e2e --workspace=@bookmyturn/customer
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: customer-browser-test-results
+          path: .artifacts/customer-e2e

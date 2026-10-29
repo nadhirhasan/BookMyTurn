@@ -2,7 +2,7 @@
 
 Status: the first three editable Figma screens are composed and visually reviewed.
 The full customer journey and clickable prototype are incomplete; user design
-verification is pending. See [the review summary](../design/README.md).
+verification of the three discovery screens is approved; implementation is authorised. See [the review summary](../design/README.md).
 
 Figma: [BookMyTurn — Customer Experience](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140).
 Connection and OAuth are verified. Further Figma tool calls are blocked by the
@@ -11,9 +11,10 @@ Starter-plan MCP allowance; no more canvas writes were attempted after the limit
 The user has replaced the earlier dark/navy/cyan theme instructions with a light,
 real-app-inspired direction. Those historical colour requirements no longer apply.
 
-The initial coded shell did not meet the user's visual expectations. Stop further
-screen implementation until the customer design is built and reviewed in Figma.
-Retain useful engineering setup, but do not use the rejected UI as a reference.
+The initial coded shell did not meet the user's visual expectations. The user
+has now approved the light discovery composition and requested implementation.
+Use those three screens as the reference; design the remaining flows before
+implementing their UI.
 
 ## Customer task
 
@@ -120,7 +121,7 @@ salon cards, availability controls, status labels, buttons, navigation and sheet
 - [ ] Core navigation and the go-now / request-a-time journeys are clickable.
 - [ ] Queue, arrival, estimated availability and appointment confirmation are clear.
 - [ ] Small-screen/text-size behavior is specified for React Native adaptation.
-- [ ] User verifies the direction before UI development resumes.
+- [x] User verified the three-screen direction and requested implementation.
 
 After approval, translate the Figma components and layout into React Native,
 compare running screens with the approved frames, and continue the existing

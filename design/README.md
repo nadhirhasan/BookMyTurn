@@ -42,9 +42,9 @@ are still pending. This is an editable-screen review, **not a completed clickabl
 prototype**. Prepared source scripts for pending screens are not evidence that
 those screens exist in Figma.
 
-User verification and merge remain pending. React Native UI development stays
-paused until the design gate is satisfied; the rejected local shell is preserved
-outside this review PR.
+The user approved these three screens and requested React Native implementation.
+See [the runnable discovery feature](../docs/CUSTOMER_FOUNDATION.md). The full
+journey/prototype and design PR merge remain pending.
 
 ## Sources and resuming
 

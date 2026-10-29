@@ -1,44 +1,69 @@
 # BookMyTurn
 
-Mobile salon discovery, queues and appointments for Akurana, Sri Lanka.
+A customer-first salon app for Akurana, Sri Lanka, built with React Native,
+Expo, TypeScript and Supabase.
 
-The Customer app is the primary product: help people compare current waiting
-times, find an estimated quieter time to visit, join a queue or request a future
-appointment. Salon Manager workflows keep that customer information up to date.
+The first runnable feature follows the approved light Figma design: Home,
+comparison of 13 fictional salons, and salon availability. Browse as a guest,
+search salon/barber names, compare estimated waits and prices, and inspect visit
+windows. Queue joining, appointments and accounts are clearly marked coming next.
 
-The agreed stack is React Native with Expo, TypeScript, and Supabase. Development
-will proceed one verified milestone and one feature pull request at a time.
+- [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
+- [Current feature, validation and phone walkthrough](docs/CUSTOMER_FOUNDATION.md)
+- [Customer specification](idea/customer.md)
+- [Manager specification](idea/manager.md)
+- [Approved Figma discovery screens](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140)
+- [Design sources, licences and remaining screens](design/README.md)
 
-- [Implementation plan and progress checklist](docs/IMPLEMENTATION_PLAN.md)
-- [Customer app specification](idea/customer.md)
-- [Salon Manager specification](idea/manager.md)
-- [Figma customer design and review status](design/README.md)
+## Run the Customer app
 
-Start with the implementation plan. UI implementation is paused for the customer
-design review. The agreed direction is light and neutral, replacing the original
-dark/navy and cyan specification.
+Use Node 22.13+ and npm 10+ from the repository root:
 
-## Design review
+```sh
+npm ci
+npm start
+```
 
-Open [BookMyTurn in Figma](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140)
-to review Home, salon comparison and Royal Saloon availability. These are editable
-screens with reusable components. The remaining journey and clickable prototype
-are pending because the Figma MCP Starter-plan tool limit was reached.
+Open Expo Go on an iPhone or Android phone connected to the same Wi-Fi.
+Scan the terminal QR code (iPhone: Camera). This project uses Expo SDK 57;
+the installed Expo Go must support it. Windows cannot launch an iOS simulator.
+For a browser preview, run `npm run web`.
 
-The earlier engineering shell remains a local draft. It is not the approved
-design and is not included in the design-review PR. React Native setup and
-run instructions will be delivered with the implementation milestone.
+All queue values, opening status, ratings, prices and windows are a fixed
+fictional snapshot at 2:00 pm in Asia/Colombo, not live availability.
+Images are licensed illustrative photos. No booking or database record is
+created in this step.
 
-## Local configuration
+## Configuration
 
-The root `.env` contains local Supabase connection settings and is ignored by Git.
-`.env.example` documents the variable names without real project values. The Expo
-workspace setup milestone will document where each app reads its configuration.
+Root `.env` is ignored. Copy `.env.example` if setting up another checkout.
+The app config loads root values as fallback without replacing injected
+environment variables. Only project URL and publishable key belong in app
+configuration; never add database passwords or service-role/secret keys.
+The discovery preview works without Supabase. Connectivity, migrations, RLS and
+authentication are later verified steps; reading configuration is not a
+successful database connection.
 
-Only the Supabase project URL and publishable key belong in mobile app
-configuration. Database passwords, service-role keys and secret keys do not.
+## Checks
 
-## Feature delivery
+```sh
+npm run check
+npm run export:web
+npx expo-doctor
+```
 
-Each feature uses its own PR and stops for user verification. Mark a milestone
-complete only after the applicable checks, user verification and merge.
+Run Expo Doctor from `apps/customer`. Browser journey tests:
+
+```sh
+cd apps/customer
+npx playwright install chromium
+npm run test:e2e
+```
+
+The tests launch their own Expo server on port 8082. Keep that port free.
+CI checks a clean install, lint, types, web export and browser journeys.
+See the feature document for outstanding device checks and dependency advisories.
+
+Each feature has a separate PR. User verification and merge are required before
+a milestone is marked complete. The implementation PR is stacked on design PR #2;
+merge the design first and then retarget the feature PR to main.
