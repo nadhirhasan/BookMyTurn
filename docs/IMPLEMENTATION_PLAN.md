@@ -5,7 +5,9 @@ Plan prepared: 29 October 2026 (Asia/Colombo).
 Current stage: first three editable customer screens ready for design review.
 The remaining screens and clickable prototype are blocked by the Figma MCP
 Starter-plan tool-call limit. See [the design review](../design/README.md).
-[Planning PR #1](https://github.com/nadhirhasan/BookMyTurn/pull/1) remains open.
+[Planning PR #1](https://github.com/nadhirhasan/BookMyTurn/pull/1) is merged.
+[Design review PR #2](https://github.com/nadhirhasan/BookMyTurn/pull/2) is open as
+a draft; user design verification remains pending.
 An initial Customer foundation exists locally, but its visual direction was
 rejected in review. Pause UI development until gate 00A below is complete.
 No Supabase database changes have been made.
@@ -153,7 +155,7 @@ Store timestamps consistently and display salon schedules in Asia/Colombo.
   preserve the original specifications and add a PR checklist.
 - [x] Validated: review the planning diff, confirm `.env` is ignored and absent
   from tracked files, and open the planning PR.
-- [ ] Complete: user accepts the plan and the planning PR is merged.
+- [x] Complete: user accepted the plan and the planning PR is merged.
 
 Acceptance: the build order, verification gates, customer guest journey and
 feature-PR workflow are clear. No app or database implementation belongs in this PR.
@@ -520,11 +522,11 @@ credentials, access tokens, real customer data or account passwords in this log.
 - Validation: staged diff passes `git diff --cached --check`; all 17 milestone
   sections are present; `.env` is ignored/untracked and its values are absent
   from staged files; remote `main` matches the local starting commit. Planning
-  PR is open against `main`. No app/database tests apply to this documentation change.
+  PR is merged into `main`. No app/database tests apply to this documentation change.
 - PR: [#1](https://github.com/nadhirhasan/BookMyTurn/pull/1), branch
   `docs/implementation-plan`.
-- User verification: pending.
-- Merge: pending.
+- User verification: plan accepted and implementation start authorised in conversation.
+- Merge: confirmed through GitHub; planning PR #1 is merged.
 
 ### Gate 00A — customer design review
 
@@ -550,7 +552,10 @@ credentials, access tokens, real customer data or account passwords in this log.
   requirements and their old colour rules no longer apply.
 - UI development: paused for design. Keep the local engineering draft available;
   do not mark milestone 01 validated or complete based only on build checks.
-- Design PR: pending creation. User verification and merge remain pending.
+- Design PR: [#2](https://github.com/nadhirhasan/BookMyTurn/pull/2), draft against
+  `main` from `design/customer-experience`. Whitespace, source-syntax and design-only
+  staging checks passed. Local `.env` values and private upload/session artifacts
+  were excluded. User verification and design PR merge remain pending.
 
 ### Entry format for subsequent milestones
 

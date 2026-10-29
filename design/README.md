@@ -1,6 +1,8 @@
 # Customer design review
 
 [Open the Figma design](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140).
+[Review PR #2](https://github.com/nadhirhasan/BookMyTurn/pull/2) is a draft against
+`main`; planning PR #1 has merged.
 
 The first review replaces the earlier dark/blue shell with a light, neutral
 customer experience informed by official Fresha, Booksy and Treatwell references.
