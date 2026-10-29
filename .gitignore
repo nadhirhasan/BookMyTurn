@@ -1,0 +1,17 @@
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+
+# JavaScript / Expo build output
+node_modules/
+.expo/
+dist/
+web-build/
+coverage/
+*.tsbuildinfo
+
+# Local tooling and OS files
+*.log
+.DS_Store
+Thumbs.db
