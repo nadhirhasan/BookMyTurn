@@ -10,11 +10,13 @@ Milestone 00 is validated and awaiting user review and merge.
 
 - React Native with Expo and TypeScript for the mobile applications.
 - Supabase Postgres and Auth for real persistence and account/session handling.
+- The Customer app is the primary product; Salon Manager operations support the
+  availability, queues and appointment responses that customers rely on.
 - A Customer app and a Salon Manager app, sharing domain types and behavior.
 - The Manager has Owner, Barber and Queue Coordinator experiences.
-- Start authentication in the Salon Manager. Customers keep account-free salon
-  discovery and the QR queue journey. This starting scope follows the preceding
-  recommendation accepted in conversation; revisit it before coding if needed.
+- Start with the Customer app foundation, database and optional customer sign-up /
+  sign-in. Customers keep account-free salon discovery and the QR queue journey.
+  Reuse authentication in the Manager app when its supporting workflows are added.
 - Akurana, Sri Lanka only; exactly the 13 salon names in the customer specification.
 - Royal Saloon is the primary salon for end-to-end development and verification.
 - Black/navy backgrounds, cyan `#14A3C7`, white/light-grey text and dark cards.
@@ -28,6 +30,27 @@ Source requirements: [Customer](../idea/customer.md) and
 The newer decisions above supersede the original specifications' local-only
 storage and simulated-authentication instructions. The other product requirements
 still apply.
+
+### Primary customer outcome
+
+Help a customer answer: "Which salon can serve me soon, when is it likely to be
+quiet, and can I request a slot instead of waiting?"
+
+The main journey is compare salons and waiting times -> inspect estimated
+availability for a service/barber -> choose when to visit or request an appointment
+-> join/check in when appropriate -> track service status. Keep the QR shortcut.
+
+Show current physical queue, estimated wait, earliest estimated service time,
+opening status and data freshness together. As scheduling becomes functional,
+show estimated visit windows around current work, confirmed appointments, hours
+and breaks. Label forecasts as estimates; an empty queue now does not guarantee
+zero waiting when the customer arrives. Do not fabricate historical quiet-time
+trends or present a requested slot as confirmed.
+
+Prioritise discovery, availability and appointment usability when making design
+or scope decisions. Staff controls keep this information accurate; full financial
+reporting remains a later milestone. Customer browsing must not be blocked by an
+account screen.
 
 ### Queue and appointment rules accepted in conversation
 
@@ -49,7 +72,7 @@ still apply.
 For each milestone:
 
 1. Confirm the previous milestone is validated and user-reviewed. Create a branch
-   from up-to-date `main`, such as `feat/03-manager-auth`.
+   from up-to-date `main`, such as `feat/03-customer-auth`.
 2. Implement only that milestone. Add database migrations alongside the feature
    that requires them; do not build the entire schema upfront.
 3. Run relevant checks. For database changes, exercise real development-project
@@ -84,8 +107,8 @@ Create an npm workspace during milestone 01:
 
 ```text
 apps/
-  manager/                 Expo app: Owner, Barber, Queue Coordinator
-  customer/                Expo app: added in milestone 06
+  customer/                Primary Expo app: created in milestone 01
+  manager/                 Supporting Expo app: added in milestone 05
 packages/
   domain/                  Shared types, state rules and scheduling logic
   ui/                      Shared theme/components as they become reusable
@@ -125,13 +148,13 @@ Store timestamps consistently and display salon schedules in Asia/Colombo.
 Acceptance: the build order, verification gates, customer guest journey and
 feature-PR workflow are clear. No app or database implementation belongs in this PR.
 
-### 01. Bootstrap the Manager app and development checks
+### 01. Bootstrap the Customer app and development checks
 
 - [ ] Implemented
 - [ ] Validated
 - [ ] Complete
 
-Scope: npm workspace, Expo Manager app, TypeScript, navigation shell, brand theme,
+Scope: npm workspace, Expo Customer app, TypeScript, navigation shell, brand theme,
 safe-area/keyboard handling, environment example/loading, and basic CI for lint,
 type checks and applicable tests. Choose a stable Expo SDK compatible with the
 actual test device at implementation time. No salon features yet.
@@ -156,7 +179,7 @@ and update permitted fields on their own profiles; neither can access or alter
 the other's private record. An unauthenticated caller cannot access private
 profiles. Record migration execution and cleanup evidence, not just SQL review.
 
-### 03. Manager sign-up, sign-in and account lifecycle
+### 03. Optional customer sign-up, sign-in and account lifecycle
 
 - [ ] Implemented
 - [ ] Validated
@@ -166,21 +189,44 @@ Scope: email/password sign-up and sign-in; password visibility and confirmation;
 input validation; clear loading/error states; email-verification state and callback
 handling; restored sessions; sign-out; password reset and update flow. Configure
 development redirect URLs and agree the email-delivery setup before email tests.
-Newly registered users initially have no salon-management privileges.
+Customer authentication is optional: preserve a clear Continue as Guest path for
+discovery and the future QR flow. Newly registered users have no salon-management
+privileges. Keep account/session behavior reusable for staff authentication later.
 
 Acceptance: valid/invalid registration and login, email confirmation, reset,
 restart/session restore and logout work on the target device. Unconfirmed users
 are not treated as signed in when confirmation is required. Protected navigation
 does not flash private content. Repeated taps do not create duplicate submissions.
 User verifies the working authentication flow before we start salon features.
+Guest entry remains reachable without registration or sign-in.
 
-### 04. Salon membership, roles and authorised staff onboarding
+### 04. Customer salon discovery, comparison and QR entry
 
 - [ ] Implemented
 - [ ] Validated
 - [ ] Complete
 
-Scope: salon memberships and permission checks; Royal Saloon development setup;
+Scope: Home, Salons, My Queue and My Appointments navigation in the Customer app;
+public salon/service/barber schema and deterministic fictional seed data for the
+specified 13 salons; search, sorts and open-only filter; salon detail and barber
+profile screens; current queue/wait/earliest-time comparisons with explicit demo
+and freshness labels; Royal Saloon QR route and scan simulation. Add only shared
+UI/domain modules needed here. Computed live estimates arrive in milestone 08.
+
+Acceptance: all names match the specification. A guest can compare where to go
+using the demo queue, wait, price and opening information. Search and all sorting/
+filter controls work. Seed values are labelled demo estimates, never claimed as
+live measurements. QR entry prominently offers Join Queue without requiring an
+account or hairstyle. Future actions are clearly labelled until functional.
+
+### 05. Supporting Manager app, membership and staff onboarding
+
+- [ ] Implemented
+- [ ] Validated
+- [ ] Complete
+
+Scope: minimal Expo Manager shell using shared theme/authentication; salon
+memberships and permission checks; Royal Saloon development setup;
 Owner, individual Barber and Coordinator identities; membership-aware entry and
 navigation; owner-managed staff onboarding/deactivation. Bootstrap the first
 development owner through a trusted administrative action, never a public role
@@ -193,7 +239,7 @@ Unaffiliated accounts see a clear access-pending state. Deactivated memberships
 lose salon access without deleting historical records. Owner finance access is
 restricted from the start, before reports exist.
 
-### 05. Salon settings, services and public barber profiles
+### 06. Salon settings, services and public barber profiles
 
 - [ ] Implemented
 - [ ] Validated
@@ -208,22 +254,7 @@ Acceptance: permitted edits persist and public profile data excludes private
 account/contact fields. Validate price/duration/hours inputs. Barbers can edit
 their own permitted profile fields; cannot edit another barber's settings.
 Owner sees staff availability. Closing does not delete any records.
-
-### 06. Customer app, salon discovery and QR entry
-
-- [ ] Implemented
-- [ ] Validated
-- [ ] Complete
-
-Scope: second Expo app; Home, Salons, My Queue and My Appointments navigation;
-exactly the specified 13 salons; search, sorts and open-only filter; salon detail
-and barber profile screens; demo timestamps/stale-state messaging; Royal Saloon QR
-route and scan simulation. Add only real shared UI/domain modules needed here.
-
-Acceptance: all names match the specification. Search and all sorting/filter
-controls work. QR entry prominently offers Join Queue without requiring account
-creation or a hairstyle. Manager profile/settings edits appear in customer views.
-Unavailable future actions are clearly labelled until their milestone lands.
+Manager profile, service, hours and availability edits appear in customer views.
 
 ### 07. Appointment requests and confirmed schedule reservations
 
@@ -235,6 +266,8 @@ Scope: optional-customer-identity strategy using a silent Supabase anonymous
 session for private guest records, subject to confirming project support; no
 customer sign-up screen required. Customer requests, manager responses, alternate
 time acceptance, cancellation and appointment arrival; in-app notifications.
+Customers can inspect date/service/barber availability before requesting a time.
+An estimated free window is distinct from a confirmed appointment slot.
 Agree grace period/no-show and cancellation rules before implementation.
 
 Acceptance: requests begin pending. Salon acceptance confirms the requested time;
@@ -254,12 +287,18 @@ Scope: queue references, source, customer identity, barber preference/assignment
 arrival/service timestamps and constrained transitions; shared scheduling logic
 using current work, arrived customers, service duration, reserved appointments,
 hours and breaks. Define estimate refresh/freshness and tie-breaking behavior.
+Replace seeded customer estimates with calculations from shared records; show
+earliest estimated service time and estimated visit windows so customers can
+compare going now with visiting later. Define the forecast horizon explicitly.
 
 Acceptance: scenario checks cover a shorter queue with longer work, breaks,
 appointment conflicts, unspecified duration and a specific-barber preference.
 Remote entries do not consume a physical position. Check-in order is stable.
 Closed salons reject new immediate-service entries on the server. Concurrent
 joins cannot create duplicate active entries for the same customer and salon.
+A customer can compare an empty queue with a busy barber and see the difference;
+future windows respect confirmed work and are labelled estimates. Starting or
+finishing work and changing availability updates the customer-facing estimates.
 
 ### 09. Customer join, confirmation, check-in and My Queue
 
@@ -394,13 +433,16 @@ No new product scope in this milestone.
 
 Acceptance: demonstrate all of these against the same Supabase development data:
 
-1. QR/customer joins -> receives code -> checks in -> shares styles -> barber
+1. Customer compares salon waits and estimated visit windows -> chooses to go now
+   or requests a later appointment. Fresh/stale and estimated/confirmed states
+   remain clear, including when a salon currently has no physical queue.
+2. QR/customer joins -> receives code -> checks in -> shares styles -> barber
    starts and completes service -> one sale/commission -> eligible customer review.
-2. Customer requests appointment -> salon accepts, suggests or declines -> customer
+3. Customer requests appointment -> salon accepts, suggests or declines -> customer
    accepts an alternative when needed -> arrival -> service -> sale -> review.
-3. Owner opens/closes -> monitors staff/queues -> records expenses -> reconciles
+4. Owner opens/closes -> monitors staff/queues -> records expenses -> reconciles
    sales, commission, estimated profit and performance.
-4. Concurrent/repeated actions, restricted-role access, restart/session restoration
+5. Concurrent/repeated actions, restricted-role access, restart/session restoration
    and reconnect do not produce duplicate or contradictory business records.
 
 Document the commands, migrations, environment setup, test identities, limitations
@@ -416,12 +458,12 @@ Native store submission/production release requires a separately agreed mileston
   method and whether any existing database records must be preserved.
 - Milestone 03: email confirmation/SMTP behavior, redirect URLs and callback test
   environment. Keep confirmation enabled unless a development-only change is agreed.
-- Milestone 04: trusted first-owner bootstrap, staff invitation method and minimum
+- Milestone 05: trusted first-owner bootstrap, staff invitation method and minimum
   permission defaults. No open self-selection of an owner role.
 - Milestone 07: anonymous guest support, identity recovery limitations, appointment
   grace period, cancellation/no-show policy and who may accept each request.
 - Milestone 08: scheduling estimate policy, refresh interval, handling of unknown
-  break end times and priority when appointment arrivals are late.
+  break end times, forecast horizon and priority when appointment arrivals are late.
 - Milestone 12: qualifying queue/appointment sources, exact commission allocation,
   price-consent behavior and how actual commission payments are recorded.
 - Milestone 14: explicit treatment of unpaid expenses and commissions in the
@@ -439,6 +481,9 @@ credentials, access tokens, real customer data or account passwords in this log.
 
 - Implemented: implementation plan, repository entry point, PR template and local
   environment-file protection. Original product specifications remain unchanged.
+- Customer-priority refinement: Customer app bootstraps first; customer auth is
+  optional; discovery precedes Manager setup; estimated visit windows and comparing
+  when to go are explicit acceptance criteria. No feature code was added.
 - Validation: staged diff passes `git diff --cached --check`; all 17 milestone
   sections are present; `.env` is ignored/untracked and its values are absent
   from staged files; remote `main` matches the local starting commit. Planning
