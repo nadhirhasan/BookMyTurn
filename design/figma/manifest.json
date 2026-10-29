@@ -1,0 +1,74 @@
+{
+  "fileKey": "wugLxCXK2CM44607SvxZwF",
+  "fileUrl": "https://www.figma.com/design/wugLxCXK2CM44607SvxZwF",
+  "discoveryUrl": "https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140",
+  "pages": {
+    "journey": "0:1",
+    "components": "3:49"
+  },
+  "screens": {
+    "home": "9:141",
+    "salons": "9:256",
+    "salon": "9:382"
+  },
+  "components": {
+    "nav0": "7:140",
+    "nav1": "7:173",
+    "nav2": "7:206",
+    "nav3": "7:239",
+    "field": "7:273",
+    "salonPhoto": "7:277",
+    "salonCompare": "7:296",
+    "barber": "7:304",
+    "status": "7:312",
+    "time": "7:317"
+  },
+  "variables": {
+    "primitive/white": "VariableID:3:15",
+    "primitive/ink": "VariableID:3:16",
+    "primitive/muted": "VariableID:3:17",
+    "primitive/soft": "VariableID:3:18",
+    "primitive/line": "VariableID:3:19",
+    "primitive/canvas": "VariableID:3:20",
+    "color/background": "VariableID:3:21",
+    "color/text": "VariableID:3:22",
+    "color/action": "VariableID:3:23",
+    "color/muted": "VariableID:3:24",
+    "color/surface": "VariableID:3:25",
+    "color/border": "VariableID:3:26",
+    "color/divider": "VariableID:3:27",
+    "color/canvas": "VariableID:3:28",
+    "color/on-action": "VariableID:3:29",
+    "space/4": "VariableID:3:30",
+    "space/8": "VariableID:3:31",
+    "space/12": "VariableID:3:32",
+    "space/16": "VariableID:3:33",
+    "space/20": "VariableID:3:34",
+    "space/24": "VariableID:3:35",
+    "space/32": "VariableID:3:36",
+    "radius/8": "VariableID:3:37",
+    "radius/12": "VariableID:3:38",
+    "radius/16": "VariableID:3:39",
+    "radius/24": "VariableID:3:40"
+  },
+  "styles": {
+    "Display": "S:5f94d5d49a0b03e1e6a6182bf242ca1c63c90bac,",
+    "Title": "S:bb906421bec4bbeb2ef2108484ed5463e7f85826,",
+    "Section": "S:50729f1f6971474254c692da06d66746836ebd5c,",
+    "Body": "S:0601e1b93b93fb94c8b0f6fd09bb6b74a2090175,",
+    "Label": "S:e83ad12f29f7aed3c6330f6a4eb2febd8841117f,",
+    "Caption": "S:6562cb09292f22fae1ab129909d901c7ba4ae593,",
+    "Micro": "S:17534381526ce69902bc70eb4f3f057c350e8869,",
+    "Metric": "S:3a219e23be9fb258616e39d0c27465143439e869,"
+  },
+  "boards": {
+    "discovery": "9:140"
+  },
+  "status": "Discovery screens composed and visually reviewed; remaining screens and clickable prototype pending Figma MCP quota",
+  "remaining": [
+    "queue",
+    "appointments",
+    "account",
+    "prototype-navigation"
+  ]
+}
