@@ -23,6 +23,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run test:unit --workspace=@bookmyturn/customer
       - run: npm run export:web
         env:
           EXPO_PUBLIC_SUPABASE_URL: https://example.supabase.co
@@ -35,3 +36,27 @@ jobs:
         with:
           name: customer-browser-test-results
           path: .artifacts/customer-e2e
+
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: bookmyturn_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ci_disposable_password
+        options: >-
+          --health-cmd "pg_isready -U postgres -d bookmyturn_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply migration and verify profile permissions
+        env:
+          POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/bootstrap-ci.sql
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/migrations/20261030015043_customer_profiles.sql
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/customer_profiles.sql

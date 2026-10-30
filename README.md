@@ -9,7 +9,8 @@ search salon/barber names, compare estimated waits and prices, and inspect visit
 windows. Queue joining, appointments and accounts are clearly marked coming next.
 
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
-- [Current feature, validation and phone walkthrough](docs/CUSTOMER_FOUNDATION.md)
+- [Customer UI, validation and phone walkthrough](docs/CUSTOMER_FOUNDATION.md)
+- [Supabase foundation and hosted deployment status](supabase/README.md)
 - [Customer specification](idea/customer.md)
 - [Manager specification](idea/manager.md)
 - [Approved Figma discovery screens](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140)
@@ -40,9 +41,10 @@ Root `.env` is ignored. Copy `.env.example` if setting up another checkout.
 The app config loads root values as fallback without replacing injected
 environment variables. Only project URL and publishable key belong in app
 configuration; never add database passwords or service-role/secret keys.
-The discovery preview works without Supabase. Connectivity, migrations, RLS and
-authentication are later verified steps; reading configuration is not a
-successful database connection.
+Guest discovery works without Supabase. The client/session foundation and private
+profile migration are prepared; deployment and hosted permission-test status are
+tracked in supabase/README.md. Account screens and real signed-in flow verification
+remain the next milestone. Configuration presence alone is not connectivity.
 
 ## Checks
 
@@ -65,5 +67,6 @@ CI checks a clean install, lint, types, web export and browser journeys.
 See the feature document for outstanding device checks and dependency advisories.
 
 Each feature has a separate PR. User verification and merge are required before
-a milestone is marked complete. The implementation PR is stacked on design PR #2;
-merge the design first and then retarget the feature PR to main.
+a milestone is marked complete. The PR chain is design #2, discovery #3, then the Supabase foundation feature.
+Merge/retarget in that order; later features do not merge their prerequisites
+automatically.
