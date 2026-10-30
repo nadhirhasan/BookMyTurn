@@ -2,15 +2,13 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: first three editable customer screens ready for design review.
-The remaining screens and clickable prototype are blocked by the Figma MCP
-Starter-plan tool-call limit. See [the design review](../design/README.md).
-[Planning PR #1](https://github.com/nadhirhasan/BookMyTurn/pull/1) is merged.
-[Design review PR #2](https://github.com/nadhirhasan/BookMyTurn/pull/2) is open as
-a draft; user design verification remains pending.
-An initial Customer foundation exists locally, but its visual direction was
-rejected in review. Pause UI development until gate 00A below is complete.
-No Supabase database changes have been made.
+Current stage: approved Figma discovery screens implemented for verification.
+The user approved Home, salon comparison and salon availability, then explicitly
+requested implementation. Milestone 01 includes these local demo screens as an
+authorised subset of milestone 04; database/QR/profile work stays deferred.
+The remaining Figma journey/prototype is pending the Starter-plan allowance.
+Planning PR #1 is merged; design PR #2 remains open. The implementation feature
+is stacked on the design branch, with a separate PR. No Supabase changes made.
 
 ## 1. Agreed direction
 
@@ -171,7 +169,8 @@ feature-PR workflow are clear. No app or database implementation belongs in this
   link the clickable prototype. Pending the Figma tool-call allowance.
 - [ ] Validate: inspect actual Figma exports for layout, typography, density,
   contrast, images, state clarity and prototype navigation at iPhone dimensions.
-- [ ] Complete: user verifies the Figma design and the corresponding PR is merged.
+- [x] User approved the three discovery screens and authorised their implementation.
+- [ ] Complete: remaining journey/prototype validated and design PR merged.
 
 Acceptance: the design shows how a customer compares salon waits, chooses when
 to go, joins/checks in or requests a future time. Follow the real-app reference
@@ -183,20 +182,20 @@ the corresponding backend feature has been implemented.
 
 ### 01. Bootstrap the Customer app and development checks
 
-- [ ] Implemented
+- [x] Implemented
 - [ ] Validated
 - [ ] Complete
 
 Scope: npm workspace, Expo Customer app, TypeScript, navigation shell, brand theme,
 safe-area/keyboard handling, environment example/loading, and basic CI for lint,
 type checks and applicable tests. Choose a stable Expo SDK compatible with the
-actual test device at implementation time. No salon features yet.
-The initial local UI draft is not approved. Rework the shell against the approved
-Figma design after gate 00A, rather than treating the existing draft as the design.
+actual test device at implementation time. The user subsequently authorised the
+approved discovery screens in this first feature; use local fictional data.
+Persistence, QR entry and full discovery scope remain in milestone 04.
 
 Acceptance: clean install and documented commands work; the branded shell runs
-on the agreed phone/emulator and web preview. Missing configuration gives an
-actionable message. CI passes. Do not expose secret values in logs.
+on the agreed phone/emulator and web preview. Discovery remains usable without configuration; document the connection setup
+for milestone 02. CI passes. Do not expose secret values in logs.
 
 ### 02. Connect Supabase and establish the account database
 
@@ -543,19 +542,19 @@ credentials, access tokens, real customer data or account passwords in this log.
   text, vector geometry, instances and discrete photo layers. The first render
   revealed filled SVG wrapper boxes; those were corrected and the new render
   was inspected. See `design/reviews/customer-discovery.png`.
-- Remaining: queue/check-in, appointment/account states, prototype navigation,
-  user design verification and implementation. Figma returned a Starter-plan
+- Remaining: queue/check-in, appointment/account states and prototype navigation.
+  The user approved the three composed screens and requested implementation. Figma returned a Starter-plan
   tool-call-limit error before the queue composition ran. The remaining scripts
   are prepared locally but are not claimed as completed Figma screens.
 - Visual direction: user explicitly rejected dark/blue themes. Use the light,
   neutral direction in DESIGN_DIRECTION.md; the source idea files are historical
   requirements and their old colour rules no longer apply.
-- UI development: paused for design. Keep the local engineering draft available;
-  do not mark milestone 01 validated or complete based only on build checks.
+- UI development: resumed for the three approved discovery screens by explicit
+  user instruction. Native device verification and PR merge remain required.
 - Design PR: [#2](https://github.com/nadhirhasan/BookMyTurn/pull/2), draft against
   `main` from `design/customer-experience`. Whitespace, source-syntax and design-only
   staging checks passed. Local `.env` values and private upload/session artifacts
-  were excluded. User verification and design PR merge remain pending.
+  were excluded. The first three screens are user-approved; design PR merge remains pending.
 
 ### Entry format for subsequent milestones
 
@@ -570,3 +569,29 @@ Outstanding checks or limitations:
 User verification:
 Merge:
 ```
+
+### Milestone 01 and discovery preview ? implementation
+
+- Implemented: approved Home, salon comparison and salon availability in Expo;
+  exact DM Sans/photography/Lucide assets, guest search, sorting, filtering,
+  selectable estimated windows and honest pending-feature notices.
+- Scope adjustment: user explicitly approved implementing these three screens.
+  Milestone 04 is only partially demonstrated; no persistence, QR entry, barber
+  profile or live forecast is claimed. Milestones 02/03 remain next.
+- Validation: lint/types and Expo Doctor (21/21) passed; nine browser journeys
+  passed including four viewport widths. Web, iOS and Android bundle export
+  passed. See CUSTOMER_FOUNDATION.md and docs/reviews for evidence/limits.
+- Database: no migration or mutation. Supabase connectivity is not yet tested.
+- PR: [#3](https://github.com/nadhirhasan/BookMyTurn/pull/3), stacked on design PR #2.
+- Clean installation: npm ci passed.
+- CI: see the checks on feature PR #3 for the current result.
+- Outstanding: physical iPhone/Android runtime verification and user review.
+  Network audit reports 11 Expo dependency findings; no forced incompatible
+  downgrade applied. Full Figma journey remains limited by its tool allowance.
+- User verification: Figma discovery approved; runnable app pending.
+- Merge: pending; do not tick the full validation/completion gates yet.
+
+Cold browser loading: initial CI exposed controls before client handlers were
+attached. The app now shows its loading state through hydration; a regression
+check holds JavaScript requests, verifies controls stay hidden, then verifies
+search after scripts load. Native font-loading behavior is preserved.
