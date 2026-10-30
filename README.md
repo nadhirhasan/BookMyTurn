@@ -32,6 +32,18 @@ Scan the terminal QR code (iPhone: Camera). This project uses Expo SDK 57;
 the installed Expo Go must support it. Windows cannot launch an iOS simulator.
 For a browser preview, run `npm run web`.
 
+For Expo Go through a tunnel (including when same-Wi-Fi access fails):
+
+```powershell
+cd C:\Users\pc\Mobile-Apps\BookMyTurn
+npm run start:tunnel
+```
+
+The existing `npm start -- --tunnel --go` command also works. On Windows, the
+project launcher exposes npm's existing global modules to Expo for that process,
+preventing the repeated ngrok-install prompt. No additional installation or
+system environment change is needed. See [tunnel startup notes](docs/TUNNEL_STARTUP.md).
+
 All queue values, opening status, ratings, prices and windows are a fixed
 fictional snapshot at 2:00 pm in Asia/Colombo, not live availability.
 Images are licensed illustrative photos. No booking or database record is

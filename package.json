@@ -16,6 +16,7 @@
   },
   "scripts": {
     "start": "npm run start --workspace=@bookmyturn/customer --",
+    "start:tunnel": "npm run start:tunnel --workspace=@bookmyturn/customer --",
     "android": "npm run android --workspace=@bookmyturn/customer --",
     "ios": "npm run ios --workspace=@bookmyturn/customer --",
     "web": "npm run web --workspace=@bookmyturn/customer --",
