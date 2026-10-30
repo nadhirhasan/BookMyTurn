@@ -8,6 +8,8 @@ export type Context = {
   role: string;
 };
 export type Service = {
+  archived_at?: string | null;
+  is_active?: boolean;
   id: string;
   name: string;
   duration_minutes: number;

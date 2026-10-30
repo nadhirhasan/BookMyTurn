@@ -272,6 +272,7 @@ export type Database = {
       }
       barbers: {
         Row: {
+          archived_at: string | null
           bio: string | null
           created_at: string
           display_name: string
@@ -286,6 +287,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          archived_at?: string | null
           bio?: string | null
           created_at?: string
           display_name: string
@@ -300,6 +302,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          archived_at?: string | null
           bio?: string | null
           created_at?: string
           display_name?: string
@@ -726,6 +729,7 @@ export type Database = {
       salons: {
         Row: {
           address: string | null
+          archived_at: string | null
           country_code: string
           created_at: string
           currency: string
@@ -743,6 +747,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          archived_at?: string | null
           country_code?: string
           created_at?: string
           currency?: string
@@ -760,6 +765,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          archived_at?: string | null
           country_code?: string
           created_at?: string
           currency?: string
@@ -936,6 +942,7 @@ export type Database = {
       }
       services: {
         Row: {
+          archived_at: string | null
           duration_minutes: number
           id: string
           is_active: boolean
@@ -945,6 +952,7 @@ export type Database = {
           salon_id: string
         }
         Insert: {
+          archived_at?: string | null
           duration_minutes: number
           id?: string
           is_active?: boolean
@@ -954,6 +962,7 @@ export type Database = {
           salon_id: string
         }
         Update: {
+          archived_at?: string | null
           duration_minutes?: number
           id?: string
           is_active?: boolean

@@ -15,11 +15,12 @@ export function Button({ label, onPress, secondary = false, disabled = false, ac
   disabled?: boolean;
   accessibilityLabel?: string;
 }) { return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress} style={({ pressed }) => [s.button, secondary && s.secondary, { opacity: disabled ? .4 : pressed ? .7 : 1 }]}><Text style={[type.label, !secondary && { color: colors.background }]}>{label}</Text></Pressable>; }
-export function Chip({ label, selected, onPress }: {
+export function Chip({ label, selected, onPress, accessibilityLabel }: {
   label: string;
   selected: boolean;
+  accessibilityLabel?: string;
   onPress: () => void;
-}) { return <Pressable accessibilityRole="button" accessibilityState={{ selected }} onPress={onPress} style={[s.chip, selected && { backgroundColor: colors.action }]}><Text style={[type.label, selected && { color: colors.background }]}>{label}</Text></Pressable>; }
+}) { return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} accessibilityState={{ selected }} onPress={onPress} style={[s.chip, selected && { backgroundColor: colors.action }]}><Text style={[type.label, selected && { color: colors.background }]}>{label}</Text></Pressable>; }
 export function Field({ label, value, onChange, multiline = false, numeric = false, maxLength = 100 }: {
   label: string;
   value: string;

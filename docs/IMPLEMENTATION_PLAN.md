@@ -2,7 +2,12 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: phone-test feedback — live salon operations, staff Activity and
+Current stage: Manager salon, barber and service CRUD. See
+[MANAGER_CRUD_PLAN.md](MANAGER_CRUD_PLAN.md) and
+[the management guide](MANAGER_CRUD_WORKFLOW.md). Removal preserves history and
+blocks active visits. User device acceptance and PR review remain pending.
+
+Previous stage: phone-test feedback — live salon operations, staff Activity and
 Manager UI redesign. See [LIVE_OPERATIONS_PLAN.md](LIVE_OPERATIONS_PLAN.md).
 Remote Any Barber joins must be visible as incoming without inflating physical
 waiting; user phone revalidation and PR acceptance remain pending.
