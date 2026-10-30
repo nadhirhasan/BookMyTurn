@@ -15,6 +15,7 @@ See [the complete walkthrough and validation](docs/CUSTOMER_PIPELINE.md).
 - [Supabase foundation and hosted deployment status](supabase/README.md)
 - [Customer specification](idea/customer.md)
 - [Manager specification](idea/manager.md)
+- [Barber app setup and cross-app testing](docs/BARBER_WORKFLOW.md)
 - [Approved Figma discovery screens](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140)
 - [Design sources, licences and remaining screens](design/README.md)
 
@@ -44,10 +45,30 @@ project launcher exposes npm's existing global modules to Expo for that process,
 preventing the repeated ngrok-install prompt. No additional installation or
 system environment change is needed. See [tunnel startup notes](docs/TUNNEL_STARTUP.md).
 
-Salons, staff, service prices, hours and hairstyle references are fictional
-catalogue records seeded in Postgres. Queues, appointments and reviews are real
-database records created by your testing. Availability refreshes every 15 seconds,
-on screen focus and app foreground. Images are illustrative stock photographs.
+The original demo salons and linked test visits were removed at your request.
+Create your own salons in the Barber app; each starts with an empty queue.
+Salons, staff, service prices, hours, queues and appointments live in Supabase.
+Customer availability refreshes every 15 seconds, on focus and app foreground.
+The shared hairstyle reference gallery remains available with illustrative photos.
+
+## Run the Barber app
+
+From the repository root, in a separate terminal:
+
+```powershell
+cd C:\Users\pc\Mobile-Apps\BookMyTurn
+npm run barber:tunnel
+```
+
+Scan its QR in Expo Go. The Barber app uses port 8084; the Customer app uses
+8081, so both can run together. `npm run barber` uses LAN and
+`npm run barber:web` opens a browser preview.
+
+Create an account with a separate email for each salon, then enter its name,
+primary barber, first service, prices and working hours. No verification email
+is required. The new salon appears in the Customer app. Staff access is checked
+against database memberships, never a role picker. See the
+[full barber walkthrough](docs/BARBER_WORKFLOW.md).
 
 ## Configuration
 

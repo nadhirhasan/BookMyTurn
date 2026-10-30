@@ -2,7 +2,13 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: complete database-backed customer pipeline, authorised on 30 October
+Current stage: Barber workflow, authorised after the user accepted the customer
+experience on 30 October 2026. See [the barber delivery plan](BARBER_IMPLEMENTATION_PLAN.md).
+Barber implementation and hosted migrations are validated; user phone testing
+and PR review remain pending. The authorised demo reset removed the original
+salons and linked visits while preserving accounts and hairstyle references.
+New salons are created through the Barber app's setup flow.
+Customer implementation record: complete database-backed customer pipeline, authorised on 30 October
 2026. The user explicitly replaced sequential feature gates with one integrated
 customer delivery. Keep validation boxes and PR review; do not auto-merge.
 

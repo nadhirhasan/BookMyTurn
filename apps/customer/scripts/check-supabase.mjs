@@ -41,16 +41,10 @@ if (!result.configuration) {
       headers: { apikey: publishableKey }, signal: AbortSignal.timeout(15000),
     });
     const catalogBody = await catalog.json();
-    const expectedSlugs = [
-      'royal-saloon', 'mrg-akurana-6', 'mrg-akurana-7', 'mrg-akurana-8',
-      'neel1', 'neel2', 'neel3', 'saloon-chami', 'mr-handsome',
-      'saloon-kumar', 'mr-perfect', 'noire', 'saloon-bhai',
-    ].sort();
-    if (!catalog.ok || !Array.isArray(catalogBody)
-      || JSON.stringify(catalogBody.map(row => row.slug).sort()) !== JSON.stringify(expectedSlugs)) {
-      throw new Error('Published salon catalog does not match the 13 approved demo listings. Check the complete schema migration.');
+    if (!catalog.ok || !Array.isArray(catalogBody) || catalogBody.some(s => typeof s.slug !== 'string') || new Set(catalogBody.map(s => s.slug)).size !== catalogBody.length) {
+      throw new Error('Published salon catalogue could not be read. Check database access.');
     }
-    console.log('PASS: Anonymous discovery can read exactly the 13 approved salon listings.');
+    console.log(`PASS: Anonymous discovery reads ${catalogBody.length} published salons (an empty catalogue is valid).`);
 
     const queue = await fetch(`${url}/rest/v1/queue_entries?select=id&limit=0`, {
       headers: { apikey: publishableKey }, signal: AbortSignal.timeout(15000),
@@ -76,7 +70,7 @@ if (!result.configuration) {
       'The Auth API rejected the configured project URL or publishable key.',
       'Profile migration is not applied (or schema cache is not refreshed). Apply 20261030015043_customer_profiles.sql, then rerun this check.',
       'Profile access did not match the expected private-table policy. Review the migration and database permission tests.',
-      'Published salon catalog does not match the 13 approved demo listings. Check the complete schema migration.',
+      'Published salon catalogue could not be read. Check database access.',
       'Anonymous queue access was not denied as expected. Review the complete schema grants.',
       'Private administrative schema is not outside the Data API as expected. Review exposed schema settings.',
     ];

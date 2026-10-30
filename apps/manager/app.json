@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "BookMyTurn Barber",
+    "slug": "bookmyturn-barber",
+    "scheme": "bookmyturn-barber",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "../customer/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FFFFFF",
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-font",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose your public barber profile photo.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bookmyturn.barber"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF",
+        "foregroundImage": "../customer/assets/icon.png"
+      },
+      "package": "com.bookmyturn.barber"
+    },
+    "web": {
+      "favicon": "../customer/assets/favicon.png",
+      "bundler": "metro",
+      "output": "single",
+      "name": "BookMyTurn Barber"
+    }
+  }
+}

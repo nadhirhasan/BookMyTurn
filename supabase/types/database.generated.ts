@@ -1085,6 +1085,12 @@ export type Database = {
       }
     }
     Functions: {
+      barber_command: {
+        Args: { p_action: string; p_barber: string; p_data: Json }
+        Returns: Json
+      }
+      barber_context: { Args: never; Returns: Json }
+      barber_state: { Args: { p_barber: string }; Returns: Json }
       customer_catalog: { Args: never; Returns: Json }
       customer_command: {
         Args: { p_action: string; p_data: Json }
@@ -1118,6 +1124,7 @@ export type Database = {
         }
         Returns: Json
       }
+      setup_salon: { Args: { p_data: Json }; Returns: Json }
     }
     Enums: {
       [_ in never]: never

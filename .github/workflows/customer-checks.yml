@@ -28,14 +28,24 @@ jobs:
         env:
           EXPO_PUBLIC_SUPABASE_URL: https://example.supabase.co
           EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_placeholder
+      - run: npm run export:web --workspace=@bookmyturn/manager
+        env:
+          EXPO_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_ci_placeholder
       - run: npx playwright install --with-deps chromium
         working-directory: apps/customer
       - run: npm run test:e2e --workspace=@bookmyturn/customer
+      - run: npm run test:e2e --workspace=@bookmyturn/manager
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: customer-browser-test-results
           path: .artifacts/customer-e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: barber-browser-test-results
+          path: .artifacts/barber-e2e
 
   database:
     runs-on: ubuntu-latest
@@ -66,3 +76,4 @@ jobs:
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/customer_pipeline.sql
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/qr_arrival.sql
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/customer_appointment_overlap.sql
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/barber_workflow.sql
