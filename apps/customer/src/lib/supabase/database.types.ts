@@ -1,5 +1,6 @@
-// Schema contract for 20261029000100_customer_profiles.sql.
-// Keep the contract aligned with the migration; these are not generated remotely.
+// Schema contract for 20261030015043_customer_profiles.sql.
+// Row/Insert fields verified against hosted generated types on 30 October 2026.
+// Update intentionally follows column grants: only display_name is client-editable.
 export type CustomerProfile = {
   id: string;
   display_name: string | null;

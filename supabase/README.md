@@ -5,7 +5,7 @@ plumbing. It does not persist salons, create bookings or add sign-in screens.
 
 ## Migration
 
-[20261029000100_customer_profiles.sql](migrations/20261029000100_customer_profiles.sql)
+[20261030015043_customer_profiles.sql](migrations/20261030015043_customer_profiles.sql)
 is one atomic, additive migration. Apply once to the BookMyTurn development
 project after checking its identity against the configured project URL.
 
@@ -32,6 +32,10 @@ add a service-role key, database password or access token to the mobile app.
 Prefer the management connection's migration operation, which records migration
 history. If applying manually through SQL Editor, record the file/version/date and
 reconcile its applied status before a later CLI `db push` so it is not applied twice.
+This migration was applied to the configured BookMyTurn project on 30 October
+2026. The management tool recorded version `20261030015043`; the original local
+filename `20261029000100_customer_profiles.sql` was renamed to match, with its SQL
+unchanged. Do not reapply it to this project.
 No destructive down migration is supplied; a production rollback needs a separate
 data-preserving plan. The existing discovery UI remains compatible before and
 after deployment because this step makes no profile request as a guest.
@@ -94,16 +98,21 @@ and project. Tokens and raw SDK errors are never logged by the integration.
 
 Profile helpers derive the ID from `auth.getUser()`, expose self read/display-name
 update only and rely on database enforcement. The schema contract is handwritten
-and explicitly tied to the migration; regenerate/diff types when the management
-connection is available. There are no automatic signups, anonymous Auth accounts,
+and explicitly tied to the migration. Hosted generated types were compared on
+30 October 2026: row/insert shapes match; Update intentionally permits only the
+display-name field allowed by grants (generated types do not model column grants).
+Regenerate/diff after future schema changes. There are no automatic signups, anonymous Auth accounts,
 profile edits or salon data requests merely from opening the app.
 
 ## Current validation status
 
 - Project URL/publishable key: Auth settings endpoint verified, email provider and
   email confirmation enabled.
-- Migration/schema deployment and hosted permission suite: pending management
-  connection authorisation.
+- Migration deployed through the authorised connection, version `20261030015043`.
+- Hosted permission suite passed against real Auth roles and separate subjects;
+  rollback and an independent count check confirmed no test accounts/profiles remain.
+- Public-key probe passed: Auth reachable and anonymous profile access denied.
+- Supabase security and performance advisors: no findings on 30 October 2026.
 - Local unit tests: 11 passed; lint/types, web export and Expo Doctor 21/21 passed.
 - Both iOS and Android bundle exports passed.
 - All nine guest-discovery browser journeys passed with the provider mounted.

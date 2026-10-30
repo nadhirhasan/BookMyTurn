@@ -2,11 +2,12 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: Supabase account foundation in progress (milestone 02).
+Current stage: Supabase account foundation implemented and validated (milestone 02);
+awaiting user review and PR merge before sign-in/sign-up work.
 The user approved the runnable customer UI and requested database integration.
-Client/session handling, a private-profile migration and tests are prepared.
-Hosted migration application and permission validation await the authorised
-Supabase connection. No hosted schema changes have been made.
+Client/session handling and private profiles are implemented. The migration is
+applied to the configured BookMyTurn project; hosted permission tests, cleanup,
+public-key connectivity and anonymous-access denial passed on 30 October 2026.
 Planning PR #1 is merged. Design PR #2 and discovery PR #3 remain open; this
 feature is stacked on the discovery branch in a separate PR by user instruction
 to continue. Completion boxes remain unchecked until acceptance and merge.
@@ -202,9 +203,9 @@ for milestone 02. CI passes. Do not expose secret values in logs.
 ### 02. Connect Supabase and establish the account database
 
 - [x] Client/session source, profile migration and tests prepared.
-- [ ] Hosted migration applied.
-- [ ] Implemented
-- [ ] Validated
+- [x] Hosted migration applied.
+- [x] Implemented
+- [x] Validated
 - [ ] Complete
 
 Scope: Supabase client/session lifecycle; minimal account profile linked to
@@ -600,7 +601,7 @@ attached. The app now shows its loading state through hydration; a regression
 check holds JavaScript requests, verifies controls stay hidden, then verifies
 search after scripts load. Native font-loading behavior is preserved.
 
-### Milestone 02 ? Supabase account foundation (in progress)
+### Milestone 02 - Supabase account foundation (validated; review pending)
 
 - PR: [#4](https://github.com/nadhirhasan/BookMyTurn/pull/4), stacked on #3.
 - User acceptance: runnable discovery UI accepted; database integration requested.
@@ -616,10 +617,26 @@ search after scripts load. Native font-loading behavior is preserved.
 - Validation: 11 unit checks plus lint/types passed. Expo Doctor previously passed
   21/21. Both iOS and Android bundle exports passed after resuming. Browser and
   PostgreSQL CI results are recorded in the feature PR when completed.
-- Hosted connectivity: Auth settings endpoint accepted the configured public key;
-  email provider and email confirmation are enabled. Profile table was absent.
-- Outstanding: authorised Supabase connection, hosted migration/permission suite
-  and final anonymous API denial probe. CI database fixture is not hosted proof.
+- Hosted deployment (30 October 2026): authorised connection matched BookMyTurn
+  to the configured project; inspection found no application tables or accounts.
+  Applied `customer_profiles` through the migration tool, recorded as version
+  `20261030015043`. The unchanged local SQL file was renamed to this version so
+  later CLI deployment does not try to apply the same migration twice.
+- Hosted permission suite: passed against real Auth schema/roles, covering two
+  customer subjects, own updates, cross-user denial, grants, metadata isolation,
+  constraints and deletion cascade. All fixtures rolled back; a separate query
+  confirmed zero Auth users and zero profiles remained. No emails or API sessions
+  were created by these SQL tests.
+- Public-key probe: Auth reachable, email confirmation remains enabled, and
+  anonymous profile access denied. Security and performance advisors: no findings.
+  Generated hosted types match the row/insert contract; the client Update type
+  intentionally narrows to the display-name column permitted by grants.
+- CI on `ab09324`: [both jobs passed](https://github.com/nadhirhasan/BookMyTurn/actions/runs/40987413750),
+  including clean install, lint/types, 11 unit tests, web export, nine browser
+  journeys and the PostgreSQL 17 suite. Migration filename/evidence changes will
+  run CI again before handoff.
+- Outstanding: user review and PR merge. Signed-token authentication and native
+  signed-in session restoration remain milestone 03 checks.
 - Previous attempt: approval review hit a usage limit before browser/native checks
   could start. On resume both native exports, source checks, 11 unit tests and all
   nine browser journeys passed; the isolated test server was closed.
