@@ -106,7 +106,9 @@ profile edits or salon data requests merely from opening the app.
   connection authorisation.
 - Local unit tests: 11 passed; lint/types, web export and Expo Doctor 21/21 passed.
 - Both iOS and Android bundle exports passed.
-- CI SQL permission tests and browser regression checks: results recorded in the
-  feature PR when completed.
+- All nine guest-discovery browser journeys passed with the provider mounted.
+- CI SQL permission results: see [PR #4](https://github.com/nadhirhasan/BookMyTurn/pull/4).
+  The migration applied in PostgreSQL 17; a temporary-schema grant in the initial
+  test run was corrected before the rerun.
 - UI acceptance: the user approved the runnable discovery UI and requested this
   next step. Native signed-in session restoration remains a milestone 03 check.

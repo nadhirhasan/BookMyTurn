@@ -602,6 +602,7 @@ search after scripts load. Native font-loading behavior is preserved.
 
 ### Milestone 02 ? Supabase account foundation (in progress)
 
+- PR: [#4](https://github.com/nadhirhasan/BookMyTurn/pull/4), stacked on #3.
 - User acceptance: runnable discovery UI accepted; database integration requested.
   User chose to add/authorise Supabase for migration application and validation.
 - Implemented locally: lazy typed client using public configuration, persistent
@@ -620,6 +621,10 @@ search after scripts load. Native font-loading behavior is preserved.
 - Outstanding: authorised Supabase connection, hosted migration/permission suite
   and final anonymous API denial probe. CI database fixture is not hosted proof.
 - Previous attempt: approval review hit a usage limit before browser/native checks
-  could start. On resume the native exports and source checks completed normally.
+  could start. On resume both native exports, source checks, 11 unit tests and all
+  nine browser journeys passed; the isolated test server was closed.
+- CI note: the migration applied in PostgreSQL 17. The first permission run
+  failed because GRANT requires the temporary schema namespace rather than the
+  pg_temp alias; the test helper was corrected. Latest CI results are on PR #4.
 - Scope/deployment guide: [supabase/README.md](../supabase/README.md).
 - Merge and milestone completion: pending; do not advance to sign-in/sign-up yet.
