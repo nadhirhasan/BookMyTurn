@@ -245,6 +245,12 @@ Evidence: [SCHEMA_VALIDATION.md](../supabase/SCHEMA_VALIDATION.md).
 - [ ] Validated
 - [ ] Complete
 
+PR: [#6](https://github.com/nadhirhasan/BookMyTurn/pull/6), stacked on #5.
+Runtime/source commit e998fae passed [CI](https://github.com/nadhirhasan/BookMyTurn/actions/runs/41001570662),
+22 unit tests, 17 browser journeys and web/iOS/Android exports. Visual review
+passed at iPhone dimensions. Validation stays unchecked pending the hosted signup
+setting, explicit approval for disposable-account tests/cleanup, and phone review.
+
 Scope revised 30 October 2026: email/password sign-up and sign-in; password
 visibility, input validation, clear loading/error states, restored sessions,
 signed-in account view and sign-out. Email verification, callbacks, password

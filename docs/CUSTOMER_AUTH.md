@@ -65,7 +65,10 @@ the confirmation mode without printing URL/key/private records.
   [account](reviews/customer-account.png). Local Windows teardown needed the owned
   Expo test server to be closed explicitly after all browser assertions passed.
 - [x] Web/iOS/Android bundle exports passed; web includes 27 static routes.
-- [ ] Final feature PR CI passed.
+- [x] Feature CI passed on runtime/source commit e998fae: [run 41001570662](https://github.com/nadhirhasan/BookMyTurn/actions/runs/41001570662).
+  Both app and database jobs passed, including clean install, 22 unit tests,
+  17 browser journeys, web export and both database suites. Later evidence-only
+  commits retain this source evidence; current checks are shown on the PR.
 - [ ] Public Auth settings reflect immediate signup.
 - [ ] Live password signup/login, signed-token RLS and cleanup passed.
 - [ ] User iPhone verification and PR acceptance/merge.
