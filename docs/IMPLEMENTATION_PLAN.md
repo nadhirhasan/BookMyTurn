@@ -27,10 +27,12 @@ customer delivery. Keep validation boxes and PR review; do not auto-merge.
 - [x] Account-free physical QR arrivals: no Auth user, immediate arrived status,
   private device receipts, duplicate prevention and optional explicit app linking.
   Anonymous Supabase Auth remains disabled, as the user explicitly requested.
-- [ ] Final CI and native exports. Hosted migration/role suites, real two-customer
-  concurrency and isolation, 20 browser journeys, lint/types and 22 unit tests pass.
-- [ ] Open a separate customer pipeline PR, document manual iPhone testing and
-  remaining limits. Leave queues/bookings empty after automated hosted tests.
+- [x] Hosted migration/role suites, real two-customer concurrency and isolation,
+  20 browser journeys, lint/types, 22 unit tests and iOS/Android/web exports pass.
+- [x] Open customer pipeline [PR #8](https://github.com/nadhirhasan/BookMyTurn/pull/8),
+  document manual testing and deployment limits. Automated hosted fixtures cleaned.
+- [ ] User iPhone/Android acceptance and review/merge. Implementing the flows
+  does not mark user verification done. Final automated CI status is on PR #8.
 
 Earlier stage record: customer sign-in/sign-up implementation (milestone 03), authorised
 after the full database review. Verification/email flows are deferred by user

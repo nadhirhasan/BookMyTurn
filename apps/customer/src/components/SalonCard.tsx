@@ -14,7 +14,7 @@ export function SalonCard({ salon, featured = false }: {
    <Text style={type.caption}>{salon.reviews ? `${salon.rating} (${salon.reviews})` : 'No reviews yet'} · {salon.price === null ? 'Services not listed' : `From ${money(salon.price)}`}</Text>
    <View style={s.wait}>{featured && <Clock3 size={17} color={colors.text}/>}<Text style={type.label}>{waitLabel(salon)}</Text></View>
    <Text style={type.caption}>{queueLabel(salon)}</Text>
-   {featured ? <View style={s.earliest}><Text style={type.caption}>Earliest service</Text><Text style={type.label}>{salon.earliest}</Text></View> : <Text style={type.caption}>{salon.open ? `Earliest service ${salon.earliest.toLowerCase()}` : 'No availability today'}</Text>}
+   {featured ? <View style={s.earliest}><Text style={type.caption}>Earliest service</Text><Text style={type.label}>{salon.earliest}</Text></View> : <Text style={type.caption}>Earliest service: {salon.earliest}</Text>}
   </View>
  </Pressable>;
 }
