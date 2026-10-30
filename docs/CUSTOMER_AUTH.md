@@ -66,6 +66,7 @@ the confirmation mode without printing URL/key/private records.
   Expo test server to be closed explicitly after all browser assertions passed.
 - [x] Web/iOS/Android bundle exports passed; web includes 27 static routes.
 - [x] Feature CI passed on runtime/source commit e998fae: [run 41001570662](https://github.com/nadhirhasan/BookMyTurn/actions/runs/41001570662).
+  Evidence commit 6ff3dbb also passed [run 41003044544](https://github.com/nadhirhasan/BookMyTurn/actions/runs/41003044544).
   Both app and database jobs passed, including clean install, 22 unit tests,
   17 browser journeys, web export and both database suites. Later evidence-only
   commits retain this source evidence; current checks are shown on the PR.
@@ -76,8 +77,14 @@ the confirmation mode without printing URL/key/private records.
 Automatic approval review rejected the proposed live test because it would
 create persistent hosted Auth accounts/sessions without explicit authorization
 and deletion included in the planned action. The script did not run; no hosted
-test accounts were created. Explicit approval for two disposable accounts,
-sign-out and immediate deletion is required before retrying that live test.
+test accounts were created. The user subsequently approved two disposable
+accounts, sign-out and immediate deletion. A read-only preflight verified that
+the two generated fixture addresses do not already exist. Creation remains
+unexecuted because the configured project's public settings still return
+mailer_autoconfirm=false after the user reported saving Confirm email off again.
+A dashboard URL and switch state after reloading were requested to reconcile
+the discrepancy. No additional test approval is needed; wait for immediate
+signup mode, then include sign-out/deletion in the test's cleanup orchestration.
 Mock tests are not presented as proof of the hosted signup flow.
 
 ## Phone review steps

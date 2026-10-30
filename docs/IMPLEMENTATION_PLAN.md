@@ -249,7 +249,9 @@ PR: [#6](https://github.com/nadhirhasan/BookMyTurn/pull/6), stacked on #5.
 Runtime/source commit e998fae passed [CI](https://github.com/nadhirhasan/BookMyTurn/actions/runs/41001570662),
 22 unit tests, 17 browser journeys and web/iOS/Android exports. Visual review
 passed at iPhone dimensions. Validation stays unchecked pending the hosted signup
-setting, explicit approval for disposable-account tests/cleanup, and phone review.
+setting, signed-token verification/cleanup and phone review. The user approved
+the two disposable-account tests and immediate cleanup; the public Auth API still
+reports confirmation enabled, so the conditional test has not created accounts.
 
 Scope revised 30 October 2026: email/password sign-up and sign-in; password
 visibility, input validation, clear loading/error states, restored sessions,
