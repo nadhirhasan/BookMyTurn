@@ -58,5 +58,8 @@ jobs:
           POSTGRES_CONTAINER: ${{ job.services.postgres.id }}
         run: |
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/bootstrap-ci.sql
-          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/migrations/20261030015043_customer_profiles.sql
+          for migration in supabase/migrations/*.sql; do
+            docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < "$migration"
+          done
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/customer_profiles.sql
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/complete_schema.sql

@@ -11,6 +11,7 @@ web-build/
 coverage/
 *.tsbuildinfo
 .artifacts/
+supabase/.temp/
 
 # Local tooling and OS files
 *.log
