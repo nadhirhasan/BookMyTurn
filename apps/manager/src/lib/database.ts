@@ -4,6 +4,8 @@ export type Database = {
     Tables: Record<never, never>;
     Views: Record<never, never>;
     Functions: {
+      manager_visit_command:{Args:{p_salon:string;p_action:string;p_id:string};Returns:Json};
+      staff_alert_read:{Args:{p_id?:string|null};Returns:undefined};
       manager_state: {
         Args: Record<string, never>;
         Returns: Json;

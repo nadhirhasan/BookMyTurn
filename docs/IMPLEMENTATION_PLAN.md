@@ -2,7 +2,12 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: Manager accounts, multiple salons and barber teams; see
+Current stage: phone-test feedback — live salon operations, staff Activity and
+Manager UI redesign. See [LIVE_OPERATIONS_PLAN.md](LIVE_OPERATIONS_PLAN.md).
+Remote Any Barber joins must be visible as incoming without inflating physical
+waiting; user phone revalidation and PR acceptance remain pending.
+
+Previous stage: Manager accounts, multiple salons and barber teams; see
 [the manager delivery plan](MANAGER_IMPLEMENTATION_PLAN.md). One account manages
 several salons and creates their barber profiles; the previous one-salon account
 restriction is superseded. Existing salons, staff, accounts and visits are retained.
