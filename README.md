@@ -6,7 +6,9 @@ Expo, TypeScript and Supabase.
 The first runnable feature follows the approved light Figma design: Home,
 comparison of 13 fictional salons, and salon availability. Browse as a guest,
 search salon/barber names, compare estimated waits and prices, and inspect visit
-windows. Queue joining, appointments and accounts are clearly marked coming next.
+windows. Account now opens email/password sign-in and sign-up; queue joining and
+appointments remain later features. See [Auth scope and validation](docs/CUSTOMER_AUTH.md)
+for the immediate-signup setting and remaining live/device verification.
 
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
 - [Customer UI, validation and phone walkthrough](docs/CUSTOMER_FOUNDATION.md)
@@ -45,7 +47,8 @@ Guest discovery works without Supabase. The complete shared database has been
 created and verified; see [the database plan](docs/DATABASE_PLAN.md) and
 [deployment evidence](supabase/SCHEMA_VALIDATION.md). Current discovery still uses
 its labelled demo snapshot. We will integrate controlled database commands and
-screens one feature at a time, beginning with account sign-in/sign-up.
+screens one feature at a time. Account screens are implemented; hosted signup and
+device verification remain tracked in the authentication feature PR.
 
 ## Checks
 

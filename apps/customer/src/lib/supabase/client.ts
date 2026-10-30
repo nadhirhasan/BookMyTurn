@@ -24,7 +24,10 @@ export function getSupabaseClient() {
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: false,
-        flowType: 'pkce',
+        // Password-only signup returns a session directly. Supabase does not
+        // support PKCE email signup with auto-confirm enabled. No redirect or
+        // URL-token handling is enabled; verified-link/OAuth flows are deferred.
+        flowType: 'implicit',
       },
     });
   }

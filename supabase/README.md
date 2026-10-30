@@ -73,7 +73,9 @@ configuration, verifies anonymous profile/queue denial and the 13 approved salon
 slugs, and confirms the private schema is not exposed in the Data API. It requests
 zero private records and prints no project URL, key or user records.
 This probe alone is not proof that two customers are isolated: also run the SQL
-permission suite. Do not disable email confirmation for these checks.
+permission suite. Milestone 03 now explicitly requests immediate development
+signup without confirmation; see [CUSTOMER_AUTH.md](../docs/CUSTOMER_AUTH.md) for
+the setting, read-only verification status and remaining live test gate.
 
 ## Isolated CI database
 

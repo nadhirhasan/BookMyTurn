@@ -43,7 +43,7 @@
     "export:web": "expo export --platform web",
     "assets": "node scripts/generate-brand-assets.mjs",
     "test:e2e": "playwright test",
-    "test:unit": "node --experimental-strip-types --test tests/config.test.ts tests/session-store.test.ts",
+    "test:unit": "node --experimental-strip-types --test tests/config.test.ts tests/session-store.test.ts tests/auth-actions.test.ts tests/signup-policy.test.ts",
     "check:supabase": "node --experimental-strip-types scripts/check-supabase.mjs"
   },
   "private": true
