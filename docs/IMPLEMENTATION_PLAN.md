@@ -2,13 +2,14 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: approved Figma discovery screens implemented for verification.
-The user approved Home, salon comparison and salon availability, then explicitly
-requested implementation. Milestone 01 includes these local demo screens as an
-authorised subset of milestone 04; database/QR/profile work stays deferred.
-The remaining Figma journey/prototype is pending the Starter-plan allowance.
-Planning PR #1 is merged; design PR #2 remains open. The implementation feature
-is stacked on the design branch, with a separate PR. No Supabase changes made.
+Current stage: Supabase account foundation in progress (milestone 02).
+The user approved the runnable customer UI and requested database integration.
+Client/session handling, a private-profile migration and tests are prepared.
+Hosted migration application and permission validation await the authorised
+Supabase connection. No hosted schema changes have been made.
+Planning PR #1 is merged. Design PR #2 and discovery PR #3 remain open; this
+feature is stacked on the discovery branch in a separate PR by user instruction
+to continue. Completion boxes remain unchecked until acceptance and merge.
 
 ## 1. Agreed direction
 
@@ -183,7 +184,8 @@ the corresponding backend feature has been implemented.
 ### 01. Bootstrap the Customer app and development checks
 
 - [x] Implemented
-- [ ] Validated
+- [x] Validated: automated checks and user acceptance of the runnable UI; Android
+  physical-device coverage remains pending.
 - [ ] Complete
 
 Scope: npm workspace, Expo Customer app, TypeScript, navigation shell, brand theme,
@@ -199,6 +201,8 @@ for milestone 02. CI passes. Do not expose secret values in logs.
 
 ### 02. Connect Supabase and establish the account database
 
+- [x] Client/session source, profile migration and tests prepared.
+- [ ] Hosted migration applied.
 - [ ] Implemented
 - [ ] Validated
 - [ ] Complete
@@ -595,3 +599,27 @@ Cold browser loading: initial CI exposed controls before client handlers were
 attached. The app now shows its loading state through hydration; a regression
 check holds JavaScript requests, verifies controls stay hidden, then verifies
 search after scripts load. Native font-loading behavior is preserved.
+
+### Milestone 02 ? Supabase account foundation (in progress)
+
+- User acceptance: runnable discovery UI accepted; database integration requested.
+  User chose to add/authorise Supabase for migration application and validation.
+- Implemented locally: lazy typed client using public configuration, persistent
+  session wiring, native refresh lifecycle, stale-result/error/cleanup handling,
+  and self-profile read/display-name helpers. No auth screens or automatic signups.
+- Migration prepared: Auth-linked private customer profiles, server provisioning,
+  own-row read/update policies, display-name-only update grants, immutable identity
+  and timestamps, and no anonymous access or editable role fields.
+- Tests prepared: configuration/session unit suite, two-identity SQL permission
+  suite with rollback, PostgreSQL 17 CI service and repeatable public-key probe.
+- Validation: 11 unit checks plus lint/types passed. Expo Doctor previously passed
+  21/21. Both iOS and Android bundle exports passed after resuming. Browser and
+  PostgreSQL CI results are recorded in the feature PR when completed.
+- Hosted connectivity: Auth settings endpoint accepted the configured public key;
+  email provider and email confirmation are enabled. Profile table was absent.
+- Outstanding: authorised Supabase connection, hosted migration/permission suite
+  and final anonymous API denial probe. CI database fixture is not hosted proof.
+- Previous attempt: approval review hit a usage limit before browser/native checks
+  could start. On resume the native exports and source checks completed normally.
+- Scope/deployment guide: [supabase/README.md](../supabase/README.md).
+- Merge and milestone completion: pending; do not advance to sign-in/sign-up yet.

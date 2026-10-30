@@ -2,8 +2,14 @@
   "name": "bookmyturn",
   "version": "0.1.0",
   "private": true,
-  "workspaces": ["apps/*", "packages/*"],
-  "engines": { "node": ">=22.13.0", "npm": ">=10" },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=10"
+  },
   "overrides": {
     "react-native-reanimated": "4.5.1",
     "react-native-worklets": "0.10.1"
@@ -16,6 +22,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "check": "npm run lint && npm run typecheck",
-    "export:web": "npm run export:web --workspace=@bookmyturn/customer"
+    "export:web": "npm run export:web --workspace=@bookmyturn/customer",
+    "check:supabase": "npm run check:supabase --workspace=@bookmyturn/customer"
   }
 }

@@ -9,6 +9,7 @@ import { useSyncExternalStore } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors, layout } from '@/theme';
+import { SessionProvider } from '@/providers/SessionProvider';
 const theme = { ...DefaultTheme, colors: { ...DefaultTheme.colors, primary: colors.action, background: colors.background, card: colors.background, text: colors.text, border: colors.border } };
 const subscribe = () => () => {};
 const clientSnapshot = () => true;
@@ -21,7 +22,7 @@ export default function RootLayout() {
   if (!interactive || (!loaded && !error)) return <View style={styles.loading}><ActivityIndicator color={colors.action} accessibilityLabel="Loading BookMyTurn" /></View>;
   if (error) return <View style={styles.loading}><Text>Could not load the app fonts. Please restart BookMyTurn.</Text></View>;
   return <SafeAreaProvider><ThemeProvider value={theme}><StatusBar style="dark" />
-    <View style={styles.canvas}><View style={styles.app}><Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }} /></View></View>
+    <SessionProvider><View style={styles.canvas}><View style={styles.app}><Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }} /></View></View></SessionProvider>
   </ThemeProvider></SafeAreaProvider>;
 }
 const styles = StyleSheet.create({
