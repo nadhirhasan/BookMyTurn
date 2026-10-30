@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { ChevronLeft, CornerUpRight, Info, Search, UserRound, X } from 'lucide-react-native';
-import { useState, type ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, fonts, type } from '@/theme';
@@ -17,20 +17,19 @@ export function FeatureNotice({ feature, onClose }: { feature: string | null; on
   return <Modal visible={feature !== null} transparent animationType="fade" onRequestClose={onClose}>
     <View style={s.scrim}><View accessibilityViewIsModal style={s.modal}>
       <Text accessibilityRole="header" style={type.section}>Coming next: {feature}</Text>
-      <Text style={type.body}>This is the customer discovery preview. No queue entry, appointment or account has been created.</Text>
+      <Text style={type.body}>This feature is part of the next customer app steps. No queue entry or appointment has been created.</Text>
       <Text style={type.caption}>You can explore all 13 fictional salons and compare their demo availability without signing in.</Text>
       <Action label="Keep exploring" onPress={onClose} />
     </View></View>
   </Modal>;
 }
 export function Header({ title, home = false }: { title: string; home?: boolean }) {
-  const [account, setAccount] = useState(false);
-  return <><View style={s.header}>
+  return <View style={s.header}>
     {home ? <CornerUpRight size={25} color={colors.text} /> : <Pressable accessibilityRole="button" accessibilityLabel="Go back" hitSlop={8} onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={s.back}><ChevronLeft size={22} color={colors.text} /></Pressable>}
     <Text numberOfLines={1} style={[type.section, { flex: 1 }]}>{title}</Text>
     <View style={home ? s.badge : undefined}><Text style={s.demo}>DEMO</Text></View>
-    {home && <Pressable accessibilityRole="button" accessibilityLabel="Account" onPress={() => setAccount(true)} style={s.iconButton}><UserRound size={24} color={colors.text} /></Pressable>}
-  </View><FeatureNotice feature={account ? 'Accounts' : null} onClose={() => setAccount(false)} /></>;
+    {home && <Pressable accessibilityRole="button" accessibilityLabel="Account" onPress={() => router.push('/account')} style={s.iconButton}><UserRound size={24} color={colors.text} /></Pressable>}
+  </View>;
 }
 export function Screen({ title, home, children, footer }: { title: string; home?: boolean; children: ReactNode; footer?: ReactNode }) {
   return <SafeAreaView edges={footer ? ['top', 'bottom'] : ['top']} style={s.screen}>

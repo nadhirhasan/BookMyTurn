@@ -2,9 +2,10 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: complete shared database implemented and validated before more
-app integration, by user instruction on 30 October 2026. Milestones 02/02B await
-PR review/merge. Resume app integration one feature at a time after this gate.
+Current stage: customer sign-in/sign-up implementation (milestone 03), authorised
+after the full database review. Verification/email flows are deferred by user
+instruction. The user approved reusing the existing light style directly while
+Figma's Starter-plan tool limit prevents account-screen edits.
 The user approved the runnable customer UI and requested database integration.
 Client/session handling and private profiles are implemented. The migration is
 applied to the configured BookMyTurn project; hosted permission tests, cleanup,
@@ -240,21 +241,24 @@ Evidence: [SCHEMA_VALIDATION.md](../supabase/SCHEMA_VALIDATION.md).
 
 ### 03. Optional customer sign-up, sign-in and account lifecycle
 
-- [ ] Implemented
+- [x] Implemented: scoped pages and auth actions; see [CUSTOMER_AUTH.md](CUSTOMER_AUTH.md).
 - [ ] Validated
 - [ ] Complete
 
-Scope: email/password sign-up and sign-in; password visibility and confirmation;
-input validation; clear loading/error states; email-verification state and callback
-handling; restored sessions; sign-out; password reset and update flow. Configure
-development redirect URLs and agree the email-delivery setup before email tests.
+Scope revised 30 October 2026: email/password sign-up and sign-in; password
+visibility, input validation, clear loading/error states, restored sessions,
+signed-in account view and sign-out. Email verification, callbacks, password
+recovery/update and social login are deferred by the user's instruction to keep
+this step simple. Immediate signup requires the development Confirm email setting
+off; the app checks it before signup and never treats a missing session as success.
 Customer authentication is optional: preserve a clear Continue as Guest path for
 discovery and the future QR flow. Newly registered users have no salon-management
 privileges. Keep account/session behavior reusable for staff authentication later.
 
-Acceptance: valid/invalid registration and login, email confirmation, reset,
-restart/session restore and logout work on the target device. Unconfirmed users
-are not treated as signed in when confirmation is required. Protected navigation
+Acceptance: valid/invalid registration and login, restart/session restore and
+logout work on the target device. No verification email flow is introduced.
+If confirmation is enabled, signup is blocked before creating an account.
+Protected navigation
 does not flash private content. Repeated taps do not create duplicate submissions.
 User verifies the working authentication flow before we start salon features.
 Guest entry remains reachable without registration or sign-in.
@@ -515,8 +519,9 @@ Native store submission/production release requires a separately agreed mileston
   stable SDK compatibility; package/workspace environment loading.
 - Milestone 02: development Supabase project identity, schema migration execution
   method and whether any existing database records must be preserved.
-- Milestone 03: email confirmation/SMTP behavior, redirect URLs and callback test
-  environment. Keep confirmation enabled unless a development-only change is agreed.
+- Milestone 03: user requested signup without verification for now; confirm the
+  development Confirm email setting is off. Verification/recovery/redirect setup
+  is deferred to a later agreed authentication enhancement.
 - Milestone 05: trusted first-owner bootstrap, staff invitation method and minimum
   permission defaults. No open self-selection of an owner role.
 - Milestone 07: anonymous guest support, identity recovery limitations, appointment
