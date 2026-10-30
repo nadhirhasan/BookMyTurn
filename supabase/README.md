@@ -130,3 +130,13 @@ profile edits or salon data requests merely from opening the app.
   test run was corrected before the rerun.
 - UI acceptance: the user approved the runnable discovery UI and requested this
   next step. Native signed-in session restoration remains a milestone 03 check.
+
+## Customer pipeline integration
+
+Apply all migrations in timestamp order, including the customer pipeline,
+refinements, estimates and QR receipt APIs. The app now reads the hosted catalogue
+and writes controlled customer commands. `supabase/config.toml` declares only the
+authorised development email-confirmation setting. Anonymous Auth stays disabled.
+Use Supabase CLI 2.122+ for config push; older CLI versions may reset undeclared
+settings. QR arrivals are public, scoped commands with private device receipts.
+See [full customer workflow](../docs/CUSTOMER_PIPELINE.md).

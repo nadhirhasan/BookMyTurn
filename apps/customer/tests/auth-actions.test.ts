@@ -6,7 +6,6 @@ import { createAuthActions, validateCredentials } from '../src/lib/supabase/auth
 const credentials = { email: ' Customer@Example.com ', password: ' 12345678 ' };
 function fixture() {
   const calls: { kind: string; input: unknown }[] = [];
-  let allowed = true;
   let result: unknown = { data: { session: { user: { id: 'fixture' } } }, error: null };
   let fail = false;
   let wait: Promise<void> | null = null;
@@ -15,8 +14,8 @@ function fixture() {
     signUp: async (input: unknown) => { calls.push({ kind: 'sign-up', input }); if (wait) await wait; if (fail) throw new Error('private URL/token'); return result; },
     signOut: async (input: unknown) => { calls.push({ kind: 'sign-out', input }); if (fail) throw new Error('private URL/token'); return { error: null }; },
   } as unknown as Pick<SupabaseClient['auth'], 'signInWithPassword' | 'signUp' | 'signOut'>;
-  const actions = createAuthActions({ getClient: () => ({ client: { auth } }), canSignUpImmediately: async () => allowed });
-  return { actions, calls, setAllowed: (value: boolean) => { allowed = value; }, setResult: (value: unknown) => { result = value; },
+  const actions = createAuthActions({ getClient: () => ({ client: { auth } }) });
+  return { actions, calls, setResult: (value: unknown) => { result = value; },
     setWait: (value: Promise<void>) => { wait = value; }, throwNetwork: () => { fail = true; } };
 }
 
@@ -36,11 +35,10 @@ test('sign-in normalises email, preserves password whitespace, and uses password
   assert.deepEqual(await f.actions.submit('sign-in', credentials), { ok: true });
   assert.deepEqual(f.calls, [{ kind: 'sign-in', input: { email: 'customer@example.com', password: ' 12345678 ' } }]);
 });
-test('confirmation-enabled signup is blocked before an account or email can be created', async () => {
-  const f = fixture(); f.setAllowed(false);
-  const result = await f.actions.submit('sign-up', credentials);
-  assert.equal(result.ok, false);
-  assert.equal(f.calls.length, 0);
+test('dummy email signup calls Auth directly without a public-settings gate', async () => {
+  const f = fixture();
+  assert.equal((await f.actions.submit('sign-up', credentials)).ok, true);
+  assert.equal(f.calls.length, 1);
 });
 test('immediate signup uses no metadata roles, redirect, email resend or profile insert', async () => {
   const f = fixture();
@@ -81,7 +79,7 @@ test('rate-limit and thrown network failures are safe and permit retries', async
 test('sign-out targets this device and missing setup exposes no environment values', async () => {
   const f = fixture(); assert.deepEqual(await f.actions.signOut(), { ok: true });
   assert.deepEqual(f.calls, [{ kind: 'sign-out', input: { scope: 'local' } }]);
-  const missing = createAuthActions({ getClient: () => ({ client: null, error: 'sb_secret_private' }), canSignUpImmediately: async () => true });
+  const missing = createAuthActions({ getClient: () => ({ client: null, error: 'sb_secret_private' }) });
   const result = await missing.submit('sign-in', credentials);
   assert.equal(result.ok, false); if (!result.ok) assert.ok(!result.error.includes('private'));
 });

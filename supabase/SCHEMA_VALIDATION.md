@@ -85,3 +85,14 @@ Account-free browsing works; guest Auth enablement/recovery, controlled business
 commands, scheduling forecasts, realtime subscriptions and per-feature UI are
 integrated and validated next. No additional Supabase project, paid branch,
 Storage bucket or external delivery/payment integration is created.
+
+## Customer integration update ? 30 October 2026
+
+The initial empty-catalogue counts above are historical. The customer pipeline
+now seeds 26 demo barbers, 65 services, hours and 23 hairstyle references into the
+13 salons. Customer operations use controlled RPCs; public QR arrivals require
+no Auth account. New tables keep RLS and closed client grants. Hosted customer
+and QR regression suites pass with rollback; real signed-token/concurrent-slot
+tests pass with two disposable accounts and complete cleanup. Confirmation is
+now disabled by user instruction. Security advisors have no findings. See
+[customer pipeline evidence and remaining deployment/device checks](../docs/CUSTOMER_PIPELINE.md).

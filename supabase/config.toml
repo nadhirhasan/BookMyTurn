@@ -1,0 +1,6 @@
+# Development project: email/password accounts sign in immediately.
+# CLI 2.122+ pushes only explicitly declared properties.
+project_id = "bookmyturn"
+
+[auth.email]
+enable_confirmations = false

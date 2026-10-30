@@ -1,4 +1,3 @@
-// Generated from hosted public schema on 30 October 2026. Do not hand-edit.
 export type Json =
   | string
   | number
@@ -1086,7 +1085,39 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      customer_catalog: { Args: never; Returns: Json }
+      customer_command: {
+        Args: { p_action: string; p_data: Json }
+        Returns: Json
+      }
+      customer_quote: {
+        Args: { p_barber?: string; p_salon: string; p_service?: string }
+        Returns: Json
+      }
+      customer_slots: {
+        Args: {
+          p_barber?: string
+          p_day: string
+          p_salon: string
+          p_service: string
+        }
+        Returns: {
+          available: boolean
+          barber_id: string
+          ends_at: string
+          starts_at: string
+        }[]
+      }
+      customer_state: { Args: never; Returns: Json }
+      qr_visit: {
+        Args: {
+          p_action: string
+          p_data?: Json
+          p_slug: string
+          p_token: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never

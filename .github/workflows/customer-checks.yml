@@ -63,3 +63,5 @@ jobs:
           done
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/customer_profiles.sql
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/complete_schema.sql
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/customer_pipeline.sql
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/qr_arrival.sql

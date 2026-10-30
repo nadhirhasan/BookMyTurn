@@ -2,7 +2,39 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: customer sign-in/sign-up implementation (milestone 03), authorised
+Current stage: complete database-backed customer pipeline, authorised on 30 October
+2026. The user explicitly replaced sequential feature gates with one integrated
+customer delivery. Keep validation boxes and PR review; do not auto-merge.
+
+### Integrated customer delivery checklist (30 October 2026)
+
+- [x] Development Auth permits immediate email/password signup without emails.
+- [x] Seed the 13 approved salons, staff, services, hours and hairstyle catalogue
+  into Postgres. Never seed queue entries, bookings, ratings or customer records.
+- [x] Replace frontend demo arrays and fixed counts/times with database queries,
+  loading/error/empty states and refresh on focus / foreground / polling.
+- [x] Implement server-calculated physical queues, earliest suitable barber,
+  join / duplicate prevention / check-in / cancel / confirmation / My Queue.
+- [x] Implement salon -> service/barber -> month calendar -> time -> request.
+  Pending requests hold capacity until cancelled/declined; acceptance confirms.
+  Server locks and overlap constraints arbitrate concurrent customers.
+- [x] Implement My Appointments, cancellation, alternative acceptance and private
+  in-app notifications. No automatic penalties or email/SMS integration.
+- [x] Implement hairstyles/details/reference sharing and barber profiles/reviews.
+- [x] Add explicit development-only simulation controls for the customer's own
+  demo records so acceptance/service completion/reviews can be tested before the
+  Manager app exists. Enforce both ownership and a private database setting.
+- [x] Account-free physical QR arrivals: no Auth user, immediate arrived status,
+  private device receipts, duplicate prevention and optional explicit app linking.
+  Anonymous Supabase Auth remains disabled, as the user explicitly requested.
+- [x] Hosted migration/role suites, real two-customer concurrency and isolation,
+  20 browser journeys, lint/types, 22 unit tests and iOS/Android/web exports pass.
+- [x] Open customer pipeline [PR #8](https://github.com/nadhirhasan/BookMyTurn/pull/8),
+  document manual testing and deployment limits. Automated hosted fixtures cleaned.
+- [ ] User iPhone/Android acceptance and review/merge. Implementing the flows
+  does not mark user verification done. Final automated CI status is on PR #8.
+
+Earlier stage record: customer sign-in/sign-up implementation (milestone 03), authorised
 after the full database review. Verification/email flows are deferred by user
 instruction. The user approved reusing the existing light style directly while
 Figma's Starter-plan tool limit prevents account-screen edits.

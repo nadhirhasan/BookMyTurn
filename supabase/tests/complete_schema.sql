@@ -40,6 +40,7 @@ select pg_temp.assert_true(not exists(select 1 from information_schema.columns w
 insert into auth.users(id,email,raw_user_meta_data) select id,key||'-schema-test@example.invalid','{"role":"owner"}'::jsonb
   from bmt_ids where key in ('a','b','owner','barber','coordinator','outsider');
 update public.salons set is_open=true where id=pg_temp.id('royal');
+update public.salons set is_open=false where id=pg_temp.id('other');
 insert into public.barbers(id,salon_id,display_name,is_published) values
  (pg_temp.id('barber1'),pg_temp.id('royal'),'Schema fixture 1',true),
  (pg_temp.id('barber2'),pg_temp.id('royal'),'Schema fixture 2',true),
