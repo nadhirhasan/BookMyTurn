@@ -12,6 +12,7 @@ export type TeamMember = {
   experience_years: number | null;
   specialities: string[];
   is_active: boolean;
+  archived_at?: string | null;
   availability: string;
   service_ids: string[];
 };
@@ -22,6 +23,7 @@ export type ManagedSalon = {
   address: string | null;
   photo_url: string | null;
   is_open: boolean;
+  archived_at?: string | null;
   waiting: number;
   pending: number;
   incoming?:number;

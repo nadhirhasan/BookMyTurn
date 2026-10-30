@@ -82,6 +82,11 @@ database views, with a five-second foreground polling fallback.
 Optional phone banners/sounds while the app runs can be enabled under Account.
 Closed-app remote push is not configured in this Expo Go workflow.
 
+Manager catalogue actions include create/edit, weekly salon/team hours, photo removal,
+archive/restore and confirmed deletion of unused salons, barbers and services.
+Active visits block removal; completed service and financial history are retained.
+See [the CRUD workflow](docs/MANAGER_CRUD_WORKFLOW.md).
+
 ## Configuration
 
 Root `.env` is ignored. Copy `.env.example` if setting up another checkout.

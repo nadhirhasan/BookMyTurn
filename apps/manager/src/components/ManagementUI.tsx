@@ -28,7 +28,9 @@ export function Cover({ uri, name }: {
   uri?: string | null;
   name: string;
 }) { return uri ? <Image accessibilityLabel={`${name} cover photo`} source={{ uri }} style={m.cover}/> : <View style={[m.cover, { backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center', gap: 8 }]}><Store color={colors.muted} size={32}/><Text style={type.caption}>Your salon, your space</Text></View>; }
-export function PhotoPicker({ asset, url, onChange, cover = false, name = 'Profile' }: {
+export function PhotoPicker({ asset, url, onChange, cover = false, name = 'Profile', onRemove, disabled = false }: {
+  onRemove?: () => void;
+  disabled?: boolean;
   asset: ImagePickerAsset | null;
   url?: string | null;
   onChange: (a: ImagePickerAsset | null) => void;
@@ -36,8 +38,8 @@ export function PhotoPicker({ asset, url, onChange, cover = false, name = 'Profi
   name?: string;
 }) {
   const [error, setError] = useState<string | null>(null);
-  return <View style={{ gap: 12 }}>{cover ? <Cover uri={asset?.uri ?? url} name={name}/> : <View style={{ alignSelf: 'center', padding: 8 }}><Portrait uri={asset?.uri ?? url} name={name} size={96}/></View>}<Pressable accessibilityRole="button" accessibilityLabel={cover ? 'Choose salon cover' : 'Choose profile photo'} onPress={() => { setError(null); void pickPhoto(cover).then(a => { if (a)
-    onChange(a); }, e => setError(e instanceof Error ? e.message : 'Could not select photo.')); }} style={m.photoButton}><ImagePlus color={colors.text} size={19}/><Text style={type.label}>{asset ? 'Change selected photo' : cover ? 'Add a salon photo' : 'Choose profile photo'}</Text></Pressable>{asset && <Pressable accessibilityRole="button" onPress={() => onChange(null)} style={{ minHeight: 40, justifyContent: 'center', alignItems: 'center' }}><Text style={type.caption}>Discard selected photo</Text></Pressable>}{error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}<Text style={[type.caption, { textAlign: 'center' }]}>JPEG, PNG or WebP · Up to 2 MB · Uploads when you save</Text></View>;
+  return <View style={{ gap: 12 }}>{cover ? <Cover uri={asset?.uri ?? url} name={name}/> : <View style={{ alignSelf: 'center', padding: 8 }}><Portrait uri={asset?.uri ?? url} name={name} size={96}/></View>}<Pressable accessibilityRole="button" disabled={disabled} accessibilityLabel={cover ? 'Choose salon cover' : 'Choose profile photo'} onPress={() => { setError(null); void pickPhoto(cover).then(a => { if (a)
+    onChange(a); }, e => setError(e instanceof Error ? e.message : 'Could not select photo.')); }} style={m.photoButton}><ImagePlus color={colors.text} size={19}/><Text style={type.label}>{asset ? 'Change selected photo' : cover ? 'Add a salon photo' : 'Choose profile photo'}</Text></Pressable>{!asset && !!url && onRemove && <Pressable accessibilityRole="button" disabled={disabled} onPress={onRemove} style={{ minHeight:44, alignItems:'center', justifyContent:'center' }}><Text style={type.label}>Remove photo</Text></Pressable>}{asset && <Pressable disabled={disabled} accessibilityRole="button" onPress={() => onChange(null)} style={{ minHeight: 40, justifyContent: 'center', alignItems: 'center' }}><Text style={type.caption}>Discard selected photo</Text></Pressable>}{error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}<Text style={[type.caption, { textAlign: 'center' }]}>JPEG, PNG or WebP · Up to 2 MB · Uploads when you save</Text></View>;
 }
 export function EmptyTeam() { return <View style={m.empty}><Scissors size={30} color={colors.muted}/><Text style={type.section}>A chair for your first barber.</Text><Text style={[type.body, { textAlign: 'center' }]}>Add your team so customers can choose a barber and book a time.</Text></View>; }
 export function MenuRow({ label, detail, onPress }: {
