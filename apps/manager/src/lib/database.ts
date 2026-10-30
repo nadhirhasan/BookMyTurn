@@ -4,6 +4,17 @@ export type Database = {
     Tables: Record<never, never>;
     Views: Record<never, never>;
     Functions: {
+      manager_state: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      manager_command: {
+        Args: {
+          p_action: string;
+          p_data: Json;
+        };
+        Returns: Json;
+      };
       barber_context: {
         Args: Record<string, never>;
         Returns: Json;

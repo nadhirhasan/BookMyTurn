@@ -2,7 +2,12 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: Barber workflow, authorised after the user accepted the customer
+Current stage: Manager accounts, multiple salons and barber teams; see
+[the manager delivery plan](MANAGER_IMPLEMENTATION_PLAN.md). One account manages
+several salons and creates their barber profiles; the previous one-salon account
+restriction is superseded. Existing salons, staff, accounts and visits are retained.
+
+Previous stage: Barber workflow, authorised after the user accepted the customer
 experience on 30 October 2026. See [the barber delivery plan](BARBER_IMPLEMENTATION_PLAN.md).
 Barber implementation and hosted migrations are validated; user phone testing
 and PR review remain pending. The authorised demo reset removed the original
