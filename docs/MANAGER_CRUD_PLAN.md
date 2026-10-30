@@ -12,7 +12,9 @@ Complete salon, barber and service management in the approved light interface. E
 - [x] Verify complete browser CRUD journeys and small-screen layout, run lint/types, native exports and regression checks.
 - [x] Apply the additive migrations, update generated types and workflow docs.
 - [x] Open separate [PR #13](https://github.com/nadhirhasan/BookMyTurn/pull/13).
-- [ ] Verify full PR CI.
+- [x] Add full app and PostgreSQL regression coverage to PR CI.
 - [ ] User acceptance on iPhone and Android.
+
+The latest CI result is recorded on [PR #13](https://github.com/nadhirhasan/BookMyTurn/pull/13); the PR stays draft until the final commit passes.
 
 Removal never automatically cancels visits. Archive hides a record without deleting history. Restore returns a salon closed so its manager can check it before reopening; restored barbers/services return to their normal published/active state. Deleting an unused salon also removes its unused team, services and configuration. Uploaded storage objects are retained; removing a photo detaches it from the profile, and public URLs already shared can remain accessible.
