@@ -31,7 +31,14 @@ begin
 end;
 $$;
 
-grant usage on schema pg_temp to authenticated, anon;
+-- GRANT ON SCHEMA requires the actual namespace name, not the pg_temp alias
+-- accepted by qualified function calls.
+do $$
+begin
+  execute format('grant usage on schema %I to authenticated, anon',
+    pg_my_temp_schema()::regnamespace::text);
+end;
+$$;
 grant execute on function pg_temp.assert_true(boolean, text), pg_temp.expect_denied(text, text)
   to authenticated, anon;
 
