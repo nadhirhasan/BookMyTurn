@@ -24,6 +24,9 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "check": "npm run lint && npm run typecheck",
     "export:web": "npm run export:web --workspace=@bookmyturn/customer",
-    "check:supabase": "npm run check:supabase --workspace=@bookmyturn/customer"
+    "check:supabase": "npm run check:supabase --workspace=@bookmyturn/customer",
+    "barber": "npm run start --workspace=@bookmyturn/manager --",
+    "barber:tunnel": "npm run start:tunnel --workspace=@bookmyturn/manager --",
+    "barber:web": "npm run web --workspace=@bookmyturn/manager --"
   }
 }
