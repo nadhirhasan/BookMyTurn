@@ -42,7 +42,9 @@ load test or proof that future UI/API commands are implemented.
 
 - [x] Requirements and current hosted schema inspected; only customer_profiles existed.
 - [x] Full schema/access plan recorded before implementation.
-- [ ] Fresh PostgreSQL migration and permission/constraint suites pass.
+- [x] Fresh PostgreSQL migration and permission/constraint suites pass on initial
+  schema commit 4337620: [database CI](https://github.com/nadhirhasan/BookMyTurn/actions/runs/40992505096).
+  Final request-immutability/view-grant changes are being rerun before deployment.
 - [ ] Hosted migration and real-role suites pass; fixtures cleaned up.
 - [ ] Security/performance advisors reviewed.
 - [ ] Public-key probe and generated schema types verified.

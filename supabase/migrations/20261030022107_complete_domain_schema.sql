@@ -220,7 +220,7 @@ create table public.service_sessions (
     (commission_rule_id is not null and commission_agreed_at is not null and commission_agreed_at <= started_at
       and nullif(btrim(commission_disclosure_snapshot),'') is not null)),
   check (status <> 'completed' or (completed_at is not null and completed_at >= started_at and final_amount_minor is not null
-    and final_amount_agreed_at is not null)),
+    and final_amount_agreed_at is not null and final_amount_agreed_at <= completed_at)),
   check (final_amount_minor is null or final_amount_minor between price_min_minor_snapshot and price_max_minor_snapshot
     or nullif(btrim(final_price_reason),'') is not null),
   foreign key (salon_id, barber_id) references public.barbers (salon_id, id),
@@ -389,6 +389,9 @@ language plpgsql set search_path = '' as $$
 declare p public.appointment_proposals;
 begin
   if tg_op='INSERT' and new.status <> 'pending' then raise exception 'Requests start pending' using errcode='23514'; end if;
+  if tg_op='UPDATE' and (new.salon_id,new.service_id,new.preferred_barber_id,new.requested_start,new.requested_duration_minutes,new.reference,new.request_key,new.created_at)
+    is distinct from (old.salon_id,old.service_id,old.preferred_barber_id,old.requested_start,old.requested_duration_minutes,old.reference,old.request_key,old.created_at) then
+    raise exception 'Original appointment request is immutable; suggest an alternative' using errcode='23514'; end if;
   if tg_op='UPDATE' and new.status <> old.status and not (
     (old.status in ('pending','alternative_suggested') and new.status in ('alternative_suggested','confirmed','declined','cancelled')) or
     (old.status='confirmed' and new.status in ('arrived','cancelled','no_show')) or
@@ -719,6 +722,7 @@ create view public.barber_review_stats with (security_invoker=true) as
 create view public.salon_review_stats with (security_invoker=true) as
   select salon_id,count(*) as review_count,round(avg(rating),2) as average_rating
     from public.published_reviews group by salon_id;
+revoke all on public.barber_review_stats,public.salon_review_stats from public,anon,authenticated;
 grant select on public.barber_review_stats,public.salon_review_stats to anon,authenticated;
 
 -- Exactly the approved catalog; no invented people, live workloads, ratings or finances.

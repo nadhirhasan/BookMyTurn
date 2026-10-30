@@ -76,6 +76,7 @@ insert into public.appointments(id,salon_id,customer_id,service_id,preferred_bar
  (pg_temp.id('conflict'),pg_temp.id('royal'),pg_temp.id('b'),pg_temp.id('service'),pg_temp.id('barber1'),'2035-01-01 09:15Z',30),
  (pg_temp.id('alternative'),pg_temp.id('royal'),pg_temp.id('a'),pg_temp.id('service'),pg_temp.id('barber2'),'2035-01-01 10:00Z',30);
 select pg_temp.assert_true((select count(*)=0 from bookmyturn_private.barber_schedule_blocks),'Pending requests do not reserve barber time');
+select pg_temp.expect_state($q$update public.appointments set requested_start='2035-01-01 10:30Z' where id=pg_temp.id('alternative')$q$,'23514','Original request cannot be overwritten to bypass alternative consent');
 update public.appointments set status='confirmed',confirmed_barber_id=preferred_barber_id,
  confirmed_start=requested_start,confirmed_end=requested_start+interval '30 minutes' where id=pg_temp.id('appointment');
 select pg_temp.expect_state($q$update public.appointments set status='confirmed',confirmed_barber_id=preferred_barber_id,confirmed_start=requested_start,confirmed_end=requested_start+interval '30 minutes' where id=pg_temp.id('conflict')$q$,'23P01','Overlapping confirmations cannot both reserve the barber');
