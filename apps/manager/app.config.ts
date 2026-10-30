@@ -10,6 +10,6 @@ if (existsSync(environmentPath)) loadEnvFile(environmentPath);
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: 'BookMyTurn Barber',
+  name: 'BookMyTurn Manager',
   slug: 'bookmyturn-barber',
 });

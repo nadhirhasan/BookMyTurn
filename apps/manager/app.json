@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "BookMyTurn Barber",
+    "name": "BookMyTurn Manager",
     "slug": "bookmyturn-barber",
     "scheme": "bookmyturn-barber",
     "version": "0.1.0",
@@ -36,7 +36,7 @@
       "favicon": "../customer/assets/favicon.png",
       "bundler": "metro",
       "output": "single",
-      "name": "BookMyTurn Barber"
+      "name": "BookMyTurn Manager"
     }
   }
 }

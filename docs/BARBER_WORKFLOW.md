@@ -1,5 +1,10 @@
 # Barber app and shared customer workflow
 
+**Updated account structure:** the [Manager workflow](MANAGER_WORKFLOW.md)
+supersedes the original separate-email-per-salon onboarding below. One manager
+now owns multiple salons and creates their barber teams. Existing chair/service
+workflows in this guide still apply. Existing salons and accounts are preserved.
+
 Implemented 30 October 2026. This release covers the individual Barber workflow
 and the minimum salon creation needed for user testing. The separate Owner
 finance/accounting and coordinator interfaces remain later releases.

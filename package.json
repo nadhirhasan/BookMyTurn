@@ -27,6 +27,9 @@
     "check:supabase": "npm run check:supabase --workspace=@bookmyturn/customer",
     "barber": "npm run start --workspace=@bookmyturn/manager --",
     "barber:tunnel": "npm run start:tunnel --workspace=@bookmyturn/manager --",
-    "barber:web": "npm run web --workspace=@bookmyturn/manager --"
+    "barber:web": "npm run web --workspace=@bookmyturn/manager --",
+    "manager": "npm run start --workspace=@bookmyturn/manager --",
+    "manager:tunnel": "npm run start:tunnel --workspace=@bookmyturn/manager --",
+    "manager:web": "npm run web --workspace=@bookmyturn/manager --"
   }
 }

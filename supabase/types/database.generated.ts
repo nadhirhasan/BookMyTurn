@@ -1115,6 +1115,11 @@ export type Database = {
         }[]
       }
       customer_state: { Args: never; Returns: Json }
+      manager_command: {
+        Args: { p_action: string; p_data: Json }
+        Returns: Json
+      }
+      manager_state: { Args: never; Returns: Json }
       qr_visit: {
         Args: {
           p_action: string

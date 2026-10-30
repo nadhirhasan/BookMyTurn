@@ -10,7 +10,7 @@ type Value = {
   error: string | null;
   busy: boolean;
   refresh: () => Promise<void>;
-  select: (barber: string) => void;
+  select: (barber: string) => Promise<void>;
   mutate: (action: string, data: Json) => Promise<{
     id: string;
   }>;
@@ -27,7 +27,7 @@ export function BarberProvider({ children }: {
     contexts: BarberContext[];
     data: State | null;
   }>({ uid: null, contexts: [], data: null });
-  const [selection, setSelection] = useState<string | null>(null);
+  const selection = useRef<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
@@ -42,7 +42,7 @@ export function BarberProvider({ children }: {
         return;
       }
       const list = await fetchContexts();
-      const selected = list.find(c => c.barber_id === selection) ?? list[0];
+      const selected = list.find(c => c.barber_id === selection.current) ?? list[0];
       const data = selected ? await fetchState(selected.barber_id) : null;
       if (version === generation.current) {
         setSnapshot({ uid, contexts: list, data });
@@ -59,32 +59,58 @@ export function BarberProvider({ children }: {
       if (version === generation.current)
         setLoading(false);
     }
-  }, [uid, selection]);
-  useEffect(() => { void Promise.resolve().then(refresh); const interval = setInterval(() => { if (AppState.currentState !== 'background')
-    void refresh(); }, 10000); const sub = AppState.addEventListener('change', value => { if (value === 'active')
-    void refresh(); }); const invalidate = () => { generation.current++; }; return () => { clearInterval(interval); sub.remove(); invalidate(); }; }, [refresh]);
-  const mutate = async (action: string, data: Json) => { if (pending.current)
-    throw new Error('Please wait for the current request.'); const barber = snapshot.uid === uid ? snapshot.data?.barber.id : null; if (!barber)
-    throw new Error('Refresh your barber access.'); pending.current = true; setBusy(true); try {
-    const result = await command(barber, action, data);
-    await refresh();
-    return result;
-  }
-  finally {
-    pending.current = false;
-    setBusy(false);
-  } };
-  const setupSalon = async (data: Json) => { if (pending.current)
-    throw new Error('Please wait for the current request.'); pending.current = true; setBusy(true); try {
-    await setup(data);
-    await refresh();
-  }
-  finally {
-    pending.current = false;
-    setBusy(false);
-  } };
+  }, [uid]);
+  useEffect(() => {
+    void Promise.resolve().then(refresh);
+    const interval = setInterval(() => {
+      if (AppState.currentState !== 'background')
+        void refresh();
+    }, 10000);
+    const sub = AppState.addEventListener('change', value => {
+      if (value === 'active')
+        void refresh();
+    });
+    const invalidate = () => { generation.current++; };
+    return () => { clearInterval(interval); sub.remove(); invalidate(); };
+  }, [refresh]);
+  const mutate = async (action: string, data: Json) => {
+    if (pending.current)
+      throw new Error('Please wait for the current request.');
+    const barber = snapshot.uid === uid ? snapshot.data?.barber.id : null;
+    if (!barber)
+      throw new Error('Refresh your barber access.');
+    pending.current = true;
+    setBusy(true);
+    try {
+      const result = await command(barber, action, data);
+      await refresh();
+      return result;
+    }
+    finally {
+      pending.current = false;
+      setBusy(false);
+    }
+  };
+  const setupSalon = async (data: Json) => {
+    if (pending.current)
+      throw new Error('Please wait for the current request.');
+    pending.current = true;
+    setBusy(true);
+    try {
+      await setup(data);
+      await refresh();
+    }
+    finally {
+      pending.current = false;
+      setBusy(false);
+    }
+  };
   const visible = snapshot.uid === uid ? snapshot : null;
-  return <Context.Provider value={{ contexts: visible?.contexts ?? [], data: visible?.data ?? null, loading: loading || !!uid && !visible, error, busy, refresh, select: setSelection, mutate, setup: setupSalon }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ contexts: visible?.contexts ?? [], data: visible?.data ?? null, loading: loading || !!uid && !visible, error, busy, refresh, select: async (barber: string) => { selection.current = barber; setLoading(true); setSnapshot({ uid, contexts: snapshot.contexts, data: null }); await refresh(); }, mutate, setup: setupSalon }}>{children}</Context.Provider>;
 }
-export function useBarber() { const value = useContext(Context); if (!value)
-  throw new Error('BarberProvider missing'); return value; }
+export function useBarber() {
+  const value = useContext(Context);
+  if (!value)
+    throw new Error('BarberProvider missing');
+  return value;
+}
