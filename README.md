@@ -3,12 +3,12 @@
 A customer-first salon app for Akurana, Sri Lanka, built with React Native,
 Expo, TypeScript and Supabase.
 
-The first runnable feature follows the approved light Figma design: Home,
-comparison of 13 fictional salons, and salon availability. Browse as a guest,
-search salon/barber names, compare estimated waits and prices, and inspect visit
-windows. Account now opens email/password sign-in and sign-up; queue joining and
-appointments remain later features. See [Auth scope and validation](docs/CUSTOMER_AUTH.md)
-for the immediate-signup setting and remaining live/device verification.
+The customer workflow uses the approved light design and live Supabase data:
+salon discovery, physical queues, calendar/time selection, appointment requests,
+hairstyle sharing, barber profiles and reviews after completed services.
+Email/password signup signs in immediately without verification emails.
+The salon QR web route records arrival without an app or any Auth account.
+See [the complete walkthrough and validation](docs/CUSTOMER_PIPELINE.md).
 
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
 - [Customer UI, validation and phone walkthrough](docs/CUSTOMER_FOUNDATION.md)
@@ -44,10 +44,10 @@ project launcher exposes npm's existing global modules to Expo for that process,
 preventing the repeated ngrok-install prompt. No additional installation or
 system environment change is needed. See [tunnel startup notes](docs/TUNNEL_STARTUP.md).
 
-All queue values, opening status, ratings, prices and windows are a fixed
-fictional snapshot at 2:00 pm in Asia/Colombo, not live availability.
-Images are licensed illustrative photos. No booking or database record is
-created in this step.
+Salons, staff, service prices, hours and hairstyle references are fictional
+catalogue records seeded in Postgres. Queues, appointments and reviews are real
+database records created by your testing. Availability refreshes every 15 seconds,
+on screen focus and app foreground. Images are illustrative stock photographs.
 
 ## Configuration
 
@@ -55,12 +55,16 @@ Root `.env` is ignored. Copy `.env.example` if setting up another checkout.
 The app config loads root values as fallback without replacing injected
 environment variables. Only project URL and publishable key belong in app
 configuration; never add database passwords or service-role/secret keys.
-Guest discovery works without Supabase. The complete shared database has been
-created and verified; see [the database plan](docs/DATABASE_PLAN.md) and
-[deployment evidence](supabase/SCHEMA_VALIDATION.md). Current discovery still uses
-its labelled demo snapshot. We will integrate controlled database commands and
-screens one feature at a time. Account screens are implemented; hosted signup and
-device verification remain tracked in the authentication feature PR.
+Supabase is required for catalogue and visit data. Connection failures show a
+retry state; there is no hardcoded fallback dataset. Apply all migrations for a
+new project, and push the declared development Auth configuration with Supabase
+CLI 2.122+ to disable email confirmation. Anonymous Auth sign-ins stay disabled.
+See [database deployment evidence](supabase/SCHEMA_VALIDATION.md).
+
+Physical salon QR links use `/qr/<salon-slug>` on a hosted web version. The Expo
+Go terminal QR opens the development app; it is a different QR. The web build is
+an SPA: its host must send unknown paths to `index.html`. A public web hostname
+and iOS/Android universal/app links have not been deployed by this PR.
 
 ## Checks
 

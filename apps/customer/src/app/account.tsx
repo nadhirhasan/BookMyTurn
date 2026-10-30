@@ -8,7 +8,6 @@ import type { CustomerProfile } from '@/lib/supabase/database.types';
 import { getMyProfile } from '@/lib/supabase/profiles';
 import { useSession } from '@/providers/SessionProvider';
 import { colors, type } from '@/theme';
-
 export default function Account() {
   const session = useSession();
   const user = session.status === 'authenticated' ? session.session?.user : null;
@@ -22,44 +21,58 @@ export default function Account() {
   const mounted = useRef(true);
   useEffect(() => { mounted.current = true; return () => { mounted.current = false; }; }, []);
   useEffect(() => {
-    if (!userId) return;
+    if (!userId)
+      return;
     let active = true;
-    void getMyProfile().then(value => { if (active) { setProfile(value); setProfileIssueFor(null); } })
-      .catch(() => { if (active) setProfileIssueFor(userId); });
+    void getMyProfile().then(value => { if (active) {
+      setProfile(value);
+      setProfileIssueFor(null);
+    } })
+      .catch(() => { if (active)
+      setProfileIssueFor(userId); });
     return () => { active = false; };
   }, [userId, retry]);
   const signOut = async () => {
-    if (pending.current) return;
-    pending.current = true; setBusy(true); setError(null);
+    if (pending.current)
+      return;
+    pending.current = true;
+    setBusy(true);
+    setError(null);
     try {
       const result = await customerAuth.signOut();
-      if (mounted.current && !result.ok) setError(result.error);
-    } finally {
+      if (mounted.current && !result.ok)
+        setError(result.error);
+    }
+    finally {
       pending.current = false;
-      if (mounted.current) setBusy(false);
+      if (mounted.current)
+        setBusy(false);
     }
   };
-  if (session.status === 'loading') return <Screen title="Your account"><ActivityIndicator color={colors.action} accessibilityLabel="Restoring your session" /></Screen>;
-  if (!user) return <Redirect href="/sign-in" />;
+  if (session.status === 'loading')
+    return <Screen title="Your account"><ActivityIndicator color={colors.action} accessibilityLabel="Restoring your session"/></Screen>;
+  if (!user)
+    return <Redirect href="/sign-in"/>;
   return <Screen title="Your account">
-    <View style={s.intro}>
-      <View style={s.avatar}><UserRound size={28} color={colors.text} /></View>
-      <Text accessibilityRole="header" style={type.title}>{profile?.id === user.id && profile.display_name ? profile.display_name : 'You’re signed in'}</Text>
-      <Text style={[type.body, s.email]}>{user.email}</Text>
-    </View>
-    {profileIssueFor === user.id && <View style={s.notice}>
-      <Text accessibilityRole="alert" style={type.body}>Your profile could not be loaded. You can keep browsing and try again.</Text>
-      <Action label="Retry profile" secondary onPress={() => { setProfileIssueFor(null); setRetry(value => value + 1); }} />
-    </View>}
-    <View style={s.details}>
-      <Text style={type.label}>BookMyTurn Customer</Text>
-      <Text style={type.body}>Explore salons and find a good time for your next visit.</Text>
-      <Text style={type.caption}>Queues and appointments are coming in the next steps.</Text>
-    </View>
-    <Action label="Explore salons" onPress={() => router.replace('/salons')} />
-    {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
-    <Action label={busy ? 'Signing out…' : 'Sign out'} secondary disabled={busy} onPress={() => { void signOut(); }} />
-  </Screen>;
+  <View style={s.intro}>
+   <View style={s.avatar}><UserRound size={28} color={colors.text}/></View>
+   <Text accessibilityRole="header" style={type.title}>{profile?.id === user.id && profile.display_name ? profile.display_name : 'You’re signed in'}</Text>
+   <Text style={[type.body, s.email]}>{user.is_anonymous ? 'Guest on this device' : user.email}</Text>
+   {user.is_anonymous && <Text style={type.caption}>Signing out removes access to guest visits. Use an email account for testing across devices.</Text>}
+  </View>
+  {profileIssueFor === user.id && <View style={s.notice}>
+   <Text accessibilityRole="alert" style={type.body}>Your profile could not be loaded. You can keep browsing and try again.</Text>
+   <Action label="Retry profile" secondary onPress={() => { setProfileIssueFor(null); setRetry(value => value + 1); }}/>
+  </View>}
+  <View style={s.details}>
+   <Text style={type.label}>BookMyTurn Customer</Text>
+   <Text style={type.body}>Explore salons and find a good time for your next visit.</Text>
+   <Text style={type.caption}>Queues and appointments are coming in the next steps.</Text>
+  </View>
+  <Action label="Explore salons" onPress={() => router.replace('/salons')}/>
+  {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
+  <Action label={busy ? 'Signing out…' : 'Sign out'} secondary disabled={busy} onPress={() => { void signOut(); }}/>
+ </Screen>;
 }
 const s = StyleSheet.create({
   intro: { alignItems: 'center', gap: 12, paddingVertical: 24 }, avatar: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface },
