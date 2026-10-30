@@ -3,13 +3,14 @@ import { AppState } from 'react-native';
 import { contexts as fetchContexts, state as fetchState, command, setup } from '@/lib/api';
 import type { Context as BarberContext, State, Json } from '@/lib/types';
 import { useSession } from './SessionProvider';
+import { useManager } from './ManagerProvider';
 type Value = {
   contexts: BarberContext[];
   data: State | null;
   loading: boolean;
   error: string | null;
   busy: boolean;
-  refresh: () => Promise<void>;
+  refresh: () => Promise<State|null>;
   select: (barber: string) => Promise<void>;
   mutate: (action: string, data: Json) => Promise<{
     id: string;
@@ -21,6 +22,7 @@ export function BarberProvider({ children }: {
   children: ReactNode;
 }) {
   const session = useSession();
+  const {liveVersion}=useManager();
   const uid = session.status === 'authenticated' ? session.session?.user.id ?? null : null;
   const [snapshot, setSnapshot] = useState<{
     uid: string | null;
@@ -39,7 +41,7 @@ export function BarberProvider({ children }: {
       if (!uid) {
         setSnapshot({ uid: null, contexts: [], data: null });
         setError(null);
-        return;
+        return null;
       }
       const list = await fetchContexts();
       const selected = list.find(c => c.barber_id === selection.current) ?? list[0];
@@ -47,7 +49,9 @@ export function BarberProvider({ children }: {
       if (version === generation.current) {
         setSnapshot({ uid, contexts: list, data });
         setError(null);
+        return data;
       }
+      if(data&&selection.current===data.barber.id)return data;
     }
     catch (e) {
       if (version === generation.current) {
@@ -59,13 +63,14 @@ export function BarberProvider({ children }: {
       if (version === generation.current)
         setLoading(false);
     }
+    return null;
   }, [uid]);
   useEffect(() => {
     void Promise.resolve().then(refresh);
     const interval = setInterval(() => {
       if (AppState.currentState !== 'background')
         void refresh();
-    }, 10000);
+    }, 5000);
     const sub = AppState.addEventListener('change', value => {
       if (value === 'active')
         void refresh();
@@ -73,6 +78,7 @@ export function BarberProvider({ children }: {
     const invalidate = () => { generation.current++; };
     return () => { clearInterval(interval); sub.remove(); invalidate(); };
   }, [refresh]);
+  useEffect(()=>{if(liveVersion)void Promise.resolve().then(refresh);},[liveVersion,refresh]);
   const mutate = async (action: string, data: Json) => {
     if (pending.current)
       throw new Error('Please wait for the current request.');
@@ -106,7 +112,7 @@ export function BarberProvider({ children }: {
     }
   };
   const visible = snapshot.uid === uid ? snapshot : null;
-  return <Context.Provider value={{ contexts: visible?.contexts ?? [], data: visible?.data ?? null, loading: loading || !!uid && !visible, error, busy, refresh, select: async (barber: string) => { selection.current = barber; setLoading(true); setSnapshot({ uid, contexts: snapshot.contexts, data: null }); await refresh(); }, mutate, setup: setupSalon }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ contexts: visible?.contexts ?? [], data: visible?.data ?? null, loading: loading || !!uid && !visible, error, busy, refresh, select: async (barber: string) => { selection.current = barber; setLoading(true); setSnapshot({ uid, contexts: snapshot.contexts, data: null }); const selected=await refresh(); if(selected?.barber.id!==barber)throw new Error('Could not open this chair. Refresh and retry.'); }, mutate, setup: setupSalon }}>{children}</Context.Provider>;
 }
 export function useBarber() {
   const value = useContext(Context);

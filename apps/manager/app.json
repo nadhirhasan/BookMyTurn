@@ -15,11 +15,12 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Choose your public barber profile photo.",
+          "photosPermission": "Choose photos for your salon, team or account profile.",
           "cameraPermission": false,
           "microphonePermission": false
         }
-      ]
+      ],
+      "expo-notifications"
     ],
     "ios": {
       "supportsTablet": true,

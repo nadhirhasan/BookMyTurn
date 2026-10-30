@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChevronLeft, RefreshCw } from 'lucide-react-native';
 import { colors, fonts, type } from '@/theme';
+import {ActivityBell} from '@/components/StaffAlerts';
 import { useManager } from '@/providers/ManagerProvider';
 import { useBarber } from '@/providers/BarberProvider';
 import type { Json } from '@/lib/types';
@@ -34,7 +35,7 @@ export function Screen({ title, children, back = false }: {
   title: string;
   children: ReactNode;
   back?: boolean;
-}) { const { refresh, error, loading } = useBarber(); const manager = useManager(); return <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: colors.background }}><View style={s.header}>{back && <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.canGoBack() ? router.back() : router.replace('/queue')} style={s.icon}><ChevronLeft size={22} color={colors.text}/></Pressable>}<Text style={[type.section, { flex: 1 }]}>{title}</Text>{!!manager.data?.salons.length && <Pressable accessibilityRole="button" accessibilityLabel="My salons" onPress={() => router.dismissTo('/manage')} style={{ minHeight: 44, justifyContent: 'center' }}><Text style={type.label}>My salons</Text></Pressable>}<Pressable accessibilityRole="button" accessibilityLabel="Refresh work" onPress={() => { void refresh(); }} style={s.icon}><RefreshCw size={19} color={colors.text}/></Pressable></View><ScrollView keyboardShouldPersistTaps="handled" automaticallyAdjustKeyboardInsets contentContainerStyle={s.content}>{error && <Note>{error}</Note>}{loading && <ActivityIndicator color={colors.text}/>}{children}</ScrollView></SafeAreaView>; }
+}) { const { refresh, error, loading } = useBarber(); const manager = useManager(); return <SafeAreaView edges={['top']} style={{ flex: 1, backgroundColor: colors.background }}><View style={s.header}>{back && <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.canGoBack() ? router.back() : router.replace('/queue')} style={s.icon}><ChevronLeft size={22} color={colors.text}/></Pressable>}<Text style={[type.section, { flex: 1 }]}>{title}</Text>{!!manager.data?.salons.length && <Pressable accessibilityRole="button" accessibilityLabel="My salons" onPress={() => router.dismissTo('/manage')} style={{ minHeight: 44, justifyContent: 'center' }}><Text style={type.label}>My salons</Text></Pressable>}<ActivityBell/><Pressable accessibilityRole="button" accessibilityLabel="Refresh work" onPress={() => { void refresh(); }} style={s.icon}><RefreshCw size={19} color={colors.text}/></Pressable></View><ScrollView keyboardShouldPersistTaps="handled" automaticallyAdjustKeyboardInsets contentContainerStyle={s.content}>{error && <Note>{error}</Note>}{loading && <ActivityIndicator color={colors.text}/>}{children}</ScrollView></SafeAreaView>; }
 export function useRefresh() { const { refresh } = useBarber(); useFocusEffect(useCallback(() => { void refresh(); }, [refresh])); }
 export function useAction() {
   const { mutate, busy } = useBarber();

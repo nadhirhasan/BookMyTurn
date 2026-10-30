@@ -6,9 +6,10 @@ import { Button, Field, Note } from '@/components/UI';
 import { useManager } from '@/providers/ManagerProvider';
 import { useSession } from '@/providers/SessionProvider';
 import { accountPhoto, uploadManagedPhoto, removeManagedPhoto } from '@/lib/photos';
+import {PhoneAlerts} from '@/components/PhoneAlerts';
 import { auth } from '@/lib/api';
 import { type } from '@/theme';
-export default function Account() { const { data } = useManager(); return <ManagementScreen title="My account" back>{data && <AccountForm profile={data.profile}/>}</ManagementScreen>; }
+export default function Account() { const { data } = useManager(); return <ManagementScreen title="My account" back navigation>{data && <AccountForm profile={data.profile}/>}</ManagementScreen>; }
 function AccountForm({ profile }: {
   profile: {
     display_name: string;
@@ -43,5 +44,5 @@ function AccountForm({ profile }: {
     pending.current = false;
     setSaving(false);
   } };
-  return <><Text accessibilityRole="header" style={type.title}>The person behind the salons.</Text><Text style={type.body}>One account. Every salon you manage.</Text><PhotoPicker name={name || 'Me'} asset={photo} url={url} onChange={setPhoto}/><Section title="Your profile"><Field label="Your name" value={name} onChange={setName} maxLength={80}/><Text style={type.caption}>Signed in as</Text><Text style={type.body}>{session.session?.user.email}</Text></Section><Note>Your account photo is private. Salon and barber photos are shown to customers.</Note>{error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}{saved && <Note>Profile saved.</Note>}<Button label={saving ? 'Saving profile…' : 'Save account profile'} disabled={saving} onPress={() => { void submit(); }}/><Button label="Sign out" secondary disabled={saving} onPress={() => { void auth.signOut(); }}/></>;
+  return <><Text accessibilityRole="header" style={type.title}>The person behind the salons.</Text><Text style={type.body}>One account. Every salon you manage.</Text><PhotoPicker name={name || 'Me'} asset={photo} url={url} onChange={setPhoto}/><Section title="Your profile"><Field label="Your name" value={name} onChange={setName} maxLength={80}/><Text style={type.caption}>Signed in as</Text><Text style={type.body}>{session.session?.user.email}</Text></Section><Note>Your account photo is private. Salon and barber photos are shown to customers.</Note>{error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}{saved && <Note>Profile saved.</Note>}<Button label={saving ? 'Saving profile…' : 'Save account profile'} disabled={saving} onPress={() => { void submit(); }}/><PhoneAlerts/><Button label="Sign out" secondary disabled={saving} onPress={() => { void auth.signOut(); }}/></>;
 }

@@ -1120,6 +1120,10 @@ export type Database = {
         Returns: Json
       }
       manager_state: { Args: never; Returns: Json }
+      manager_visit_command: {
+        Args: { p_action: string; p_id: string; p_salon: string }
+        Returns: Json
+      }
       qr_visit: {
         Args: {
           p_action: string
@@ -1130,6 +1134,7 @@ export type Database = {
         Returns: Json
       }
       setup_salon: { Args: { p_data: Json }; Returns: Json }
+      staff_alert_read: { Args: { p_id?: string }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never

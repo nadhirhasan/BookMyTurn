@@ -17,6 +17,7 @@ See [the complete walkthrough and validation](docs/CUSTOMER_PIPELINE.md).
 - [Manager specification](idea/manager.md)
 - [Barber app setup and cross-app testing](docs/BARBER_WORKFLOW.md)
 - [Manager accounts, multiple salons and teams](docs/MANAGER_WORKFLOW.md)
+- [Live queue, Activity and Manager UI redesign](docs/LIVE_OPERATIONS.md)
 - [Approved Figma discovery screens](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140)
 - [Design sources, licences and remaining screens](design/README.md)
 
@@ -72,6 +73,14 @@ barber portraits and your private account avatar. No verification email is
 required. Existing salons/accounts are preserved. Each new salon appears in the
 Customer app; bookable capacity appears after adding an active barber.
 See the [manager walkthrough](docs/MANAGER_WORKFLOW.md).
+
+The salon opens on a live Queue board with separate **On the way**, **Waiting**
+and **In service** views. **Agenda** contains appointment requests across all
+dates plus the selected day's schedule. **Activity** keeps joins, arrivals and
+booking updates with unread badges. Private Realtime invalidations refresh the
+database views, with a five-second foreground polling fallback.
+Optional phone banners/sounds while the app runs can be enabled under Account.
+Closed-app remote push is not configured in this Expo Go workflow.
 
 ## Configuration
 

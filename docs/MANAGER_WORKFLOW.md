@@ -1,5 +1,9 @@
 # One manager, multiple salons, individual barber teams
 
+The [live operations update](LIVE_OPERATIONS.md) adds a salon-wide Queue board,
+date-based Agenda and staff Activity inbox. A location now opens on operations;
+choose **Team** to add/edit barbers and **Details** for services and opening hours.
+
 Updated 30 October 2026. This replaces the original one-account-per-salon setup.
 Existing accounts, salons, barbers, visits and profile pictures are preserved.
 
