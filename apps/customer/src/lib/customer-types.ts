@@ -76,7 +76,8 @@ export type Catalog = {
   hairstyles: Hairstyle[];
   reviews: PublishedReview[];
 };
-export type QueueEntry = {
+export type VisitLabels = {salon_name?:string|null;service_name?:string|null;barber_name?:string|null};
+export type QueueEntry = VisitLabels & {
   id: string;
   salon_id: string;
   reference: string;
@@ -88,7 +89,7 @@ export type QueueEntry = {
   created_at: string;
   estimated_start: string | null;
 };
-export type Appointment = {
+export type Appointment = VisitLabels & {
   id: string;
   salon_id: string;
   reference: string;

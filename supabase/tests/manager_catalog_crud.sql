@@ -87,6 +87,7 @@ select pg_temp.denied($q$select public.barber_state(pg_temp.cid('barber'))$q$,'4
 select pg_temp.denied($q$select public.manager_command('create_service',jsonb_build_object('id',gen_random_uuid(),'salon_id',pg_temp.cid('salon'),'name','Hidden service','duration_minutes',30,'price_min_minor',1,'price_max_minor',2))$q$,'P0001');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.cid('customer'))::text,true);
 select pg_temp.ok(exists(select 1 from public.appointments where id=pg_temp.cid('appointment')),'Customer keeps historical appointment access');
+select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.customer_state()->'appointments')a where a->>'id'=pg_temp.cid('appointment')::text and a->>'salon_name'='CRUD fixture updated' and a->>'service_name'='Haircut' and a->>'barber_name'='CRUD chair'),'Own archived history retains readable names');
 select pg_temp.denied($q$select public.customer_command('request_appointment',jsonb_build_object('salon_id',pg_temp.cid('salon'),'service_id',pg_temp.cid('haircut'),'barber_id',pg_temp.cid('barber'),'starts_at',((now() at time zone 'Asia/Colombo')::date+2+'14:00'::time) at time zone 'Asia/Colombo','request_key',gen_random_uuid()))$q$,'P0001');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.cid('owner'))::text,true);
 select public.manager_command('restore_salon',jsonb_build_object('salon_id',pg_temp.cid('salon')));
