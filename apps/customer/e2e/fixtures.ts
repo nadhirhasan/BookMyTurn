@@ -11,8 +11,10 @@ export function fixtureCatalog(): Catalog {
     barber_services: [{ barber_id: barberId, service_id: serviceId, duration_minutes: null, price_min_minor: null, price_max_minor: null }],
     hours: [{ salon_id: salonId, weekday: 5, opens_at: '08:00:00', closes_at: '22:00:00' }], categories: [{ id: id(90), name: 'Low Fade' }], hairstyles: [{ id: id(91), category_id: id(90), title: 'Low Fade', image_url: photo, attribution: 'Test image' }], reviews: [] };
 }
-export async function mockDatabase(page: Page) {
+export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} = {}) {
   const catalog = fixtureCatalog();
+  const otherBarberId = id(21);
+  if(options.twoBarbers){catalog.barbers.push({...catalog.barbers[0]!,id:otherBarberId,display_name:'Nimal'});catalog.barber_services.push({...catalog.barber_services[0]!,barber_id:otherBarberId});}
   let queue: any = null;
   let appointment: any = null;
   let session: any = null;
@@ -50,7 +52,8 @@ export async function mockDatabase(page: Page) {
     if (name === 'customer_slots') {
       const body = route.request().postDataJSON();
       const date = body.p_day;
-      return route.fulfill({ json: [{ starts_at: `${date}T03:30:00Z`, ends_at: `${date}T04:00:00Z`, barber_id: barberId, available: !reserved }, { starts_at: `${date}T04:00:00Z`, ends_at: `${date}T04:30:00Z`, barber_id: barberId, available: false }] });
+      const staff=options.twoBarbers?[barberId,otherBarberId]:[barberId];
+      return route.fulfill({ json: staff.filter(b=>!body.p_barber||body.p_barber===b).flatMap(b=>[{ starts_at: `${date}T03:30:00Z`, ends_at: `${date}T04:00:00Z`, barber_id: b, available: !reserved }, { starts_at: `${date}T04:00:00Z`, ends_at: `${date}T04:30:00Z`, barber_id: b, available: false }]) });
     }
     expect(name).toBe('customer_command');
     const { p_action: action, p_data: data } = route.request().postDataJSON();

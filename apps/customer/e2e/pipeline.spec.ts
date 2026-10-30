@@ -1,5 +1,15 @@
 import { test, expect } from '@playwright/test';
 import { mockDatabase, signInFixture, queueId, barberId } from './fixtures';
+test('own booked time stays unavailable with Any Barber and with a different barber',async({page})=>{
+ await mockDatabase(page,{twoBarbers:true});await signInFixture(page);await page.goto('/salon/royal-saloon/appointment');
+ await page.getByRole('button',{name:'Haircut · 30 min'}).click();await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
+ await page.getByRole('button',{name:/^9:00\s*am$/i}).click();await page.getByRole('button',{name:'Request Appointment',exact:true}).click();await expect(page.getByText('Pending salon confirmation',{exact:true})).toBeVisible();
+ await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Haircut · 30 min'}).click();await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
+ await expect(page.getByRole('button',{name:/^9:00\s*am unavailable$/i})).toBeDisabled();
+ await page.getByRole('button',{name:'Nimal',exact:true}).click();await expect(page.getByRole('button',{name:/^9:00\s*am unavailable$/i})).toBeDisabled();
+ await page.goto('/appointments');await page.getByRole('button',{name:'Cancel appointment',exact:true}).click();
+ await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Haircut · 30 min'}).click();await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();await expect(page.getByRole('button',{name:/^9:00\s*am$/i})).toBeEnabled();
+});
 test('customer joins, checks in, shares styles, completes a demo service and reviews', async ({ page }) => {
   const fixture = await mockDatabase(page);
   await signInFixture(page);

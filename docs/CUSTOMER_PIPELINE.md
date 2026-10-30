@@ -125,3 +125,20 @@ password of at least eight characters. Verification is disabled server-side.
 
 After manual tests, cancel unwanted active visits through the app. Never delete
 all queue/history records as a startup/reset behavior.
+
+## Booking regression ? personal availability
+
+A confirmed 2:00?2:45 pm appointment at MrG Akurana 7 correctly held Nimal,
+but Any Available Barber offered Sameer at 2:00 pm to the same customer. The
+calendar now excludes the customer's overlapping reserved intervals across
+barbers and salons. A database exclusion constraint also prevents concurrent
+self-overlap and validates staff/alternative changes. Other customers can still
+use an unoccupied barber. Cancellation releases personal capacity; adjacent
+non-overlapping appointments remain allowed. Account deletion clears the derived
+customer identity on pending and confirmed blocks. The reported booking was
+verified with read-only queries and was never cancelled or modified.
+
+Validation: hosted rollback suite covers own pending holds, Any Barber, another
+barber, independent customer capacity, cancellation, cross-salon constraint and
+account deletion. Six affected browser journeys pass, including revisiting the
+calendar after reserving and then cancelling. Final CI is linked on the fix PR.
