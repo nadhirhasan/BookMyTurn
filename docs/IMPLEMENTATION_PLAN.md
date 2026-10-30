@@ -2,8 +2,9 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: Supabase account foundation implemented and validated (milestone 02);
-awaiting user review and PR merge before sign-in/sign-up work.
+Current stage: complete shared database implemented and validated before more
+app integration, by user instruction on 30 October 2026. Milestones 02/02B await
+PR review/merge. Resume app integration one feature at a time after this gate.
 The user approved the runnable customer UI and requested database integration.
 Client/session handling and private profiles are implemented. The migration is
 applied to the configured BookMyTurn project; hosted permission tests, cleanup,
@@ -85,8 +86,10 @@ For each milestone:
 
 1. Confirm the previous milestone is validated and user-reviewed. Create a branch
    from up-to-date `main`, such as `feat/03-customer-auth`.
-2. Implement only that milestone. Add database migrations alongside the feature
-   that requires them; do not build the entire schema upfront.
+2. Implement only that milestone. Updated on 30 October 2026: create and verify
+   the complete shared database first, as requested by the user; then integrate
+   each app feature against it. See [DATABASE_PLAN.md](DATABASE_PLAN.md). Add
+   later migrations when verified integration requirements change the model.
 3. Run relevant checks. For database changes, exercise real development-project
    behavior and row-level security with separate test identities. For UI changes,
    verify the runnable screen on the agreed phone/emulator and browser preview.
@@ -217,6 +220,23 @@ Acceptance: connectivity works with the publishable key. Two test users can read
 and update permitted fields on their own profiles; neither can access or alter
 the other's private record. An unauthenticated caller cannot access private
 profiles. Record migration execution and cleanup evidence, not just SQL review.
+
+### 02B. Complete shared database before further app integration
+
+Added by user instruction on 30 October 2026. This supersedes incremental table
+creation in later milestones; their UI/command validation gates still apply.
+
+- [x] Complete domain and access plan: [DATABASE_PLAN.md](DATABASE_PLAN.md).
+- [x] Additive schema and constraint/permission test suite prepared.
+- [x] Fresh PostgreSQL validation passed.
+- [x] Hosted schema applied and real-role verification passed.
+- [ ] Complete: user acceptance and feature PR merge.
+
+Scope: catalog, staff membership/permissions, schedules, queues, appointments,
+hairstyle requests, actual services, sales, commission accrual/settlement,
+operating/capital expenses, reviews, private notifications and audit history.
+Schema creation does not complete later app features or open raw business writes.
+Evidence: [SCHEMA_VALIDATION.md](../supabase/SCHEMA_VALIDATION.md).
 
 ### 03. Optional customer sign-up, sign-in and account lifecycle
 
@@ -645,3 +665,23 @@ search after scripts load. Native font-loading behavior is preserved.
   pg_temp alias; the test helper was corrected. Latest CI results are on PR #4.
 - Scope/deployment guide: [supabase/README.md](../supabase/README.md).
 - Merge and milestone completion: pending; do not advance to sign-in/sign-up yet.
+
+### Milestone 02B - complete shared database (validated; review pending)
+
+- User superseded incremental table creation: plan and create the full shared
+  database, then connect app features one by one.
+- PR: [#5](https://github.com/nadhirhasan/BookMyTurn/pull/5), stacked on #4.
+- Plan: [DATABASE_PLAN.md](DATABASE_PLAN.md), written before migration work.
+- Implemented: 34 additional tables (35 including profiles), catalog, staff,
+  operational and financial relationships, constrained reservations/completion,
+  secure reads, closed business writes, sanitized public reviews and audit history.
+- Hosted migration `20261030023943` applied after the clean PostgreSQL 17 suites
+  passed. Both real Supabase role suites passed; independent counts confirmed
+  fixture cleanup and RLS on all 35 tables. No Auth settings or app UI changed.
+- Seeded: exactly 13 approved closed-by-default salons, 23 hairstyle categories
+  and expense categories; no fictional operational workload or financial totals.
+- Security advisors: no findings. Performance: 32 informational unused-index
+  notices retained for future workload review. Public schema types exported.
+- Evidence and limits: [SCHEMA_VALIDATION.md](../supabase/SCHEMA_VALIDATION.md).
+- Pending: user acceptance/PR merge, then per-feature API/UI integration. Creating
+  tables does not tick later feature milestones or claim forecasting is implemented.

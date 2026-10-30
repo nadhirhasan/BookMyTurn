@@ -1,5 +1,11 @@
 # Supabase account foundation
 
+The complete shared database is now created and verified as milestone 02B:
+[full plan](../docs/DATABASE_PLAN.md), [deployment/evidence](SCHEMA_VALIDATION.md)
+and [generated public types](types/database.generated.ts). It adds 34 tables to
+the profile foundation below. Application features still integrate one at a time;
+business writes remain closed to clients until their controlled commands exist.
+
 Milestone 02 adds private account profiles and the Customer app's client/session
 plumbing. It does not persist salons, create bookings or add sign-in screens.
 
@@ -63,8 +69,9 @@ npm run check:supabase
 ```
 
 It checks Auth API access with the configured public key, reports email-confirmation
-configuration, and verifies that an unauthenticated profile query is denied. It
-requests zero profile records and prints no project URL, key or user records.
+configuration, verifies anonymous profile/queue denial and the 13 approved salon
+slugs, and confirms the private schema is not exposed in the Data API. It requests
+zero private records and prints no project URL, key or user records.
 This probe alone is not proof that two customers are isolated: also run the SQL
 permission suite. Do not disable email confirmation for these checks.
 
