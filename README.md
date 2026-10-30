@@ -41,10 +41,11 @@ Root `.env` is ignored. Copy `.env.example` if setting up another checkout.
 The app config loads root values as fallback without replacing injected
 environment variables. Only project URL and publishable key belong in app
 configuration; never add database passwords or service-role/secret keys.
-Guest discovery works without Supabase. The client/session foundation and private
-profile migration are prepared; deployment and hosted permission-test status are
-tracked in supabase/README.md. Account screens and real signed-in flow verification
-remain the next milestone. Configuration presence alone is not connectivity.
+Guest discovery works without Supabase. The complete shared database has been
+created and verified; see [the database plan](docs/DATABASE_PLAN.md) and
+[deployment evidence](supabase/SCHEMA_VALIDATION.md). Current discovery still uses
+its labelled demo snapshot. We will integrate controlled database commands and
+screens one feature at a time, beginning with account sign-in/sign-up.
 
 ## Checks
 

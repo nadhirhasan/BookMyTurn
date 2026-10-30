@@ -2,9 +2,9 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: full database structure planned and being implemented before more
-app integration, by user instruction on 30 October 2026. Account foundation
-(milestone 02) is implemented and validated; PR review/merge remains pending.
+Current stage: complete shared database implemented and validated before more
+app integration, by user instruction on 30 October 2026. Milestones 02/02B await
+PR review/merge. Resume app integration one feature at a time after this gate.
 The user approved the runnable customer UI and requested database integration.
 Client/session handling and private profiles are implemented. The migration is
 applied to the configured BookMyTurn project; hosted permission tests, cleanup,
@@ -228,8 +228,8 @@ creation in later milestones; their UI/command validation gates still apply.
 
 - [x] Complete domain and access plan: [DATABASE_PLAN.md](DATABASE_PLAN.md).
 - [x] Additive schema and constraint/permission test suite prepared.
-- [ ] Fresh PostgreSQL validation passed.
-- [ ] Hosted schema applied and real-role verification passed.
+- [x] Fresh PostgreSQL validation passed.
+- [x] Hosted schema applied and real-role verification passed.
 - [ ] Complete: user acceptance and feature PR merge.
 
 Scope: catalog, staff membership/permissions, schedules, queues, appointments,
@@ -665,3 +665,23 @@ search after scripts load. Native font-loading behavior is preserved.
   pg_temp alias; the test helper was corrected. Latest CI results are on PR #4.
 - Scope/deployment guide: [supabase/README.md](../supabase/README.md).
 - Merge and milestone completion: pending; do not advance to sign-in/sign-up yet.
+
+### Milestone 02B - complete shared database (validated; review pending)
+
+- User superseded incremental table creation: plan and create the full shared
+  database, then connect app features one by one.
+- PR: [#5](https://github.com/nadhirhasan/BookMyTurn/pull/5), stacked on #4.
+- Plan: [DATABASE_PLAN.md](DATABASE_PLAN.md), written before migration work.
+- Implemented: 34 additional tables (35 including profiles), catalog, staff,
+  operational and financial relationships, constrained reservations/completion,
+  secure reads, closed business writes, sanitized public reviews and audit history.
+- Hosted migration `20261030023943` applied after the clean PostgreSQL 17 suites
+  passed. Both real Supabase role suites passed; independent counts confirmed
+  fixture cleanup and RLS on all 35 tables. No Auth settings or app UI changed.
+- Seeded: exactly 13 approved closed-by-default salons, 23 hairstyle categories
+  and expense categories; no fictional operational workload or financial totals.
+- Security advisors: no findings. Performance: 32 informational unused-index
+  notices retained for future workload review. Public schema types exported.
+- Evidence and limits: [SCHEMA_VALIDATION.md](../supabase/SCHEMA_VALIDATION.md).
+- Pending: user acceptance/PR merge, then per-feature API/UI integration. Creating
+  tables does not tick later feature milestones or claim forecasting is implemented.

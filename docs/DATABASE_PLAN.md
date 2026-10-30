@@ -144,14 +144,18 @@ support the initial gallery without opening an upload bucket now.
 
 - [x] Re-read customer and manager requirements and existing schema.
 - [x] Record complete domain model, relationships and access boundaries.
-- [ ] Create an additive migration and deterministic approved-salon seed.
-- [ ] Validate from a fresh PostgreSQL database and the existing profile baseline.
-- [ ] Test customer/staff/anonymous isolation and business invariants.
-- [ ] Apply to the configured hosted development project; inspect advisors.
-- [ ] Verify hosted permission/constraint tests and fixture cleanup.
-- [ ] Record generated types, evidence and deployment order in a feature PR.
+- [x] Create an additive migration and deterministic approved-salon seed.
+- [x] Validate from a fresh PostgreSQL database and the existing profile baseline.
+- [x] Test customer/staff/anonymous isolation and business invariants.
+- [x] Apply to the configured hosted development project; inspect advisors.
+- [x] Verify hosted permission/constraint tests and fixture cleanup.
+- [x] Record generated types, evidence and deployment order in [PR #5](https://github.com/nadhirhasan/BookMyTurn/pull/5).
 - [ ] User reviews and merges; then resume app integration one feature at a time.
 
 Do not mark UI milestones complete merely because their supporting tables exist.
 This feature is stacked on the reviewed Supabase foundation PR #4, without merging
 or modifying its already-applied profile migration.
+
+The hosted migration version is `20261030023943`; there are 35 application tables
+including customer_profiles, with RLS enabled on all 35. See
+[SCHEMA_VALIDATION.md](../supabase/SCHEMA_VALIDATION.md) for checks and limits.
