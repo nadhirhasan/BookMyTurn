@@ -2,9 +2,15 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: [planning PR #1](https://github.com/nadhirhasan/BookMyTurn/pull/1).
-No application implementation or Supabase database changes have been made.
-Milestone 00 is validated and awaiting user review and merge.
+Current stage: first three editable customer screens ready for design review.
+The remaining screens and clickable prototype are blocked by the Figma MCP
+Starter-plan tool-call limit. See [the design review](../design/README.md).
+[Planning PR #1](https://github.com/nadhirhasan/BookMyTurn/pull/1) is merged.
+[Design review PR #2](https://github.com/nadhirhasan/BookMyTurn/pull/2) is open as
+a draft; user design verification remains pending.
+An initial Customer foundation exists locally, but its visual direction was
+rejected in review. Pause UI development until gate 00A below is complete.
+No Supabase database changes have been made.
 
 ## 1. Agreed direction
 
@@ -19,17 +25,23 @@ Milestone 00 is validated and awaiting user review and merge.
   Reuse authentication in the Manager app when its supporting workflows are added.
 - Akurana, Sri Lanka only; exactly the 13 salon names in the customer specification.
 - Royal Saloon is the primary salon for end-to-end development and verification.
-- Black/navy backgrounds, cyan `#14A3C7`, white/light-grey text and dark cards.
+- Updated visual direction: light backgrounds, charcoal text, neutral surfaces,
+  salon photography and restrained controls informed by real booking apps. The
+  user explicitly replaced the original dark/navy/cyan theme; do not reuse it.
 - Clearly labelled fictional salon, service and financial demonstration data.
 - Real payments, real SMS, external accounting and inventory remain out of scope.
 - Build and verify one milestone at a time. Use a PR for each feature; never push
   feature work directly to `main` or merge it without the user's review.
+- Design the customer journey in Figma before further screen development. Study
+  real app references, create editable screens/components, validate the prototype
+  and obtain user verification before translating it into React Native.
 
 Source requirements: [Customer](../idea/customer.md) and
 [Salon Manager](../idea/manager.md). `manager.md` replaces the earlier `owner.md`.
 The newer decisions above supersede the original specifications' local-only
 storage and simulated-authentication instructions. The other product requirements
-still apply.
+still apply except the earlier theme instructions, which the user superseded
+with the light, real-app-inspired direction above.
 
 ### Primary customer outcome
 
@@ -143,10 +155,31 @@ Store timestamps consistently and display salon schedules in Asia/Colombo.
   preserve the original specifications and add a PR checklist.
 - [x] Validated: review the planning diff, confirm `.env` is ignored and absent
   from tracked files, and open the planning PR.
-- [ ] Complete: user accepts the plan and the planning PR is merged.
+- [x] Complete: user accepted the plan and the planning PR is merged.
 
 Acceptance: the build order, verification gates, customer guest journey and
 feature-PR workflow are clear. No app or database implementation belongs in this PR.
+
+### 00A. Customer design in Figma before UI implementation
+
+- [x] Reference research: inspect official Fresha, Booksy and Treatwell screenshots.
+- [x] Direction: record the customer tasks, screen inventory and review criteria
+  in [the design brief](DESIGN_DIRECTION.md).
+- [x] Figma foundation: connect access, create the editable file, token/type
+  foundations, reusable components and the first three discovery screens.
+- [ ] Figma journey: compose queue, arrival, appointment and account states and
+  link the clickable prototype. Pending the Figma tool-call allowance.
+- [ ] Validate: inspect actual Figma exports for layout, typography, density,
+  contrast, images, state clarity and prototype navigation at iPhone dimensions.
+- [ ] Complete: user verifies the Figma design and the corresponding PR is merged.
+
+Acceptance: the design shows how a customer compares salon waits, chooses when
+to go, joins/checks in or requests a future time. Follow the real-app reference
+patterns for useful information and navigation in a light, neutral visual system.
+Marketing-style hero copy and generic benefit cards must not
+displace the customer's primary tasks. Implement approved screens incrementally
+under the remaining engineering milestones; a Figma design does not imply that
+the corresponding backend feature has been implemented.
 
 ### 01. Bootstrap the Customer app and development checks
 
@@ -158,6 +191,8 @@ Scope: npm workspace, Expo Customer app, TypeScript, navigation shell, brand the
 safe-area/keyboard handling, environment example/loading, and basic CI for lint,
 type checks and applicable tests. Choose a stable Expo SDK compatible with the
 actual test device at implementation time. No salon features yet.
+The initial local UI draft is not approved. Rework the shell against the approved
+Figma design after gate 00A, rather than treating the existing draft as the design.
 
 Acceptance: clean install and documented commands work; the branded shell runs
 on the agreed phone/emulator and web preview. Missing configuration gives an
@@ -487,11 +522,40 @@ credentials, access tokens, real customer data or account passwords in this log.
 - Validation: staged diff passes `git diff --cached --check`; all 17 milestone
   sections are present; `.env` is ignored/untracked and its values are absent
   from staged files; remote `main` matches the local starting commit. Planning
-  PR is open against `main`. No app/database tests apply to this documentation change.
+  PR is merged into `main`. No app/database tests apply to this documentation change.
 - PR: [#1](https://github.com/nadhirhasan/BookMyTurn/pull/1), branch
   `docs/implementation-plan`.
-- User verification: pending.
-- Merge: pending.
+- User verification: plan accepted and implementation start authorised in conversation.
+- Merge: confirmed through GitHub; planning PR #1 is merged.
+
+### Gate 00A — customer design review
+
+- User steering: the first coded UI looked generic; research actual apps and
+  design in Figma before developing further UI.
+- References inspected: official Fresha venue/app-store images, Booksy customer
+  app/booking images, and Treatwell Play Store images. See DESIGN_DIRECTION.md.
+- Figma status: connection and OAuth are verified. Created
+  [BookMyTurn — Customer Experience](https://www.figma.com/design/wugLxCXK2CM44607SvxZwF?node-id=9-140).
+- Implemented in Figma: Home, salon comparison, Royal Saloon availability; local
+  component families; 26 foundation variables and 8 DM Sans text styles. Neutral
+  library controls and licensed photography are used in the composed views.
+- Validation: the discovery board contains 335 editable descendants including
+  text, vector geometry, instances and discrete photo layers. The first render
+  revealed filled SVG wrapper boxes; those were corrected and the new render
+  was inspected. See `design/reviews/customer-discovery.png`.
+- Remaining: queue/check-in, appointment/account states, prototype navigation,
+  user design verification and implementation. Figma returned a Starter-plan
+  tool-call-limit error before the queue composition ran. The remaining scripts
+  are prepared locally but are not claimed as completed Figma screens.
+- Visual direction: user explicitly rejected dark/blue themes. Use the light,
+  neutral direction in DESIGN_DIRECTION.md; the source idea files are historical
+  requirements and their old colour rules no longer apply.
+- UI development: paused for design. Keep the local engineering draft available;
+  do not mark milestone 01 validated or complete based only on build checks.
+- Design PR: [#2](https://github.com/nadhirhasan/BookMyTurn/pull/2), draft against
+  `main` from `design/customer-experience`. Whitespace, source-syntax and design-only
+  staging checks passed. Local `.env` values and private upload/session artifacts
+  were excluded. User verification and design PR merge remain pending.
 
 ### Entry format for subsequent milestones
 
