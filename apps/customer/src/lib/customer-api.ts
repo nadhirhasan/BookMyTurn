@@ -5,6 +5,8 @@ export function customerError(error: {
   code?: string;
   message?: string;
 }) {
+  if (error.message === 'Collection unavailable') return 'This collection is no longer available. Choose another collection.';
+  if (error.message === 'Add a photo to this collection first') return error.message;
   if (error.code === '23P01')
     return 'This time is no longer available. Choose another time.';
   if (error.code === '23505')

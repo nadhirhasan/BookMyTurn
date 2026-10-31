@@ -331,6 +331,7 @@ export type Database = {
       }
       customer_haircuts: {
         Row: {
+          collection_id: string
           created_at: string
           customer_id: string
           deleted_at: string | null
@@ -340,6 +341,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          collection_id: string
           created_at?: string
           customer_id: string
           deleted_at?: string | null
@@ -349,6 +351,7 @@ export type Database = {
           title?: string
         }
         Update: {
+          collection_id?: string
           created_at?: string
           customer_id?: string
           deleted_at?: string | null
@@ -358,6 +361,13 @@ export type Database = {
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "customer_haircuts_customer_id_collection_id_fkey"
+            columns: ["customer_id", "collection_id"]
+            isOneToOne: false
+            referencedRelation: "haircut_collections"
+            referencedColumns: ["customer_id", "id"]
+          },
           {
             foreignKeyName: "customer_haircuts_hairstyle_id_fkey"
             columns: ["hairstyle_id"]
@@ -385,6 +395,30 @@ export type Database = {
           display_name?: string | null
           id?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      haircut_collections: {
+        Row: {
+          created_at: string
+          customer_id: string
+          deleted_at: string | null
+          id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          deleted_at?: string | null
+          id?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          deleted_at?: string | null
+          id?: string
+          title?: string
         }
         Relationships: []
       }
@@ -1148,6 +1182,10 @@ export type Database = {
       barber_context: { Args: never; Returns: Json }
       barber_state: { Args: { p_barber: string }; Returns: Json }
       customer_catalog: { Args: never; Returns: Json }
+      customer_collections: {
+        Args: { p_action: string; p_data?: Json }
+        Returns: Json
+      }
       customer_command: {
         Args: { p_action: string; p_data: Json }
         Returns: Json

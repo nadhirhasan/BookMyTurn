@@ -30,6 +30,7 @@ export type Database = {
     };
     Functions: {
       customer_gallery: { Args: {p_action:string;p_data?:Json};Returns:Json; };
+      customer_collections: { Args: {p_action:string;p_data?:Json};Returns:Json; };
       customer_catalog: {
         Args: Record<string, never>;
         Returns: Json;
