@@ -52,6 +52,7 @@ export type Session = {
   commission_surcharge_minor: number;
 };
 export type StyleRequest = {
+  collection_title?: string | null;
   id: string;
   queue_entry_id: string | null;
   appointment_id: string | null;

@@ -19,7 +19,7 @@ export default function AppointmentScreen() {
   useRefreshOnFocus();
   const salon = catalog?.salons.find(s => s.slug === id || s.id === id);
   const service=null;
-  const [haircut,setHaircut]=useState<string|null>(null),[photoBusy,setPhotoBusy]=useState(false),[submitted,setSubmitted]=useState(false);
+  const [haircut,setHaircut]=useState<string|null>(null),[submitted,setSubmitted]=useState(false);
   const [barber, setBarber] = useState<string | null>(preferred ?? null);
   const [day, setDay] = useState('');
   const [slots, setSlots] = useState<Slot[]>([]);
@@ -62,15 +62,15 @@ export default function AppointmentScreen() {
 {!loading && loadedFor === signature && !grouped.some(s => s.available) && <Notice>No times are available for this selection. Choose another day or barber.</Notice>}
 {selected && !canSubmit && !loading && !error && <Notice>This selection is no longer available. Pick another time.</Notice>}
 <Action label="Refresh times" secondary onPress={() => { void refresh(); }}/>
-<PrivateGate><HaircutPicker value={haircut} onChange={setHaircut} onPending={setPhotoBusy}/><Field label="Name (optional)" value={name} onChange={setName}/><Field label="Mobile (optional)" value={mobile} onChange={setMobile} maxLength={32}/>
+<PrivateGate><HaircutPicker value={haircut} onChange={setHaircut}/><Field label="Name (optional)" value={name} onChange={setName}/><Field label="Mobile (optional)" value={mobile} onChange={setMobile} maxLength={32}/>
 <Text style={type.caption}>Your time is held while the salon reviews your request.</Text>{submitted&&!selected&&<Text accessibilityRole="alert" style={{...type.caption,color:'#B42318'}}>Choose an available time.</Text>}
 {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
-<Action label={busy ? 'Sending request…' : 'Request Appointment'} disabled={busy || photoBusy || loading || stale} onPress={() => {
+<Action label={busy ? 'Sending request…' : 'Request Appointment'} disabled={busy || loading || stale} onPress={() => {
           setSubmitted(true);if(!canSubmit)return;
           const submission = signature + selected;
           if (retry.current.signature !== submission)
             retry.current = { signature: submission, key: requestKey() };
-          void run('request_appointment', { salon_id: salon.id, haircut_id:haircut, barber_id: barber, starts_at: selected, customer_name: name, mobile, request_key: retry.current.key }, entry => router.replace(`/appointments?created=${entry}`));
+          void run('request_appointment', { salon_id: salon.id, collection_id:haircut, barber_id: barber, starts_at: selected, customer_name: name, mobile, request_key: retry.current.key }, entry => router.replace(`/appointments?created=${entry}`));
         }}/></PrivateGate></>
 </>}
 </Screen>;

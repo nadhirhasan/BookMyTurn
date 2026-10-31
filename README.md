@@ -88,6 +88,11 @@ or booking. Barbers use six-digit customer codes, view the reference, start the
 haircut and enter only the final price at completion. See
 [the simple haircut workflow](docs/SIMPLE_HAIRCUT_WORKFLOW.md).
 
+This branch also adds named haircut collections and full-image previews in both
+apps. Several photos can be uploaded together and optionally shared on a visit.
+The [collection migration and device walkthrough](docs/HAIRCUT_COLLECTIONS_WORKFLOW.md)
+are pending explicit hosted-deployment approval; existing accounts/photos are kept.
+
 The haircut migration is deployed and hosted checks pass. The requested clean
 reset removed all app records, Auth accounts/sessions and uploaded files while
 retaining the schema and project settings. Sign out of old app sessions and

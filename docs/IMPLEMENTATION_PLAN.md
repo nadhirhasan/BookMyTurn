@@ -2,7 +2,12 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: simple haircut visits and private customer photo references. See
+Current stage: haircut collections and full-screen previews. See
+[HAIRCUT_COLLECTIONS_PLAN.md](HAIRCUT_COLLECTIONS_PLAN.md) and
+[the collection workflow](HAIRCUT_COLLECTIONS_WORKFLOW.md). Local validation
+passes; hosted deployment requires explicit approval. No further reset is planned.
+
+Previous stage: simple haircut visits and private customer photo references. See
 [SIMPLE_HAIRCUT_PLAN.md](SIMPLE_HAIRCUT_PLAN.md) and
 [the new workflow](SIMPLE_HAIRCUT_WORKFLOW.md). Service catalogues and upfront
 prices are superseded. Hosted deployment and the explicitly requested clean

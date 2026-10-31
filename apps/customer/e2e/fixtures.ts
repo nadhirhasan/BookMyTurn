@@ -22,6 +22,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
   let shared: any = null;
   let reserved = false;
   const photos:any[]=[];
+  const collections:any[]=[];
   const calls: {
     action: string;
     data: any;
@@ -31,6 +32,15 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
     if (route.request().method() === 'OPTIONS')
       return route.fulfill({ status: 204 });
     const name = new URL(route.request().url()).pathname.split('/').at(-1);
+    if(name==='customer_collections'){
+      const {p_action,p_data}=route.request().postDataJSON();
+      if(p_action==='list')return route.fulfill({json:collections.map(c=>({...c,photos:photos.filter(p=>p.collection_id===c.id)}))});
+      if(p_action==='create'){const id=p_data.id??crypto.randomUUID();if(!collections.some(c=>c.id===id))collections.push({id,title:p_data.title});return route.fulfill({json:{id}});}
+      if(p_action==='rename'){const c=collections.find(c=>c.id===p_data.id);if(c)c.title=p_data.title;}
+      if(p_action==='remove'){const i=collections.findIndex(c=>c.id===p_data.id);if(i>=0)collections.splice(i,1);for(let i=photos.length-1;i>=0;i--)if(photos[i].collection_id===p_data.id)photos.splice(i,1);}
+      if(p_action==='add_photos')for(const p of p_data.photos){if(!photos.some(x=>x.id===p.id))photos.push({...p,collection_id:p_data.id,title:p.title??'My haircut',image_url:p.hairstyle_id?catalog.hairstyles.find(h=>h.id===p.hairstyle_id)?.image_url:null,storage_path:p.storage_path??null});}
+      return route.fulfill({json:{id:p_data.id}});
+    }
     if(name==='customer_gallery'){const {p_action,p_data}=route.request().postDataJSON();if(p_action==='list')return route.fulfill({json:photos});if(p_action==='save'){const id=p_data.id??crypto.randomUUID();photos.push({...p_data,id,title:p_data.title??'My haircut',image_url:p_data.hairstyle_id?catalog.hairstyles.find(h=>h.id===p_data.hairstyle_id)?.image_url:null,storage_path:p_data.storage_path??null});return route.fulfill({json:{id}});}if(p_action==='remove'){const i=photos.findIndex(p=>p.id===p_data.id);if(i>=0)photos.splice(i,1);}if(p_action==='rename'){const p=photos.find(p=>p.id===p_data.id);if(p)p.title=p_data.title;}return route.fulfill({json:{id:p_data.id}});}
     if (name === 'customer_catalog')
       return route.fulfill({ json: { ...catalog, observed_at: new Date().toISOString() } });
@@ -105,7 +115,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
       shared = { id: id(82), queue_entry_id: data.kind === 'queue' ? data.id : null, appointment_id: data.kind === 'appointment' ? data.id : null, hairstyle_ids: data.hairstyle_ids, note: data.note };
     return route.fulfill({ json: { id: action === 'join_queue' ? queueId : action === 'request_appointment' ? appointmentId : data.id ?? id(99) } });
   });
-  return { catalog, calls,photos,finishQueue:()=>{queue.status='completed';session={id:sessionId,queue_entry_id:queueId,appointment_id:null,barber_id:barberId,salon_id:salonId,status:'completed',service_name_snapshot:'Haircut'};},acceptAppointment:()=>{appointment.status='confirmed';appointment.confirmed_start=appointment.requested_start;appointment.confirmed_barber_id=barberId;}, reserve: () => { reserved = true; } };
+  return { catalog, calls,photos,collections,finishQueue:()=>{queue.status='completed';session={id:sessionId,queue_entry_id:queueId,appointment_id:null,barber_id:barberId,salon_id:salonId,status:'completed',service_name_snapshot:'Haircut'};},acceptAppointment:()=>{appointment.status='confirmed';appointment.confirmed_start=appointment.requested_start;appointment.confirmed_barber_id=barberId;}, reserve: () => { reserved = true; } };
 }
 export async function signInFixture(page: Page) {
   const user = { id: 'b04f0000-0000-4000-8000-000000000001', aud: 'authenticated', role: 'authenticated', email: 'pipeline@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, identities: [], created_at: '2026-10-30T00:00:00Z' };
