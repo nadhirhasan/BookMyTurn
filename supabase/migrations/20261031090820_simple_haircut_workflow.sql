@@ -255,9 +255,9 @@ begin
  if member is null or not bookmyturn_private.is_my_barber(p_barber) then raise exception 'Barber access unavailable' using errcode='42501';end if;
  perform set_config('bookmyturn.staff_action','1',true);
  if p_action='check_in' then
-  select id into entry from public.queue_entries where salon_id=salon and visit_code=p_data->>'reference'and status in('joined','arrived')and coalesce(assigned_barber_id,preferred_barber_id,p_barber)=p_barber;
-  if entry is null then raise exception 'Active customer code not found';end if;
-  return bookmyturn_private.barber_service_command_v1(p_barber,'check_in',(p_data-'reference')||jsonb_build_object('id',entry));
+  select * into q from public.queue_entries where salon_id=salon and visit_code=p_data->>'reference'and status in('joined','arrived')and coalesce(assigned_barber_id,preferred_barber_id,p_barber)=p_barber for update;
+  if q.id is null then raise exception 'Active customer code not found';end if;
+  return bookmyturn_private.barber_service_command_v1(p_barber,'check_in',p_data||jsonb_build_object('reference',q.reference));
  elsif p_action='styles_viewed' then
   update bookmyturn_private.haircut_references set viewed_at=coalesce(viewed_at,clock_timestamp())where id=entry and salon_id=salon and bookmyturn_private.can_read_haircut(id);
   if found then return jsonb_build_object('id',entry);end if;
