@@ -40,7 +40,7 @@ select pg_temp.manager_denied('select * from bookmyturn_private.manager_profiles
 -- Operate a managed chair without an employee Auth account.
 insert into manager_ids select 'queue',(public.barber_command(pg_temp.mid('barber2'),'walk_in',jsonb_build_object('request_key',gen_random_uuid(),'service_id',pg_temp.mid('service1'),'customer_name','Manager walk-in'))->>'id')::uuid;
 insert into manager_ids select 'session',(public.barber_command(pg_temp.mid('barber2'),'start',jsonb_build_object('id',pg_temp.mid('queue'),'agreed_price_minor',120000,'price_agreed',true))->>'id')::uuid;
-select public.barber_command(pg_temp.mid('barber2'),'finish',jsonb_build_object('id',pg_temp.mid('session'),'final_amount_minor',120000,'final_agreed',true));
+select public.barber_command(pg_temp.mid('barber2'),'finish_haircut',jsonb_build_object('id',pg_temp.mid('session'),'final_amount_minor',120000,'final_agreed',true));
 select pg_temp.assert_manager((public.barber_state(pg_temp.mid('barber2'))->'performance'->>'today_count')::int=1,'Created chair completes real operational workflow');
 select pg_temp.assert_manager((public.barber_state(pg_temp.mid('barber3'))->'performance'->>'today_count')::int=0,'Other salon totals stay separate');
 -- Customers discover and book the managed barber on inherited salon hours.

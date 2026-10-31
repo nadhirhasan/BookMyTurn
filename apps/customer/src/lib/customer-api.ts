@@ -32,7 +32,7 @@ export async function fetchVisits(): Promise<VisitState> {
     throw new Error('Could not load your visits. Check your connection and retry.');
   return data as unknown as VisitState;
 }
-export async function fetchSlots(salon: string, service: string, day: string, barber: string | null): Promise<Slot[]> {
+export async function fetchSlots(salon: string, service: string | null, day: string, barber: string | null): Promise<Slot[]> {
   const { data, error } = await client().rpc('customer_slots', { p_salon: salon, p_service: service, p_day: day, p_barber: barber });
   if (error)
     throw new Error('Could not load available times. Please retry.');

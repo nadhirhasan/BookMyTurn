@@ -29,14 +29,15 @@ export function PrivateGate({ children }: {
     return <><Text style={type.section}>Keep your visits together</Text><Text style={type.body}>Sign in to manage remote queue entries and appointments. At the salon, use its QR code to join without an account.</Text><Action label="Sign in" onPress={() => router.push({ pathname: '/sign-in', params: { returnTo } })}/><Action label="Create an account" secondary onPress={() => router.push({ pathname: '/sign-up', params: { returnTo } })}/></>;
   return <>{visitError && <><Notice>{visitError}</Notice><Action label="Refresh visits" secondary onPress={() => { void refresh(); }}/></>}{children}</>;
 }
-export function Field({ label, value, onChange, maxLength = 80, multiline = false }: {
+export function Field({ label, value, onChange, maxLength = 80, multiline = false, error }: {
   label: string;
   value: string;
   onChange: (text: string) => void;
   maxLength?: number;
   multiline?: boolean;
+  error?: string;
 }) {
-  return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput accessibilityLabel={label} value={value} onChangeText={onChange} maxLength={maxLength} multiline={multiline} style={[styles.input, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/></View>;
+  return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput aria-invalid={!!error} accessibilityLabel={label} value={value} onChangeText={onChange} maxLength={maxLength} multiline={multiline} style={[styles.input,error&&{borderColor:'#B42318',backgroundColor:'#FFF6F5'}, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/>{error&&<Text accessibilityRole="alert" style={{...type.caption,color:'#B42318'}}>{error}</Text>}</View>;
 }
 export function useVisitAction() {
   const { mutate, busy } = useCustomer();

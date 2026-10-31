@@ -75,7 +75,8 @@ select public.manager_command('archive_service',jsonb_build_object('id',pg_temp.
 select public.manager_command('archive_service',jsonb_build_object('id',pg_temp.cid('haircut'),'salon_id',pg_temp.cid('salon')));
 select pg_temp.ok(not exists(select 1 from jsonb_array_elements(public.customer_catalog()->'services')s where s->>'id'=pg_temp.cid('haircut')::text),'Archived service hidden from customer catalogue');
 select public.manager_command('archive_barber',jsonb_build_object('id',pg_temp.cid('barber'),'salon_id',pg_temp.cid('salon')));
-select pg_temp.denied($q$select public.manager_command('restore_barber',jsonb_build_object('id',pg_temp.cid('barber'),'salon_id',pg_temp.cid('salon')))$q$,'P0001');
+select public.manager_command('restore_barber',jsonb_build_object('id',pg_temp.cid('barber'),'salon_id',pg_temp.cid('salon')));
+select public.manager_command('archive_barber',jsonb_build_object('id',pg_temp.cid('barber'),'salon_id',pg_temp.cid('salon')));
 select public.manager_command('restore_service',jsonb_build_object('id',pg_temp.cid('haircut'),'salon_id',pg_temp.cid('salon')));
 select public.manager_command('restore_barber',jsonb_build_object('id',pg_temp.cid('barber'),'salon_id',pg_temp.cid('salon')));
 select pg_temp.ok(jsonb_array_length(public.barber_context())=1,'Restored barber operational again');

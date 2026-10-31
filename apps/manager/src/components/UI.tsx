@@ -21,14 +21,15 @@ export function Chip({ label, selected, onPress, accessibilityLabel }: {
   accessibilityLabel?: string;
   onPress: () => void;
 }) { return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} accessibilityState={{ selected }} onPress={onPress} style={[s.chip, selected && { backgroundColor: colors.action }]}><Text style={[type.label, selected && { color: colors.background }]}>{label}</Text></Pressable>; }
-export function Field({ label, value, onChange, multiline = false, numeric = false, maxLength = 100 }: {
+export function Field({ label, value, onChange, multiline = false, numeric = false, maxLength = 100, error }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
   multiline?: boolean;
   numeric?: boolean;
   maxLength?: number;
-}) { return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput accessibilityLabel={label} value={value} onChangeText={onChange} multiline={multiline} keyboardType={numeric ? 'decimal-pad' : 'default'} maxLength={maxLength} style={[s.input, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/></View>; }
+  error?: string;
+}) { return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput aria-invalid={!!error} accessibilityLabel={label} value={value} onChangeText={onChange} multiline={multiline} keyboardType={numeric ? 'decimal-pad' : 'default'} maxLength={maxLength} style={[s.input,error&&{borderColor:'#B42318',backgroundColor:'#FFF6F5'}, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/>{error&&<Text accessibilityRole="alert" style={{...type.caption,color:'#B42318'}}>{error}</Text>}</View>; }
 export function Note({ children }: {
   children: ReactNode;
 }) { return <View style={s.note}><Text style={type.caption}>{children}</Text></View>; }
@@ -56,6 +57,6 @@ export function useAction() {
       return false;
     }
   };
-  return { run, busy, error, message };
+  return { run, busy, error, message,clearError:()=>setError(null) };
 }
 export const s = StyleSheet.create({ header: { minHeight: 60, paddingHorizontal: 20, flexDirection: 'row', gap: 8, alignItems: 'center' }, icon: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }, content: { padding: 20, gap: 16, paddingBottom: 40 }, button: { minHeight: 52, borderRadius: 12, padding: 14, backgroundColor: colors.action, alignItems: 'center', justifyContent: 'center' }, secondary: { backgroundColor: colors.surface }, chip: { minHeight: 44, borderWidth: 1, borderColor: colors.border, borderRadius: 24, paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }, input: { minHeight: 50, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 14, fontFamily: fonts.regular, fontSize: 15, color: colors.text }, card: { padding: 16, borderWidth: 1, borderColor: colors.divider, borderRadius: 14, gap: 12 }, note: { backgroundColor: colors.surface, padding: 14, borderRadius: 12 }, row: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 } });

@@ -29,6 +29,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      customer_gallery: { Args: {p_action:string;p_data?:Json};Returns:Json; };
       customer_catalog: {
         Args: Record<string, never>;
         Returns: Json;
@@ -57,7 +58,7 @@ export type Database = {
       customer_slots: {
         Args: {
           p_salon: string;
-          p_service: string;
+          p_service: string | null;
           p_day: string;
           p_barber?: string | null;
         };

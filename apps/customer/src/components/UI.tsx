@@ -26,7 +26,6 @@ export function Header({ title, home = false }: {
   return <View style={s.header}>
   {home ? <CornerUpRight size={25} color={colors.text}/> : <Pressable accessibilityRole="button" accessibilityLabel="Go back" hitSlop={8} onPress={() => router.canGoBack() ? router.back() : router.replace('/')} style={s.back}><ChevronLeft size={22} color={colors.text}/></Pressable>}
   <Text numberOfLines={1} style={[type.section, { flex: 1 }]}>{title}</Text>
-  <View style={home ? s.badge : undefined}><Text style={s.demo}>DEMO</Text></View>
   {home && <Pressable accessibilityRole="button" accessibilityLabel="Account" onPress={() => router.push('/account')} style={s.iconButton}><UserRound size={24} color={colors.text}/></Pressable>}
  </View>;
 }

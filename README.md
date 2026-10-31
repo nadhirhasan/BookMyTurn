@@ -47,11 +47,11 @@ project launcher exposes npm's existing global modules to Expo for that process,
 preventing the repeated ngrok-install prompt. No additional installation or
 system environment change is needed. See [tunnel startup notes](docs/TUNNEL_STARTUP.md).
 
-The original demo salons and linked test visits were removed at your request.
-Create your own salons in the Manager app; each starts with an empty queue.
-Salons, staff, service prices, hours, queues and appointments live in Supabase.
+Development data and test accounts were reset at your request on 31 October 2026.
+Create fresh accounts and your own salons; each starts with an empty queue.
+Salons, staff, hours, queues and appointments live in Supabase.
 Customer availability refreshes every 15 seconds, on focus and app foreground.
-The shared hairstyle reference gallery remains available with illustrative photos.
+The haircut gallery starts empty; customers can upload their own favourite photos.
 
 ## Run the Manager app
 
@@ -68,7 +68,7 @@ Scan its QR in Expo Go. The Manager app uses port 8084; the Customer app uses
 remain aliases for the same app.
 
 Create one manager account, then add as many salons as you manage. Inside each
-salon, create its barber profiles and assign services. Upload salon covers,
+salon, create its barber profiles. Upload salon covers,
 barber portraits and your private account avatar. No verification email is
 required. Existing salons/accounts are preserved. Each new salon appears in the
 Customer app; bookable capacity appears after adding an active barber.
@@ -82,10 +82,16 @@ database views, with a five-second foreground polling fallback.
 Optional phone banners/sounds while the app runs can be enabled under Account.
 Closed-app remote push is not configured in this Expo Go workflow.
 
-Manager catalogue actions include create/edit, weekly salon/team hours, photo removal,
-archive/restore and confirmed deletion of unused salons, barbers and services.
-Active visits block removal; completed service and financial history are retained.
-See [the CRUD workflow](docs/MANAGER_CRUD_WORKFLOW.md).
+The new workflow removes service/price catalogues from the apps. Customers save
+private haircut photos in the Haircuts tab and optionally attach one when joining
+or booking. Barbers use six-digit customer codes, view the reference, start the
+haircut and enter only the final price at completion. See
+[the simple haircut workflow](docs/SIMPLE_HAIRCUT_WORKFLOW.md).
+
+The haircut migration is deployed and hosted checks pass. The requested clean
+reset removed all app records, Auth accounts/sessions and uploaded files while
+retaining the schema and project settings. Sign out of old app sessions and
+create fresh accounts before testing.
 
 ## Configuration
 
