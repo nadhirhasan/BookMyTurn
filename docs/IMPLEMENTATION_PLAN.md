@@ -2,7 +2,12 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: Manager salon, barber and service CRUD. See
+Current stage: simple haircut visits and private customer photo references. See
+[SIMPLE_HAIRCUT_PLAN.md](SIMPLE_HAIRCUT_PLAN.md) and
+[the new workflow](SIMPLE_HAIRCUT_WORKFLOW.md). Service catalogues and upfront
+prices are superseded. Hosted deployment is pending explicit approval.
+
+Previous stage: Manager salon, barber and service CRUD. See
 [MANAGER_CRUD_PLAN.md](MANAGER_CRUD_PLAN.md) and
 [the management guide](MANAGER_CRUD_WORKFLOW.md). Removal preserves history and
 blocks active visits. User device acceptance and PR review remain pending.

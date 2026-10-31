@@ -18,10 +18,10 @@ export default function SalonsScreen() {
   const { catalog } = useCustomer();
   useRefreshOnFocus();
   const salons = catalog?.salons.map(s => salonDisplay(s, catalog)) ?? [];
-  const results = searchSalons(salons, query).filter(s => !openOnly || s.open).sort((a, b) => sort === 'name' ? a.name.localeCompare(b.name) : Number(b.open) - Number(a.open) || (sort === 'price' ? (a.price ?? Infinity) - (b.price ?? Infinity) : (a.wait?.[0] ?? Infinity) - (b.wait?.[0] ?? Infinity)));
+  const results = searchSalons(salons, query).filter(s => !openOnly || s.open).sort((a, b) => sort === 'name' ? a.name.localeCompare(b.name) : Number(b.open) - Number(a.open) || (a.wait?.[0] ?? Infinity) - (b.wait?.[0] ?? Infinity));
   return <Screen title="Salons"><Text accessibilityRole="header" style={type.title}>{!query.trim() && !openOnly ? `${salons.length} salons in Akurana` : `${results.length} salons found`}</Text>
   <SearchField value={query} onChange={q => router.setParams({ q })}/>
-  <View style={styles.row}>{([['wait', 'Shortest wait'], ['price', 'Lowest price'], ['name', 'A–Z']] as const).map(([value, label]) => <Chip key={value} label={label} selected={sort === value} onPress={() => setSort(value)}/>)}<Chip label="Open now" selected={openOnly} onPress={() => setOpenOnly(!openOnly)}/></View>
+  <View style={styles.row}>{([['wait', 'Shortest wait'], ['name', 'A–Z']] as const).map(([value, label]) => <Chip key={value} label={label} selected={sort === value} onPress={() => setSort(value)}/>)}<Chip label="Open now" selected={openOnly} onPress={() => setOpenOnly(!openOnly)}/></View>
   {params.intent === 'plan' && <Notice>Choose a salon, then select a date and an available time to request an appointment.</Notice>}
   <DataStatus />
   {results.map(s => <View key={s.id} style={{ gap: 16 }}><SalonCard salon={s}/><View style={styles.divider}/></View>)}

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Text } from 'react-native';
 import { Action, Chip, Notice, Screen } from '@/components/UI';
 import { DataStatus, Field, PrivateGate, useRefreshOnFocus, useVisitAction } from '@/components/CustomerUI';
+import {HaircutPicker} from '@/components/HaircutPicker';
 import { VisitSelection } from '@/components/VisitSelection';
 import { requestKey } from '@/lib/customer-api';
 import { getSupabaseClient } from '@/lib/supabase/client';
@@ -18,7 +19,8 @@ export default function JoinQueue() {
   }>();
   const { catalog, visits, stale, refresh } = useCustomer();
   useRefreshOnFocus();
-  const [service, setService] = useState<string | null>(null);
+  const service=null;
+  const [haircut,setHaircut]=useState<string|null>(null),[photoBusy,setPhotoBusy]=useState(false);
   const [barber, setBarber] = useState<string | null>(preferred ?? null);
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
@@ -47,7 +49,7 @@ export default function JoinQueue() {
     } }); return () => { alive = false; }; }, [salon, service, barber, signature, catalog?.observed_at]);
   const submitQr = async () => { if (qrBusy)
     return; setQrBusy(true); setQrError(null); try {
-    const result = await joinQr(salon!.slug, { service_id: service, barber_id: barber, customer_name: name, mobile });
+    const result = await joinQr(salon!.slug, { haircut_id:haircut, barber_id: barber, customer_name: name, mobile });
     await refresh();
     router.replace(`/queue-entry/${result.id}`);
   }
@@ -57,24 +59,24 @@ export default function JoinQueue() {
   finally {
     setQrBusy(false);
   } };
-  const details = salon && catalog ? <><VisitSelection catalog={catalog} salon={salon.id} service={service} barber={barber} onService={setService} onBarber={setBarber} optional/>
+  const details = salon && catalog ? <><VisitSelection catalog={catalog} salon={salon.id} barber={barber} onBarber={setBarber}/>
  {quote && quote.signature === signature && <Notice>{barber ? 'Estimated service' : 'Suggested barber'}: {catalog.barbers.find(b => b.id === quote.barber_id)?.display_name} · {time(quote.starts_at)}. This is an estimate.</Notice>}
- <Field label="Name (optional)" value={name} onChange={setName}/><Field label="Mobile (optional)" value={mobile} onChange={setMobile} maxLength={32}/></> : null;
+ <HaircutPicker value={haircut} onChange={setHaircut} onPending={setPhotoBusy}/><Field label="Name (optional)" value={name} onChange={setName}/><Field label="Mobile (optional)" value={mobile} onChange={setMobile} maxLength={32}/></> : null;
   return <Screen title={salon?.name ?? 'Join Queue'}><Text accessibilityRole="header" style={type.title}>{qr ? 'Join the queue in seconds.' : 'Join the queue'}</Text><DataStatus />
 {salon && catalog && <>{qr ? <>
  <Text style={type.body}>At {salon.name}? Join here to record your arrival. No app or account needed.</Text>
  {qrError && <Text accessibilityRole="alert" style={type.body}>{qrError}</Text>}
- <Action label={qrBusy ? 'Joining…' : 'Join Queue — I am at the salon'} disabled={qrBusy || stale || !salon.open_now} onPress={() => { void submitQr(); }}/>
+ <Action label={qrBusy ? 'Joining…' : 'Join Queue — I am at the salon'} disabled={qrBusy || photoBusy || stale || !salon.open_now} onPress={() => { void submitQr(); }}/>
  <Text style={type.caption}>One join records one person waiting. Your receipt stays on this device; keep this page to track your turn.</Text>
  <Notice>{salon.waiting} physically waiting. Scanning records an arrival after you tap Join Queue. Repeat taps on this device reuse your active entry.</Notice>
  {details}
-</> : <><Notice>{salon.waiting} physically waiting. Joining remotely does not reserve a physical position. Check in when you reach the salon.</Notice><PrivateGate>{existing ? <><Text style={type.section}>You already have an active visit here.</Text><Action label="View my queue entry" onPress={() => router.replace(`/queue-entry/${existing.id}`)}/></> : <>
+</> : <><Notice>{salon.waiting} waiting. Check in when you reach the salon.</Notice><PrivateGate>{existing ? <><Text style={type.section}>You already have an active visit here.</Text><Action label="View my queue entry" onPress={() => router.replace(`/queue-entry/${existing.id}`)}/></> : <>
  {details}<Chip label="I am physically at the salon" selected={present} onPress={() => setPresent(!present)}/>
  {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
- <Action label={busy ? 'Joining…' : 'Confirm & join queue'} disabled={busy || stale || !salon.open_now} onPress={() => { void run('join_queue', { salon_id: salon.id, service_id: service, barber_id: barber, customer_name: name, mobile, present, source: 'remote', request_key: key }, entry => router.replace(`/queue-entry/${entry}`)); }}/>
+ <Action label={busy ? 'Joining…' : 'Confirm & join queue'} disabled={busy || photoBusy || stale || !salon.open_now} onPress={() => { void run('join_queue', { salon_id: salon.id, haircut_id:haircut, barber_id: barber, customer_name: name, mobile, present, source: 'remote', request_key: key }, entry => router.replace(`/queue-entry/${entry}`)); }}/>
 </>}</PrivateGate></>}
 {!salon.open_now && <Notice>The salon is currently closed. Request a future appointment instead.</Notice>}
-<Action label="Explore Hairstyles" secondary onPress={() => router.push(`/hairstyles?salon=${salon.id}`)}/><Action label="View Barbers" secondary onPress={() => router.push(`/salon/${salon.slug}`)}/><Action label="Request Appointment" secondary onPress={() => router.push(`/salon/${salon.slug}/appointment`)}/>
+
 </>}
 </Screen>;
 }

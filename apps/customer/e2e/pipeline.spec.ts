@@ -2,19 +2,19 @@ import { test, expect } from '@playwright/test';
 import { mockDatabase, signInFixture, queueId, barberId } from './fixtures';
 test('own booked time stays unavailable with Any Barber and with a different barber',async({page})=>{
  await mockDatabase(page,{twoBarbers:true});await signInFixture(page);await page.goto('/salon/royal-saloon/appointment');
- await page.getByRole('button',{name:'Haircut · 30 min'}).click();await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
+ await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
  await page.getByRole('button',{name:/^9:00\s*am$/i}).click();await page.getByRole('button',{name:'Request Appointment',exact:true}).click();await expect(page.getByText('Pending salon confirmation',{exact:true})).toBeVisible();
- await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Haircut · 30 min'}).click();await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
+ await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
  await expect(page.getByRole('button',{name:/^9:00\s*am unavailable$/i})).toBeDisabled();
  await page.getByRole('button',{name:'Nimal',exact:true}).click();await expect(page.getByRole('button',{name:/^9:00\s*am unavailable$/i})).toBeDisabled();
  await page.goto('/appointments');await page.getByRole('button',{name:'Cancel appointment',exact:true}).click();
- await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Haircut · 30 min'}).click();await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();await expect(page.getByRole('button',{name:/^9:00\s*am$/i})).toBeEnabled();
+ await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();await expect(page.getByRole('button',{name:/^9:00\s*am$/i})).toBeEnabled();
 });
-test('customer joins, checks in, shares styles, completes a demo service and reviews', async ({ page }) => {
+test('customer joins, checks in and reviews a haircut after salon completion', async ({ page }) => {
   const fixture = await mockDatabase(page);
   await signInFixture(page);
   await page.goto('/salon/royal-saloon/join');
-  await page.getByRole('button', { name: 'Haircut · 30 min' }).click();
+
   await page.getByRole('button', { name: 'Sameer', exact: true }).click();
   await page.getByRole('textbox', { name: 'Name (optional)' }).fill('Fixture customer');
   await page.getByRole('button', { name: 'Confirm & join queue' }).click();
@@ -22,14 +22,8 @@ test('customer joins, checks in, shares styles, completes a demo service and rev
   await expect(page.getByText('Joined — not yet arrived', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'I’ve Arrived — Check In' }).click();
   await expect(page.getByText('Arrived — waiting', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Choose reference styles' }).click();
-  await page.getByRole('button', { name: 'Select reference', exact: true }).click();
-  await page.getByRole('textbox', { name: 'Note for your barber (optional)' }).fill('Keep some length on top');
-  await page.getByRole('button', { name: 'Share styles with my barber' }).click();
-  await expect(page.getByText('Your hairstyle preferences have been shared with your barber.')).toBeVisible();
-  await page.goto(`/queue-entry/${queueId}`);
-  await page.getByRole('button', { name: 'Demo controls', exact: true }).click();
-  await page.getByRole('button', { name: 'Demo: complete my haircut' }).click();
+  fixture.finishQueue();
+  await page.reload();
   await expect(page.getByText('Completed', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Review your haircut' }).click();
   await page.getByRole('button', { name: '5 ★', exact: true }).click();
@@ -40,13 +34,13 @@ test('customer joins, checks in, shares styles, completes a demo service and rev
   await expect(page.getByText('A great test haircut')).toBeVisible();
   expect(fixture.calls.filter(c => c.action === 'join_queue')).toHaveLength(1);
   expect(fixture.calls.find(c => c.action === 'join_queue')!.data.barber_id).toBe(barberId);
-  expect(fixture.calls.map(c => c.action)).toEqual(['join_queue', 'check_in', 'share_styles', 'demo_finish_queue', 'review']);
+  expect(fixture.calls.map(c => c.action)).toEqual(['join_queue', 'check_in', 'review']);
 });
-test('calendar request stays pending, demo acceptance confirms and cancellation frees the time', async ({ page }, info) => {
+test('calendar request stays pending, salon acceptance confirms and cancellation frees the time', async ({ page }, info) => {
   const fixture = await mockDatabase(page);
   await signInFixture(page);
   await page.goto('/salon/royal-saloon/appointment');
-  await page.getByRole('button', { name: 'Haircut · 30 min' }).click();
+
   await page.getByRole('button', { name: 'Sameer', exact: true }).click();
   await page.getByRole('button', { name: 'Choose date 2026-10-31' }).click();
   const available = page.getByRole('button', { name: /^9:00\s*am$/i });
@@ -56,18 +50,17 @@ test('calendar request stays pending, demo acceptance confirms and cancellation 
   await page.screenshot({ path: info.outputPath('customer-calendar.png') });
   await page.getByRole('button', { name: 'Request Appointment', exact: true }).click();
   await expect(page.getByText('Pending salon confirmation', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Demo controls', exact: true }).click();
-  await page.getByRole('button', { name: 'Demo: salon accepts', exact: true }).click();
+  fixture.acceptAppointment();await page.reload();
   await expect(page.getByText('Confirmed', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Cancel appointment', exact: true }).click();
   await expect(page.getByText('Cancelled', { exact: true })).toBeVisible();
-  expect(fixture.calls.map(c => c.action)).toEqual(['request_appointment', 'demo_accept', 'cancel_appointment']);
+  expect(fixture.calls.map(c => c.action)).toEqual(['request_appointment', 'cancel_appointment']);
 });
 test('a slot taken before submission reports a conflict and becomes unavailable on refresh', async ({ page }) => {
   const fixture = await mockDatabase(page);
   await signInFixture(page);
   await page.goto('/salon/royal-saloon/appointment');
-  await page.getByRole('button', { name: 'Haircut · 30 min' }).click();
+
   await page.getByRole('button', { name: 'Choose date 2026-10-31' }).click();
   await page.getByRole('button', { name: /^9:00\s*am$/i }).click();
   fixture.reserve();
@@ -75,7 +68,7 @@ test('a slot taken before submission reports a conflict and becomes unavailable 
   await expect(page.getByRole('alert')).toContainText('This time is no longer available');
   await page.getByRole('button', { name: 'Refresh times' }).click();
   await expect(page.getByRole('button', { name: /^9:00\s*am unavailable$/i })).toBeDisabled();
-  await expect(page.getByRole('button', { name: 'Request Appointment', exact: true })).toBeDisabled();
+  await page.getByRole('button', { name: 'Request Appointment', exact: true }).click();await expect(page.getByRole('alert')).toContainText('This time is no longer available');expect(fixture.calls.filter(c=>c.action==='request_appointment')).toHaveLength(1);
 });
 test('empty personal visits stay empty and incomplete work cannot be reviewed', async ({ page }) => {
   await mockDatabase(page);
@@ -96,7 +89,7 @@ test('a salon QR visitor joins and tracks physical arrival without any Auth requ
   await expect(page.getByRole('heading', { name: 'Join the queue in seconds.' })).toBeVisible();
   await page.getByRole('button', { name: 'Join Queue — I am at the salon', exact: true }).click();
   await expect(page.getByText('Arrived — waiting', { exact: true })).toBeVisible();
-  await expect(page.getByText('BMT-QR-FIXTURE', { exact: true })).toBeVisible();
+  await expect(page.getByText('384205', { exact: true })).toBeVisible();
   await page.reload();
   await expect(page.getByText('Arrived — waiting', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Cancel queue entry' }).click();

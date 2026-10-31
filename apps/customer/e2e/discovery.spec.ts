@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { mockDatabase } from './fixtures';
 test.beforeEach(async ({ page }) => { await mockDatabase(page); });
-test('guest discovery loads the database catalogue and supports search, price, name and open filters', async ({ page }) => {
+test('guest discovery loads the database catalogue and supports search, wait, name and open filters', async ({ page }) => {
   await page.goto('/salons');
   await expect(page.getByRole('heading', { name: '13 salons in Akurana' })).toBeVisible();
   const cards = page.getByRole('button', { name: /^View / });
@@ -14,8 +14,6 @@ test('guest discovery loads the database catalogue and supports search, price, n
   await expect(cards).toHaveCount(13);
   await page.getByRole('button', { name: 'Open now', exact: true }).click();
   await expect(cards).toHaveCount(12);
-  await page.getByRole('button', { name: 'Lowest price', exact: true }).click();
-  await expect(cards.first()).toHaveAttribute('aria-label', 'View Noire');
   await page.getByRole('button', { name: 'A–Z', exact: true }).click();
   await expect(cards.first()).toHaveAttribute('aria-label', 'View Mr Handsome');
 });
@@ -24,10 +22,9 @@ test('salon details expose calendar booking, profiles and the QR shortcut withou
   await page.getByRole('button', { name: 'View Royal Saloon', exact: true }).click();
   await expect(page.getByText('No reviews yet · Open now', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'View calendar & times' }).click();
-  await page.getByRole('button', { name: 'Haircut · 30 min' }).click();
+
   await expect(page.getByRole('button', { name: 'Choose date 2026-10-31' })).toBeVisible();
-  await page.goto('/');
-  await page.getByRole('button', { name: /Simulate QR Scan/ }).click();
+  await page.goto('/qr/royal-saloon');
   await expect(page.getByRole('heading', { name: 'Join the queue in seconds.' })).toBeVisible();
 });
 test('database failures show a retry instead of hardcoded listings', async ({ page }) => {
@@ -42,9 +39,8 @@ for (const width of [320, 393, 430, 1440])
     await page.setViewportSize({ width, height: 852 });
     for (const path of ['/', '/salons', '/salon/royal-saloon', '/salon/royal-saloon/appointment', '/hairstyles']) {
       await page.goto(path);
-      await expect(page.getByText('DEMO', { exact: true })).toBeVisible();
       if (path.endsWith('/appointment')) {
-        await page.getByRole('button', { name: 'Haircut · 30 min' }).click();
+
         await expect(page.getByRole('button', { name: 'Choose date 2026-10-31' })).toBeVisible();
       }
       await page.evaluate(() => document.fonts.ready);

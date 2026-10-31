@@ -21,6 +21,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
   let review: any = null;
   let shared: any = null;
   let reserved = false;
+  const photos:any[]=[];
   const calls: {
     action: string;
     data: any;
@@ -30,6 +31,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
     if (route.request().method() === 'OPTIONS')
       return route.fulfill({ status: 204 });
     const name = new URL(route.request().url()).pathname.split('/').at(-1);
+    if(name==='customer_gallery'){const {p_action,p_data}=route.request().postDataJSON();if(p_action==='list')return route.fulfill({json:photos});if(p_action==='save'){const id=p_data.id??crypto.randomUUID();photos.push({...p_data,id,title:p_data.title??'My haircut',image_url:p_data.hairstyle_id?catalog.hairstyles.find(h=>h.id===p_data.hairstyle_id)?.image_url:null,storage_path:p_data.storage_path??null});return route.fulfill({json:{id}});}if(p_action==='remove'){const i=photos.findIndex(p=>p.id===p_data.id);if(i>=0)photos.splice(i,1);}if(p_action==='rename'){const p=photos.find(p=>p.id===p_data.id);if(p)p.title=p_data.title;}return route.fulfill({json:{id:p_data.id}});}
     if (name === 'customer_catalog')
       return route.fulfill({ json: { ...catalog, observed_at: new Date().toISOString() } });
     if (name === 'customer_state')
@@ -39,7 +41,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
     if (name === 'qr_visit') {
       const { p_action: action, p_token: token } = route.request().postDataJSON();
       if (action === 'join') {
-        queue ??= { id: queueId, salon_id: salonId, reference: 'BMT-QR-FIXTURE', preferred_barber_id: null, assigned_barber_id: null, service_id: null, source: 'qr', status: 'arrived', created_at: new Date().toISOString(), estimated_start: new Date().toISOString(), linked_to_account: false };
+        queue ??= { id: queueId, salon_id: salonId, reference: '384205', preferred_barber_id: null, assigned_barber_id: null, service_id: null, source: 'qr', status: 'arrived', created_at: new Date().toISOString(), estimated_start: new Date().toISOString(), linked_to_account: false };
         catalog.salons[0]!.waiting = 1;
       }
       if (action === 'cancel') {
@@ -59,7 +61,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
     const { p_action: action, p_data: data } = route.request().postDataJSON();
     calls.push({ action, data });
     if (action === 'join_queue') {
-      queue ??= { id: queueId, salon_id: salonId, reference: 'BMT-FIXTURE-001', preferred_barber_id: data.barber_id, assigned_barber_id: null, service_id: data.service_id, source: data.source, status: data.present ? 'arrived' : 'joined', created_at: new Date().toISOString(), estimated_start: new Date().toISOString() };
+      queue ??= { id: queueId, salon_id: salonId, reference: '184205', preferred_barber_id: data.barber_id, assigned_barber_id: null, service_id: data.service_id, source: data.source, status: data.present ? 'arrived' : 'joined', created_at: new Date().toISOString(), estimated_start: new Date().toISOString() };
     }
     else if (action === 'check_in') {
       queue.status = 'arrived';
@@ -73,7 +75,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
       if (reserved)
         return route.fulfill({ status: 409, json: { code: '23P01', message: 'Conflict' } });
       reserved = true;
-      appointment = { id: appointmentId, salon_id: salonId, reference: 'BMA-FIXTURE-001', service_id: serviceId, preferred_barber_id: data.barber_id, status: 'pending', requested_start: data.starts_at, confirmed_start: null, confirmed_barber_id: null };
+      appointment = { id: appointmentId, salon_id: salonId, reference: '284205', service_id: serviceId, preferred_barber_id: data.barber_id, status: 'pending', requested_start: data.starts_at, confirmed_start: null, confirmed_barber_id: null };
     }
     else if (action === 'cancel_appointment') {
       appointment.status = 'cancelled';
@@ -103,7 +105,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
       shared = { id: id(82), queue_entry_id: data.kind === 'queue' ? data.id : null, appointment_id: data.kind === 'appointment' ? data.id : null, hairstyle_ids: data.hairstyle_ids, note: data.note };
     return route.fulfill({ json: { id: action === 'join_queue' ? queueId : action === 'request_appointment' ? appointmentId : data.id ?? id(99) } });
   });
-  return { catalog, calls, reserve: () => { reserved = true; } };
+  return { catalog, calls,photos,finishQueue:()=>{queue.status='completed';session={id:sessionId,queue_entry_id:queueId,appointment_id:null,barber_id:barberId,salon_id:salonId,status:'completed',service_name_snapshot:'Haircut'};},acceptAppointment:()=>{appointment.status='confirmed';appointment.confirmed_start=appointment.requested_start;appointment.confirmed_barber_id=barberId;}, reserve: () => { reserved = true; } };
 }
 export async function signInFixture(page: Page) {
   const user = { id: 'b04f0000-0000-4000-8000-000000000001', aud: 'authenticated', role: 'authenticated', email: 'pipeline@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, identities: [], created_at: '2026-10-30T00:00:00Z' };

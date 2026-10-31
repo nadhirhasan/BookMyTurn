@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { Clock3, Star } from 'lucide-react-native';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { money, queueLabel, waitLabel, type Salon } from '@/data/salons';
+import { queueLabel, waitLabel, type Salon } from '@/data/salons';
 import { colors, type } from '@/theme';
 export function SalonCard({ salon, featured = false }: {
   salon: Salon;
@@ -11,7 +11,7 @@ export function SalonCard({ salon, featured = false }: {
   <Image source={salon.photo} accessibilityLabel="Illustrative salon photo" style={featured ? s.hero : s.thumb}/>
   <View style={featured ? s.info : s.compactInfo}>
    <View style={s.nameRow}><Text style={featured ? type.section : type.label}>{salon.name}</Text>{featured && salon.rating !== null && <View style={s.rating}><Star size={14} color={colors.text}/><Text style={[type.caption, { color: colors.text }]}>{salon.rating}</Text></View>}</View>
-   <Text style={type.caption}>{salon.reviews ? `${salon.rating} (${salon.reviews})` : 'No reviews yet'} · {salon.price === null ? 'Services not listed' : `From ${money(salon.price)}`}</Text>
+   <Text style={type.caption}>{salon.reviews ? `${salon.rating} (${salon.reviews})` : 'No reviews yet'}</Text>
    <View style={s.wait}>{featured && <Clock3 size={17} color={colors.text}/>}<Text style={type.label}>{waitLabel(salon)}</Text></View>
    <Text style={type.caption}>{queueLabel(salon)}</Text>
    {featured ? <View style={s.earliest}><Text style={type.caption}>Earliest service</Text><Text style={type.label}>{salon.earliest}</Text></View> : <Text style={type.caption}>Earliest service: {salon.earliest}</Text>}

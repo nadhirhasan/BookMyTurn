@@ -82,10 +82,15 @@ database views, with a five-second foreground polling fallback.
 Optional phone banners/sounds while the app runs can be enabled under Account.
 Closed-app remote push is not configured in this Expo Go workflow.
 
-Manager catalogue actions include create/edit, weekly salon/team hours, photo removal,
-archive/restore and confirmed deletion of unused salons, barbers and services.
-Active visits block removal; completed service and financial history are retained.
-See [the CRUD workflow](docs/MANAGER_CRUD_WORKFLOW.md).
+The new workflow removes service/price catalogues from the apps. Customers save
+private haircut photos in the Haircuts tab and optionally attach one when joining
+or booking. Barbers use six-digit customer codes, view the reference, start the
+haircut and enter only the final price at completion. See
+[the simple haircut workflow](docs/SIMPLE_HAIRCUT_WORKFLOW.md).
+
+Hosted deployment of this change is pending explicit approval; the prepared
+migration must be applied before testing the new flow against live Supabase.
+Existing visits and financial history are retained.
 
 ## Configuration
 

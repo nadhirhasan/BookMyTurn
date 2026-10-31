@@ -247,14 +247,18 @@ create function bookmyturn_private.barber_command(p_barber uuid,p_action text,p_
 language plpgsql security definer set search_path='' as $$
 declare salon uuid;entry uuid:=(p_data->>'id')::uuid;member uuid;q public.queue_entries;a public.appointments;ss public.service_sessions;duration int;at_time timestamptz;amount bigint;result uuid;
 begin
- if p_action not in ('start_haircut','finish_haircut','styles_viewed') then return bookmyturn_private.barber_service_command_v1(p_barber,p_action,p_data);end if;
+ if p_action not in ('start_haircut','finish_haircut','styles_viewed') and not(p_action='check_in'and coalesce(p_data->>'reference','')~'^[0-9]{6}$') then return bookmyturn_private.barber_service_command_v1(p_barber,p_action,p_data);end if;
  if not bookmyturn_private.is_my_barber(p_barber) then raise exception 'Barber access unavailable' using errcode='42501';end if;
  select salon_id into salon from public.barbers where id=p_barber;
  perform pg_advisory_xact_lock(hashtextextended(salon::text,0));
  select id into member from bookmyturn_private.salon_memberships where salon_id=salon and user_id=auth.uid() and is_active and (role='owner' or(role='barber' and barber_id=p_barber))for share;
  if member is null or not bookmyturn_private.is_my_barber(p_barber) then raise exception 'Barber access unavailable' using errcode='42501';end if;
  perform set_config('bookmyturn.staff_action','1',true);
- if p_action='styles_viewed' then
+ if p_action='check_in' then
+  select id into entry from public.queue_entries where salon_id=salon and visit_code=p_data->>'reference'and status in('joined','arrived')and coalesce(assigned_barber_id,preferred_barber_id,p_barber)=p_barber;
+  if entry is null then raise exception 'Active customer code not found';end if;
+  return bookmyturn_private.barber_service_command_v1(p_barber,'check_in',(p_data-'reference')||jsonb_build_object('id',entry));
+ elsif p_action='styles_viewed' then
   update bookmyturn_private.haircut_references set viewed_at=coalesce(viewed_at,clock_timestamp())where id=entry and salon_id=salon and bookmyturn_private.can_read_haircut(id);
   if found then return jsonb_build_object('id',entry);end if;
   return bookmyturn_private.barber_service_command_v1(p_barber,p_action,p_data);
@@ -313,7 +317,8 @@ create function bookmyturn_private.barber_state(p_barber uuid)returns jsonb lang
 create or replace function public.barber_state(p_barber uuid)returns jsonb language sql security invoker set search_path=''as $$select bookmyturn_private.barber_state(p_barber);$$;
 alter function bookmyturn_private.qr_visit(text,text,text,jsonb)rename to qr_visit_pre_codes;
 create function bookmyturn_private.qr_visit(p_action text,p_slug text,p_token text,p_data jsonb default '{}')returns jsonb language plpgsql security definer set search_path=''as $$declare state jsonb;begin
- state:=bookmyturn_private.qr_visit_pre_codes(p_action,p_slug,p_token,p_data);if state is null then return null;end if;
+ if p_action='join' and p_data->>'haircut_id' is not null and not exists(select 1 from public.customer_haircuts where id=(p_data->>'haircut_id')::uuid and customer_id=auth.uid() and deleted_at is null)then raise exception 'Photo unavailable'using errcode='42501';end if;
+ state:=bookmyturn_private.qr_visit_pre_codes(p_action,p_slug,p_token,p_data);if p_action='join' and p_data->>'haircut_id' is not null then perform bookmyturn_private.attach_haircut((state->>'id')::uuid,'queue',(p_data->>'haircut_id')::uuid);end if;if state is null then return null;end if;
  return state||jsonb_build_object('reference',(select visit_code from public.queue_entries where id=(state->>'id')::uuid));end;$$;
 create or replace function public.qr_visit(p_action text,p_slug text,p_token text,p_data jsonb default '{}')returns jsonb language sql security invoker set search_path=''as $$select bookmyturn_private.qr_visit(p_action,p_slug,p_token,p_data);$$;
 

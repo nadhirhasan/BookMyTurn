@@ -93,7 +93,7 @@ export type Appointment = VisitLabels & {
   id: string;
   salon_id: string;
   reference: string;
-  service_id: string;
+  service_id: string | null;
   preferred_barber_id: string | null;
   status: string;
   requested_start: string;

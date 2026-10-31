@@ -20,6 +20,10 @@ reset role;
 insert into bookmyturn_private.salon_memberships(salon_id,user_id,role,barber_id)values(pg_temp.hid('salon'),pg_temp.hid('staff'),'barber',pg_temp.hid('secondbarber'));
 set local role authenticated;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('customer'))::text,true);
+-- Metadata fixtures exist only in the isolated vanilla-Postgres test database.
+insert into storage.objects(bucket_id,name,owner_id)
+ select 'customer-haircuts',pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg',pg_temp.hid('customer')::text
+ where current_database()='bookmyturn_test';
 select public.customer_gallery('save',jsonb_build_object('id',pg_temp.hid('photo'),'title','My own reference','storage_path',pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg'));
 select public.customer_gallery('save',jsonb_build_object('id',pg_temp.hid('photo'),'title','Retry','storage_path',pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg'));
 select pg_temp.ok(jsonb_array_length(public.customer_gallery('list'))=1,'Photo save retries do not duplicate the gallery');
@@ -32,10 +36,12 @@ select pg_temp.ok(jsonb_array_length(public.customer_gallery('list'))=0,'A secon
 select pg_temp.denied($q$select public.customer_command('request_appointment',jsonb_build_object('salon_id',pg_temp.hid('salon'),'barber_id',pg_temp.hid('barber'),'starts_at',((now()at time zone 'Asia/Colombo')::date+1+'14:00'::time)at time zone 'Asia/Colombo','request_key',gen_random_uuid()))$q$,'23P01');
 select pg_temp.denied($q$select public.customer_command('join_queue',jsonb_build_object('salon_id',pg_temp.hid('salon'),'request_key',gen_random_uuid(),'haircut_id',pg_temp.hid('photo')))$q$,'42501');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('customer'))::text,true);
-insert into haircut_ids select 'queue',(public.customer_command('join_queue',jsonb_build_object('salon_id',pg_temp.hid('salon'),'barber_id',pg_temp.hid('barber'),'present',true,'customer_name','Haircut fixture','request_key',gen_random_uuid(),'haircut_id',pg_temp.hid('photo')))->>'id')::uuid;
+insert into haircut_ids select 'queue',(public.customer_command('join_queue',jsonb_build_object('salon_id',pg_temp.hid('salon'),'barber_id',pg_temp.hid('barber'),'present',false,'customer_name','Haircut fixture','request_key',gen_random_uuid(),'haircut_id',pg_temp.hid('photo')))->>'id')::uuid;
 select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.customer_state()->'queues')q where q->>'id'=pg_temp.hid('queue')::text and q->>'reference'~'^[0-9]{6}$'),'Customer sees six-digit numeric visit code');
 select public.customer_gallery('remove',jsonb_build_object('id',pg_temp.hid('photo')));
 select pg_temp.ok(jsonb_array_length(public.customer_gallery('list'))=0,'Removing a saved photo hides it from the gallery');
+delete from storage.objects where current_database()='bookmyturn_test'and bucket_id='customer-haircuts'and name=pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg';
+select pg_temp.ok(current_database()<>'bookmyturn_test'or exists(select 1 from storage.objects where bucket_id='customer-haircuts'),'Shared image cannot be deleted while its visit reference is retained');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('owner'))::text,true);
 insert into haircut_ids select 'reference',(r->>'id')::uuid from jsonb_array_elements(public.barber_state(pg_temp.hid('barber'))->'styles')r where r->>'queue_entry_id'=pg_temp.hid('queue')::text;
 select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.barber_state(pg_temp.hid('barber'))->'styles')r where r->>'queue_entry_id'=pg_temp.hid('queue')::text and r->'images'->0->>'title'='My favourite haircut'),'Barber receives the optional photo even after gallery removal');
@@ -43,7 +49,9 @@ select pg_temp.ok(bookmyturn_private.haircut_media_read(pg_temp.hid('customer')|
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('staff'))::text,true);
 select pg_temp.ok(not bookmyturn_private.can_read_haircut(pg_temp.hid('reference')),'Staff on another chair cannot read a specific-barber reference');
 select pg_temp.ok(not bookmyturn_private.haircut_media_read(pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg'),'Another chair cannot sign the private photo URL');
+select pg_temp.ok(current_database()<>'bookmyturn_test' or not exists(select 1 from storage.objects where bucket_id='customer-haircuts'),'Storage RLS hides the photo from a different chair');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('owner'))::text,true);
+select public.barber_command(pg_temp.hid('barber'),'check_in',jsonb_build_object('reference',(select q->>'reference'from jsonb_array_elements(public.barber_state(pg_temp.hid('barber'))->'queues')q where q->>'id'=pg_temp.hid('queue')::text)));
 insert into haircut_ids select 'session',(public.barber_command(pg_temp.hid('barber'),'start_haircut',jsonb_build_object('id',pg_temp.hid('queue')))->>'id')::uuid;
 reset role;
 select pg_temp.ok(exists(select 1 from public.service_sessions where id=pg_temp.hid('session')and pricing_mode='completion'and agreed_price_minor is null and price_agreed_at is null and service_id is null),'Starting has no selected service, amount or fabricated agreement');
@@ -56,8 +64,16 @@ select public.barber_command(pg_temp.hid('barber'),'finish_haircut',jsonb_build_
 reset role;
 select pg_temp.ok((select count(*)=1 and min(amount_minor)=120000 from bookmyturn_private.sales where service_session_id=pg_temp.hid('session')),'Completion and retry record exactly one real sale');
 select pg_temp.ok(exists(select 1 from public.service_sessions where id=pg_temp.hid('session')and final_amount_minor=120000 and final_amount_agreed_at is null),'Final amount is recorded without a fabricated customer agreement');
+set local role authenticated;
+select public.barber_command(pg_temp.hid('barber'),'accept',jsonb_build_object('id',pg_temp.hid('appointment')));
+select public.barber_command(pg_temp.hid('barber'),'appointment_arrived',jsonb_build_object('id',pg_temp.hid('appointment')));
+insert into haircut_ids select 'appointment_session',(public.barber_command(pg_temp.hid('barber'),'start_haircut',jsonb_build_object('id',pg_temp.hid('appointment')))->>'id')::uuid;
+select public.barber_command(pg_temp.hid('barber'),'finish_haircut',jsonb_build_object('id',pg_temp.hid('appointment_session'),'final_amount_minor',130000));
+reset role;
+select pg_temp.ok(exists(select 1 from public.service_sessions where id=pg_temp.hid('appointment_session')and appointment_id=pg_temp.hid('appointment')and service_id is null and agreed_price_minor is null and final_amount_minor=130000),'Appointment completes without a catalogue service or upfront price');
 set local role anon;
 select pg_temp.denied($q$select public.customer_gallery('list')$q$,'42501');
+select pg_temp.ok(not exists(select 1 from storage.objects where bucket_id='customer-haircuts'),'Private reference objects are not anonymously readable');
 reset role;
 select 'PASS: service-free setup/booking, private photo references, codes, chair privacy and completion-only pricing' result;
 rollback;
