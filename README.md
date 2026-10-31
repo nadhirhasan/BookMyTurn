@@ -49,7 +49,7 @@ system environment change is needed. See [tunnel startup notes](docs/TUNNEL_STAR
 
 The original demo salons and linked test visits were removed at your request.
 Create your own salons in the Manager app; each starts with an empty queue.
-Salons, staff, service prices, hours, queues and appointments live in Supabase.
+Salons, staff, hours, queues and appointments live in Supabase.
 Customer availability refreshes every 15 seconds, on focus and app foreground.
 The shared hairstyle reference gallery remains available with illustrative photos.
 
@@ -68,7 +68,7 @@ Scan its QR in Expo Go. The Manager app uses port 8084; the Customer app uses
 remain aliases for the same app.
 
 Create one manager account, then add as many salons as you manage. Inside each
-salon, create its barber profiles and assign services. Upload salon covers,
+salon, create its barber profiles. Upload salon covers,
 barber portraits and your private account avatar. No verification email is
 required. Existing salons/accounts are preserved. Each new salon appears in the
 Customer app; bookable capacity appears after adding an active barber.
