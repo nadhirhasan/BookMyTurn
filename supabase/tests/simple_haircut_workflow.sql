@@ -38,11 +38,17 @@ select pg_temp.denied($q$select public.customer_command('join_queue',jsonb_build
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('customer'))::text,true);
 insert into haircut_ids select 'queue',(public.customer_command('join_queue',jsonb_build_object('salon_id',pg_temp.hid('salon'),'barber_id',pg_temp.hid('barber'),'present',false,'customer_name','Haircut fixture','request_key',gen_random_uuid(),'haircut_id',pg_temp.hid('photo')))->>'id')::uuid;
 select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.customer_state()->'queues')q where q->>'id'=pg_temp.hid('queue')::text and q->>'reference'~'^[0-9]{6}$'),'Customer sees six-digit numeric visit code');
+reset role;
+select pg_temp.ok(exists(select 1 from bookmyturn_private.staff_alerts n join public.queue_entries q on q.id=n.entity_id where q.id=pg_temp.hid('queue')and n.user_id=pg_temp.hid('owner')and right(n.body,6)=q.visit_code),'New staff activity uses the same numeric customer code');
+-- Simulate an old alert so display compatibility is checked without changing history.
+update bookmyturn_private.staff_alerts n set body=replace(n.body,q.visit_code,q.reference)from public.queue_entries q where q.id=n.entity_id and q.id=pg_temp.hid('queue');
+set local role authenticated;
 select public.customer_gallery('remove',jsonb_build_object('id',pg_temp.hid('photo')));
 select pg_temp.ok(jsonb_array_length(public.customer_gallery('list'))=0,'Removing a saved photo hides it from the gallery');
 delete from storage.objects where current_database()='bookmyturn_test'and bucket_id='customer-haircuts'and name=pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg';
 select pg_temp.ok(current_database()<>'bookmyturn_test'or exists(select 1 from storage.objects where bucket_id='customer-haircuts'),'Shared image cannot be deleted while its visit reference is retained');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('owner'))::text,true);
+select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.manager_state()->'alerts')n join public.queue_entries q on q.id=(n->>'entity_id')::uuid where q.id=pg_temp.hid('queue')and right(n->>'body',6)=q.visit_code),'Legacy staff activity displays the numeric code without rewriting its stored UUID');
 insert into haircut_ids select 'reference',(r->>'id')::uuid from jsonb_array_elements(public.barber_state(pg_temp.hid('barber'))->'styles')r where r->>'queue_entry_id'=pg_temp.hid('queue')::text;
 select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.barber_state(pg_temp.hid('barber'))->'styles')r where r->>'queue_entry_id'=pg_temp.hid('queue')::text and r->'images'->0->>'title'='My favourite haircut'),'Barber receives the optional photo even after gallery removal');
 select pg_temp.ok(bookmyturn_private.haircut_media_read(pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg'),'Assigned salon owner may read the shared private image');

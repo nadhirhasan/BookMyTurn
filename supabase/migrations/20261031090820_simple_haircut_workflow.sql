@@ -60,6 +60,13 @@ alter table public.appointments alter column visit_code set not null;
 create unique index queue_active_visit_code on public.queue_entries(salon_id,visit_code) where status in ('joined','arrived','in_service');
 create unique index appointment_active_visit_code on public.appointments(salon_id,visit_code) where status in ('pending','alternative_suggested','confirmed','arrived','in_service');
 
+-- New activity uses the same short code as the visit, without rewriting history.
+do $$declare definition text;begin
+ definition:=pg_get_functiondef('bookmyturn_private.staff_visit_changed()'::regprocedure);
+ definition:=replace(definition,'new.reference','new.visit_code');
+ execute definition;
+end;$$;
+
 create table public.customer_haircuts(
  id uuid primary key default gen_random_uuid(),customer_id uuid not null references auth.users on delete cascade,
  title text not null default 'My haircut' check(char_length(btrim(title)) between 1 and 100),
@@ -306,7 +313,10 @@ create function bookmyturn_private.customer_state()returns jsonb language sql st
 create or replace function public.customer_state()returns jsonb language sql stable security invoker set search_path=''as $$select bookmyturn_private.customer_state();$$;
 alter function bookmyturn_private.manager_state()rename to manager_state_pre_haircuts;
 create function bookmyturn_private.manager_state()returns jsonb language plpgsql stable security definer set search_path=''as $$declare state jsonb;begin
- state:=bookmyturn_private.manager_state_pre_haircuts();return state||jsonb_build_object('salons',(select coalesce(jsonb_agg(bookmyturn_private.display_visit_codes(s)),'[]')from jsonb_array_elements(state->'salons')s));end;$$;
+ state:=bookmyturn_private.manager_state_pre_haircuts();return state||jsonb_build_object('salons',(select coalesce(jsonb_agg(bookmyturn_private.display_visit_codes(s)),'[]')from jsonb_array_elements(state->'salons')s),
+ 'alerts',(select coalesce(jsonb_agg(x||jsonb_build_object('body',replace(x->>'body',coalesce(q.reference,a.reference,''),coalesce(q.visit_code,a.visit_code,'')))),'[]')
+ from jsonb_array_elements(state->'alerts')x left join public.queue_entries q on x->>'entity_kind'='queue'and q.id=(x->>'entity_id')::uuid
+ left join public.appointments a on x->>'entity_kind'='appointment'and a.id=(x->>'entity_id')::uuid));end;$$;
 create or replace function public.manager_state()returns jsonb language sql stable security invoker set search_path=''as $$select bookmyturn_private.manager_state();$$;
 alter function bookmyturn_private.barber_state(uuid)rename to barber_state_pre_haircuts;
 create function bookmyturn_private.barber_state(p_barber uuid)returns jsonb language plpgsql security definer set search_path=''as $$declare state jsonb;photos jsonb;begin
