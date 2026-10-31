@@ -112,7 +112,7 @@ begin
   entry:=coalesce(entry,gen_random_uuid());
   if exists(select 1 from public.customer_haircuts where id=entry and customer_id=u) then return jsonb_build_object('id',entry);end if;
   if style is not null and media is not null then raise exception 'Choose one photo';end if;
-  title:=coalesce(nullif(btrim(p_data->>'title'),''),(select title from public.hairstyles where id=style),'My haircut');
+  title:=coalesce(nullif(btrim(p_data->>'title'),''),(select hs.title from public.hairstyles hs where hs.id=style),'My haircut');
   insert into public.customer_haircuts(id,customer_id,title,hairstyle_id,storage_path) values(entry,u,title,style,media);
  else
   select * into h from public.customer_haircuts where id=entry and customer_id=u for update;
