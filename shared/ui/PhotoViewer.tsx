@@ -41,4 +41,3 @@ function ViewerSession({photos,initial,onClose,resolve}:Props&{initial:number}){
 }
 
 const s=StyleSheet.create({screen:{flex:1,backgroundColor:'#FAFAF7'},header:{flexDirection:'row',alignItems:'center',padding:16,gap:12},title:{fontFamily:'DMSans_600SemiBold',fontSize:17,fontWeight:'600',color:'#292D29'},caption:{fontFamily:'DMSans_400Regular',fontSize:14,color:'#6C7069'},control:{width:48,height:48,alignItems:'center',justifyContent:'center',borderRadius:24},footer:{flexDirection:'row',alignItems:'center',justifyContent:'space-between',paddingHorizontal:20,paddingVertical:10},disabled:{opacity:.25},overlay:{position:'absolute',top:0,right:0,bottom:0,left:0,alignItems:'center',justifyContent:'center',gap:12,backgroundColor:'#FAFAF7'},retry:{paddingHorizontal:24,paddingVertical:12,borderWidth:1,borderColor:'#D9DDD5',borderRadius:24}});
-
