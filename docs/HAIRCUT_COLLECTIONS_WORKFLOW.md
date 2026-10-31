@@ -14,7 +14,9 @@ Fresh PostgreSQL 17 CI passes all existing suites plus `supabase/tests/haircut_c
 
 Local checks passed: 26 Customer + 31 Manager browser journeys, 22 Auth/session unit checks, both workspace lint/types and exports for iOS/Android/web in both apps. Browser tests cover two-photo uploads, full-frame rendering, expired URL retry, collection/photo CRUD, optional sharing, required-field errors, small/large viewports and the barber's full-screen viewer. Synthetic image fixtures make full-frame layout verifiable; browser APIs are mocked.
 
-**Hosted migration remains pending explicit approval.** Automatic approval review rejected deployment because this new migration changes live schema/RLS/functions and existing photo references. The prepared migration preserves current data. After approval, apply it through the migration tool, align its local timestamp, regenerate public types, run hosted rollback/API checks and confirm existing photo preservation.
+**Deployed on 31 October 2026 after explicit approval:** `20261031133407_haircut_collections.sql`. Local history matches the hosted migration and the public schema snapshot is regenerated. Hosted collection and single-photo compatibility suites passed with rollback. A real API test passed two-image upload/download, collection CRUD/retries, photo removal and cross-account/anonymous access denial. Both disposable accounts were globally signed out and deleted; their two uploaded files were removed.
+
+Preservation checks matched the entire existing photo record before/after migration (excluding the new collection link). Its contents are unchanged, both existing accounts remain, and the photo belongs to a one-photo collection. The two pre-existing uploaded files remain. No reset was performed. Security advisors report no new schema/RLS findings; the existing [leaked-password protection setting](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) remains disabled and was not changed by this feature.
 
 [PR #15](https://github.com/nadhirhasan/BookMyTurn/pull/15) holds final CI and review status. User iPhone/Android acceptance remains pending.
 
