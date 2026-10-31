@@ -21,9 +21,9 @@ insert into bookmyturn_private.salon_memberships(salon_id,user_id,role,barber_id
 set local role authenticated;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('customer'))::text,true);
 -- Metadata fixtures exist only in the isolated vanilla-Postgres test database.
-insert into storage.objects(bucket_id,name,owner_id)
- select 'customer-haircuts',pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg',pg_temp.hid('customer')::text
- where current_database()='bookmyturn_test';
+do $$begin if current_database()='bookmyturn_test'then
+ insert into storage.objects(bucket_id,name,owner_id)values('customer-haircuts',pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg',pg_temp.hid('customer')::text);
+end if;end;$$;
 select public.customer_gallery('save',jsonb_build_object('id',pg_temp.hid('photo'),'title','My own reference','storage_path',pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg'));
 select public.customer_gallery('save',jsonb_build_object('id',pg_temp.hid('photo'),'title','Retry','storage_path',pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg'));
 select pg_temp.ok(jsonb_array_length(public.customer_gallery('list'))=1,'Photo save retries do not duplicate the gallery');
@@ -45,7 +45,9 @@ update bookmyturn_private.staff_alerts n set body=replace(n.body,q.visit_code,q.
 set local role authenticated;
 select public.customer_gallery('remove',jsonb_build_object('id',pg_temp.hid('photo')));
 select pg_temp.ok(jsonb_array_length(public.customer_gallery('list'))=0,'Removing a saved photo hides it from the gallery');
-delete from storage.objects where current_database()='bookmyturn_test'and bucket_id='customer-haircuts'and name=pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg';
+do $$begin if current_database()='bookmyturn_test'then
+ delete from storage.objects where bucket_id='customer-haircuts'and name=pg_temp.hid('customer')||'/'||pg_temp.hid('photo')||'.jpg';
+end if;end;$$;
 select pg_temp.ok(current_database()<>'bookmyturn_test'or exists(select 1 from storage.objects where bucket_id='customer-haircuts'),'Shared image cannot be deleted while its visit reference is retained');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.hid('owner'))::text,true);
 select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.manager_state()->'alerts')n join public.queue_entries q on q.id=(n->>'entity_id')::uuid where q.id=pg_temp.hid('queue')and right(n->>'body',6)=q.visit_code),'Legacy staff activity displays the numeric code without rewriting its stored UUID');

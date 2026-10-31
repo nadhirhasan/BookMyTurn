@@ -47,11 +47,11 @@ project launcher exposes npm's existing global modules to Expo for that process,
 preventing the repeated ngrok-install prompt. No additional installation or
 system environment change is needed. See [tunnel startup notes](docs/TUNNEL_STARTUP.md).
 
-The original demo salons and linked test visits were removed at your request.
-Create your own salons in the Manager app; each starts with an empty queue.
+Development data and test accounts were reset at your request on 31 October 2026.
+Create fresh accounts and your own salons; each starts with an empty queue.
 Salons, staff, hours, queues and appointments live in Supabase.
 Customer availability refreshes every 15 seconds, on focus and app foreground.
-The shared hairstyle reference gallery remains available with illustrative photos.
+The haircut gallery starts empty; customers can upload their own favourite photos.
 
 ## Run the Manager app
 
@@ -88,9 +88,10 @@ or booking. Barbers use six-digit customer codes, view the reference, start the
 haircut and enter only the final price at completion. See
 [the simple haircut workflow](docs/SIMPLE_HAIRCUT_WORKFLOW.md).
 
-Hosted deployment of this change is pending explicit approval; the prepared
-migration must be applied before testing the new flow against live Supabase.
-Existing visits and financial history are retained.
+The haircut migration is deployed and hosted checks pass. The requested clean
+reset removed all app records, Auth accounts/sessions and uploaded files while
+retaining the schema and project settings. Sign out of old app sessions and
+create fresh accounts before testing.
 
 ## Configuration
 

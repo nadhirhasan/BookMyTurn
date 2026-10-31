@@ -5,7 +5,8 @@ Plan prepared: 29 October 2026 (Asia/Colombo).
 Current stage: simple haircut visits and private customer photo references. See
 [SIMPLE_HAIRCUT_PLAN.md](SIMPLE_HAIRCUT_PLAN.md) and
 [the new workflow](SIMPLE_HAIRCUT_WORKFLOW.md). Service catalogues and upfront
-prices are superseded. Hosted deployment is pending explicit approval.
+prices are superseded. Hosted deployment and the explicitly requested clean
+reset are verified. User phone acceptance remains pending.
 
 Previous stage: Manager salon, barber and service CRUD. See
 [MANAGER_CRUD_PLAN.md](MANAGER_CRUD_PLAN.md) and

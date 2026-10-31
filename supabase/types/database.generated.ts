@@ -84,8 +84,9 @@ export type Database = {
           requested_duration_minutes: number
           requested_start: string
           salon_id: string
-          service_id: string
+          service_id: string | null
           status: string
+          visit_code: string
         }
         Insert: {
           accepted_proposal_id?: string | null
@@ -105,8 +106,9 @@ export type Database = {
           requested_duration_minutes: number
           requested_start: string
           salon_id: string
-          service_id: string
+          service_id?: string | null
           status?: string
+          visit_code: string
         }
         Update: {
           accepted_proposal_id?: string | null
@@ -126,8 +128,9 @@ export type Database = {
           requested_duration_minutes?: number
           requested_start?: string
           salon_id?: string
-          service_id?: string
+          service_id?: string | null
           status?: string
+          visit_code?: string
         }
         Relationships: [
           {
@@ -326,6 +329,44 @@ export type Database = {
           },
         ]
       }
+      customer_haircuts: {
+        Row: {
+          created_at: string
+          customer_id: string
+          deleted_at: string | null
+          hairstyle_id: string | null
+          id: string
+          storage_path: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          deleted_at?: string | null
+          hairstyle_id?: string | null
+          id?: string
+          storage_path?: string | null
+          title?: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          deleted_at?: string | null
+          hairstyle_id?: string | null
+          id?: string
+          storage_path?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_haircuts_hairstyle_id_fkey"
+            columns: ["hairstyle_id"]
+            isOneToOne: false
+            referencedRelation: "hairstyles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_profiles: {
         Row: {
           created_at: string
@@ -493,6 +534,7 @@ export type Database = {
           source: string
           started_at: string | null
           status: string
+          visit_code: string
         }
         Insert: {
           arrival_sequence?: number | null
@@ -514,6 +556,7 @@ export type Database = {
           source: string
           started_at?: string | null
           status?: string
+          visit_code: string
         }
         Update: {
           arrival_sequence?: number | null
@@ -535,6 +578,7 @@ export type Database = {
           source?: string
           started_at?: string | null
           status?: string
+          visit_code?: string
         }
         Relationships: [
           {
@@ -820,7 +864,7 @@ export type Database = {
       }
       service_sessions: {
         Row: {
-          agreed_price_minor: number
+          agreed_price_minor: number | null
           appointment_id: string | null
           barber_id: string
           commission_agreed_at: string | null
@@ -837,20 +881,21 @@ export type Database = {
           final_price_reason: string | null
           id: string
           payment_method: string | null
-          price_agreed_at: string
+          price_agreed_at: string | null
           price_exception_reason: string | null
-          price_max_minor_snapshot: number
-          price_min_minor_snapshot: number
+          price_max_minor_snapshot: number | null
+          price_min_minor_snapshot: number | null
+          pricing_mode: string
           queue_entry_id: string | null
           salon_id: string
-          service_id: string
+          service_id: string | null
           service_name_snapshot: string
           source: string
           started_at: string
           status: string
         }
         Insert: {
-          agreed_price_minor: number
+          agreed_price_minor?: number | null
           appointment_id?: string | null
           barber_id: string
           commission_agreed_at?: string | null
@@ -867,20 +912,21 @@ export type Database = {
           final_price_reason?: string | null
           id?: string
           payment_method?: string | null
-          price_agreed_at: string
+          price_agreed_at?: string | null
           price_exception_reason?: string | null
-          price_max_minor_snapshot: number
-          price_min_minor_snapshot: number
+          price_max_minor_snapshot?: number | null
+          price_min_minor_snapshot?: number | null
+          pricing_mode?: string
           queue_entry_id?: string | null
           salon_id: string
-          service_id: string
+          service_id?: string | null
           service_name_snapshot: string
           source: string
           started_at?: string
           status?: string
         }
         Update: {
-          agreed_price_minor?: number
+          agreed_price_minor?: number | null
           appointment_id?: string | null
           barber_id?: string
           commission_agreed_at?: string | null
@@ -897,13 +943,14 @@ export type Database = {
           final_price_reason?: string | null
           id?: string
           payment_method?: string | null
-          price_agreed_at?: string
+          price_agreed_at?: string | null
           price_exception_reason?: string | null
-          price_max_minor_snapshot?: number
-          price_min_minor_snapshot?: number
+          price_max_minor_snapshot?: number | null
+          price_min_minor_snapshot?: number | null
+          pricing_mode?: string
           queue_entry_id?: string | null
           salon_id?: string
-          service_id?: string
+          service_id?: string | null
           service_name_snapshot?: string
           source?: string
           started_at?: string
@@ -1103,6 +1150,10 @@ export type Database = {
       customer_catalog: { Args: never; Returns: Json }
       customer_command: {
         Args: { p_action: string; p_data: Json }
+        Returns: Json
+      }
+      customer_gallery: {
+        Args: { p_action: string; p_data?: Json }
         Returns: Json
       }
       customer_quote: {
