@@ -12,6 +12,8 @@ export function errorMessage(error: {
   code?: string;
   message?: string;
 }) {
+  const financeErrors = ['Choose a salon', 'Check expense details', 'This request has already been used', 'Expense unavailable', 'This expense changed. Refresh before saving', 'Explain the correction to this paid expense', 'Enter a valid expense amount', 'Choose a valid expense date', 'Enter an expense description', 'Choose an expense category', 'Choose a payment date up to today', 'Choose a date range up to 366 days', 'Check report filters', 'Choose a barber from this salon'];
+  if (financeErrors.includes(error.message ?? '')) return error.message!;
   const invitationErrors = ['Invitation unavailable or expired', 'This account already belongs to this salon', 'This barber already has an account', 'Activate this barber before inviting', 'Check invitation details', 'Barber unavailable'];
   if (invitationErrors.includes(error.message ?? '')) return error.message!;
   if (error.code === '42501')

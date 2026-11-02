@@ -1175,6 +1175,10 @@ export type Database = {
       }
     }
     Functions: {
+      owner_finance: {
+        Args: { p_action: string; p_data?: Json }
+        Returns: Json
+      }
       barber_command: {
         Args: { p_action: string; p_barber: string; p_data: Json }
         Returns: Json

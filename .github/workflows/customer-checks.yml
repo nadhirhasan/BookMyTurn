@@ -83,3 +83,4 @@ jobs:
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/simple_haircut_workflow.sql
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/haircut_collections.sql
           docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/barber_invitations.sql
+          docker exec -i "$POSTGRES_CONTAINER" psql -U postgres -d bookmyturn_test -v ON_ERROR_STOP=1 < supabase/tests/owner_accounting.sql

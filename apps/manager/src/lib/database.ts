@@ -4,6 +4,7 @@ export type Database = {
     Tables: Record<never, never>;
     Views: Record<never, never>;
     Functions: {
+      owner_finance: { Args: { p_action: string; p_data?: Json }; Returns: Json };
       barber_team: { Args: { p_salon: string }; Returns: Json };
       barber_invitation: { Args: { p_action: string; p_data: Json }; Returns: Json };
       manager_visit_command:{Args:{p_salon:string;p_action:string;p_id:string};Returns:Json};

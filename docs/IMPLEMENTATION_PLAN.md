@@ -2,7 +2,13 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: invited barber accounts and restricted operational access. See
+Current stage: owner sales, expenses, estimated profit and reports. See
+[OWNER_ACCOUNTING_PLAN.md](OWNER_ACCOUNTING_PLAN.md) and
+[the accounting workflow](OWNER_ACCOUNTING_WORKFLOW.md). Pricing remains
+completion-only; services and displayed ranges remain deferred. This feature
+preserves current data and goes through its own PR and validation gates.
+
+Previous stage: invited barber accounts and restricted operational access. See
 [BARBER_INVITATIONS_PLAN.md](BARBER_INVITATIONS_PLAN.md). Implement invitation
 creation, acceptance and revocation, financial privacy and stale-data safeguards
 in [PR #16](https://github.com/nadhirhasan/BookMyTurn/pull/16). Local and hosted
