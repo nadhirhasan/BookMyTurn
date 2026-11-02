@@ -99,6 +99,14 @@ accounts, uploads and visits. Reload both apps to test the new gallery.
 
 ## Configuration
 
+The next feature adds individual barber logins through owner-shared invitations.
+Use **Salon → Team → Login access** to create a seven-day invitation. The barber
+opens it or pastes it into **Join a salon**, signs in and accepts the existing
+chair. Owners can replace/cancel links or remove login access without deleting
+the barber's history. My Work shows counts and reviews; financial history is
+restricted by the database. See [the feature plan](docs/BARBER_INVITATIONS_PLAN.md)
+and [workflow](docs/BARBER_INVITATIONS_WORKFLOW.md) for deployment status.
+
 Root `.env` is ignored. Copy `.env.example` if setting up another checkout.
 The app config loads root values as fallback without replacing injected
 environment variables. Only project URL and publishable key belong in app

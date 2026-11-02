@@ -4,12 +4,15 @@ import { contexts as fetchContexts, state as fetchState, command, setup } from '
 import type { Context as BarberContext, State, Json } from '@/lib/types';
 import { useSession } from './SessionProvider';
 import { useManager } from './ManagerProvider';
+import { useFreshness } from '@/hooks/useFreshness';
 type Value = {
   contexts: BarberContext[];
   data: State | null;
   loading: boolean;
   error: string | null;
   busy: boolean;
+  stale: boolean;
+  lastUpdated: number | null;
   refresh: () => Promise<State|null>;
   select: (barber: string) => Promise<void>;
   mutate: (action: string, data: Json) => Promise<{
@@ -28,18 +31,20 @@ export function BarberProvider({ children }: {
     uid: string | null;
     contexts: BarberContext[];
     data: State | null;
-  }>({ uid: null, contexts: [], data: null });
+    checkedAt: number | null;
+  }>({ uid: null, contexts: [], data: null, checkedAt: null });
   const selection = useRef<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const pending = useRef(false);
   const generation = useRef(0);
+  const freshness = useFreshness(snapshot.uid === uid ? snapshot.checkedAt : null, error);
   const refresh = useCallback(async () => {
     const version = ++generation.current;
     try {
       if (!uid) {
-        setSnapshot({ uid: null, contexts: [], data: null });
+        setSnapshot({ uid: null, contexts: [], data: null, checkedAt: null });
         setError(null);
         return null;
       }
@@ -47,7 +52,7 @@ export function BarberProvider({ children }: {
       const selected = list.find(c => c.barber_id === selection.current) ?? list[0];
       const data = selected ? await fetchState(selected.barber_id) : null;
       if (version === generation.current) {
-        setSnapshot({ uid, contexts: list, data });
+        setSnapshot({ uid, contexts: list, data, checkedAt: Date.now() });
         setError(null);
         return data;
       }
@@ -56,7 +61,7 @@ export function BarberProvider({ children }: {
     catch (e) {
       if (version === generation.current) {
         setError(e instanceof Error ? e.message : 'Could not load your work.');
-        setSnapshot({ uid, contexts: [], data: null });
+        setSnapshot({ uid, contexts: [], data: null, checkedAt: null });
       }
     }
     finally {
@@ -80,6 +85,7 @@ export function BarberProvider({ children }: {
   }, [refresh]);
   useEffect(()=>{if(liveVersion)void Promise.resolve().then(refresh);},[liveVersion,refresh]);
   const mutate = async (action: string, data: Json) => {
+    if (freshness.stale || !snapshot.checkedAt || Date.now() - snapshot.checkedAt > 45000) throw new Error('Your work is out of date. Refresh before making changes.');
     if (pending.current)
       throw new Error('Please wait for the current request.');
     const barber = snapshot.uid === uid ? snapshot.data?.barber.id : null;
@@ -112,7 +118,7 @@ export function BarberProvider({ children }: {
     }
   };
   const visible = snapshot.uid === uid ? snapshot : null;
-  return <Context.Provider value={{ contexts: visible?.contexts ?? [], data: visible?.data ?? null, loading: loading || !!uid && !visible, error, busy, refresh, select: async (barber: string) => { selection.current = barber; setLoading(true); setSnapshot({ uid, contexts: snapshot.contexts, data: null }); const selected=await refresh(); if(selected?.barber.id!==barber)throw new Error('Could not open this chair. Refresh and retry.'); }, mutate, setup: setupSalon }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ contexts: visible?.contexts ?? [], data: visible?.data ?? null, loading: loading || !!uid && !visible, error, busy, ...freshness, refresh, select: async (barber: string) => { selection.current = barber; setLoading(true); setSnapshot({ uid, contexts: snapshot.contexts, data: null, checkedAt: null }); const selected=await refresh(); if(selected?.barber.id!==barber)throw new Error('Could not open this chair. Refresh and retry.'); }, mutate, setup: setupSalon }}>{children}</Context.Provider>;
 }
 export function useBarber() {
   const value = useContext(Context);

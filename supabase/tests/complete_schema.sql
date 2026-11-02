@@ -142,7 +142,7 @@ select pg_temp.assert_true((select count(*)=0 from public.service_sessions),'B c
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.id('barber'),'role','authenticated')::text,true);
 select set_config('request.jwt.claim.sub',pg_temp.id('barber')::text,true);
 select pg_temp.assert_true((select count(*)=2 from public.queue_entries),'Barber reads assigned queue, not another barber queue');
-select pg_temp.assert_true((select count(*)=1 from bookmyturn_private.sales),'Barber can read own completed-service performance');
+select pg_temp.assert_true((select count(*)=0 from bookmyturn_private.sales),'Barber cannot read financial sales without permission');
 select pg_temp.assert_true((select count(*)=0 from bookmyturn_private.expenses),'Barber has no default expense access');
 select pg_temp.expect_state($q$update public.reviews set rating=1$q$,'42501','Barber cannot rewrite customer reviews');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.id('coordinator'),'role','authenticated')::text,true);
