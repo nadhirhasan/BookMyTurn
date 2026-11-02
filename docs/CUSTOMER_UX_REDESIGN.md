@@ -1,6 +1,7 @@
 # Customer experience redesign
 
-Status: implemented; PR and phone acceptance pending, 2 November 2026.
+Status: implemented in [PR #18](https://github.com/nadhirhasan/BookMyTurn/pull/18);
+phone acceptance pending, 2 November 2026.
 Scope confirmed by the user: customer first; Owner/Barber follows separately.
 Branch: `feat/customer-experience-redesign`, based on owner accounting.
 
@@ -129,7 +130,7 @@ keyboard, safe areas and disabled controls remain usable.
 - [x] Validate booking conflicts, selection after sign-in, QR and history.
 - [x] Inspect screenshots at phone sizes, landscape and enlarged browser text.
 - [x] Run lint/types, customer journeys and iOS/Android/web exports.
-- [ ] Open a reviewable feature PR with screenshots and known limitations.
+- [x] Open a reviewable feature PR with screenshots and known limitations.
 - [ ] User verifies on physical iPhone; Android acceptance also remains required.
 - [ ] Sync redesigned frames into Figma when tool allowance permits.
 
