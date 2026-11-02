@@ -2,6 +2,7 @@ import {router}from 'expo-router';
 import {useState}from 'react';
 import {ActivityIndicator,Image,Pressable,ScrollView,Text,View}from 'react-native';
 import {FolderHeart,Heart,Plus}from 'lucide-react-native';
+import {ImageBanner} from '@/components/Experience';
 import {Action,Chip,Screen}from '@/components/UI';
 import {DataStatus,Field,useRefreshOnFocus}from '@/components/CustomerUI';
 import {SaveStyleDialog}from '@/components/SaveStyleDialog';
@@ -11,7 +12,7 @@ import {colors,type}from '@/theme';
 export default function Hairstyles(){
  const gallery=useHaircutCollections(),{catalog}=useCustomer();useRefreshOnFocus();
  const [explore,setExplore]=useState(false),[category,setCategory]=useState<string|null>(null),[creating,setCreating]=useState(false),[title,setTitle]=useState(''),[submitted,setSubmitted]=useState(false),[style,setStyle]=useState<{id:string;title:string}|null>(null);
- return <Screen title="Haircut gallery"><Text accessibilityRole="header" style={type.title}>Keep your next look.</Text><View style={{flexDirection:'row',gap:10}}><Chip label="My collections" selected={!explore} onPress={()=>setExplore(false)}/><Chip label="Explore styles" selected={explore} onPress={()=>setExplore(true)}/></View>
+ return <Screen title="Haircut gallery" tab><ImageBanner compact title="Your next look starts here." subtitle="Collect front, side and back views. Share a collection when you join or book."/><View style={{flexDirection:'row',gap:10}}><Chip label="My collections" selected={!explore} onPress={()=>setExplore(false)}/><Chip label="Explore styles" selected={explore} onPress={()=>setExplore(true)}/></View>
  {!explore?<>{gallery.signedIn?<>
  {creating?<View style={{gap:12,padding:16,borderWidth:1,borderColor:colors.divider,borderRadius:16}}><Field label="Collection name" value={title} onChange={setTitle} maxLength={100} error={submitted&&!title.trim()?'Enter a collection name.':undefined}/><Action label="Create collection" disabled={gallery.busy} onPress={()=>{setSubmitted(true);if(title.trim())void gallery.create(title).then(id=>{if(id){setCreating(false);setTitle('');router.push(`/haircut-collection/${id}`);}});}}/><Action label="Cancel" secondary onPress={()=>setCreating(false)}/></View>:<Pressable accessibilityRole="button" accessibilityLabel="New collection" onPress={()=>{setCreating(true);setSubmitted(false);}} style={{minHeight:52,borderRadius:14,backgroundColor:colors.action,flexDirection:'row',justifyContent:'center',alignItems:'center',gap:9}}><Plus size={21} color="#fff"/><Text style={[type.label,{color:'#fff'}]}>New collection</Text></Pressable>}
  {gallery.loading&&<ActivityIndicator accessibilityLabel="Loading collections" color={colors.text}/>}

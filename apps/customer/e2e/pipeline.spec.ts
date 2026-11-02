@@ -3,10 +3,10 @@ import { mockDatabase, signInFixture, queueId, barberId } from './fixtures';
 test('own booked time stays unavailable with Any Barber and with a different barber',async({page})=>{
  await mockDatabase(page,{twoBarbers:true});await signInFixture(page);await page.goto('/salon/royal-saloon/appointment');
  await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
- await page.getByRole('button',{name:/^9:00\s*am$/i}).click();await page.getByRole('button',{name:'Request Appointment',exact:true}).click();await expect(page.getByText('Pending salon confirmation',{exact:true})).toBeVisible();
+ await page.getByRole('button',{name:/^9:00\s*am$/i}).click();await page.getByRole('button',{name:'Review appointment',exact:true}).click();await page.getByRole('button',{name:'Request Appointment',exact:true}).click();await expect(page.getByText('Pending salon confirmation',{exact:true})).toBeVisible();
  await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();
  await expect(page.getByRole('button',{name:/^9:00\s*am unavailable$/i})).toBeDisabled();
- await page.getByRole('button',{name:'Nimal',exact:true}).click();await expect(page.getByRole('button',{name:/^9:00\s*am unavailable$/i})).toBeDisabled();
+ await page.getByRole('button',{name:'Change barber',exact:true}).click();await page.getByRole('button',{name:'Nimal',exact:true}).click();await expect(page.getByRole('button',{name:/^9:00\s*am unavailable$/i})).toBeDisabled();
  await page.goto('/appointments');await page.getByRole('button',{name:'Cancel appointment',exact:true}).click();
  await page.goto('/salon/royal-saloon/appointment');await page.getByRole('button',{name:'Choose date 2026-10-31'}).click();await expect(page.getByRole('button',{name:/^9:00\s*am$/i})).toBeEnabled();
 });
@@ -41,6 +41,7 @@ test('calendar request stays pending, salon acceptance confirms and cancellation
   await signInFixture(page);
   await page.goto('/salon/royal-saloon/appointment');
 
+  await page.getByRole('button', { name: 'Change barber', exact: true }).click();
   await page.getByRole('button', { name: 'Sameer', exact: true }).click();
   await page.getByRole('button', { name: 'Choose date 2026-10-31' }).click();
   const available = page.getByRole('button', { name: /^9:00\s*am$/i });
@@ -48,6 +49,7 @@ test('calendar request stays pending, salon acceptance confirms and cancellation
   await expect(page.getByRole('button', { name: /^9:30\s*am unavailable$/i })).toBeDisabled();
   await available.click();
   await page.screenshot({ path: info.outputPath('customer-calendar.png') });
+  await page.getByRole('button', { name: 'Review appointment', exact: true }).click();
   await page.getByRole('button', { name: 'Request Appointment', exact: true }).click();
   await expect(page.getByText('Pending salon confirmation', { exact: true })).toBeVisible();
   fixture.acceptAppointment();await page.reload();
@@ -64,11 +66,12 @@ test('a slot taken before submission reports a conflict and becomes unavailable 
   await page.getByRole('button', { name: 'Choose date 2026-10-31' }).click();
   await page.getByRole('button', { name: /^9:00\s*am$/i }).click();
   fixture.reserve();
+  await page.getByRole('button', { name: 'Review appointment', exact: true }).click();
   await page.getByRole('button', { name: 'Request Appointment', exact: true }).click();
   await expect(page.getByRole('alert')).toContainText('This time is no longer available');
   await page.getByRole('button', { name: 'Refresh times' }).click();
   await expect(page.getByRole('button', { name: /^9:00\s*am unavailable$/i })).toBeDisabled();
-  await page.getByRole('button', { name: 'Request Appointment', exact: true }).click();await expect(page.getByRole('alert')).toContainText('This time is no longer available');expect(fixture.calls.filter(c=>c.action==='request_appointment')).toHaveLength(1);
+  await expect(page.getByRole('button', { name: 'Request Appointment', exact: true })).toHaveCount(0);await expect(page.getByRole('alert')).toContainText('This time is no longer available');expect(fixture.calls.filter(c=>c.action==='request_appointment')).toHaveLength(1);
 });
 test('empty personal visits stay empty and incomplete work cannot be reviewed', async ({ page }) => {
   await mockDatabase(page);

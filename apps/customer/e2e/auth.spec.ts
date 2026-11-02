@@ -81,7 +81,7 @@ test('account entry offers simple forms, validation, password visibility and gue
   await expect(page.getByText('Use at least 8 characters.')).toBeVisible();
   expect(calls.signups + calls.signins).toBe(0);
   await page.getByRole('button', { name: 'Continue without an account', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Find a good time' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Good hair. Less waiting.' })).toBeVisible();
 });
 test('signup signs in immediately, restores after reload and signs out on this device', async ({ page }, testInfo) => {
   const calls = await authApi(page);
@@ -139,7 +139,7 @@ test('network errors release the form and profile failures keep browsing/signout
   await expect(page.getByRole('heading', { name: 'You’re signed in' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Retry profile', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Explore salons', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '13 salons in Akurana' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '13 salons to explore' })).toBeVisible();
 });
 for (const width of [320, 393, 430]) {
   test(`account forms fit ${width}px and remain usable with short screens`, async ({ page }, testInfo) => {

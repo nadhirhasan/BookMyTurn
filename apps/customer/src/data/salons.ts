@@ -17,7 +17,7 @@ export type Salon = {
   available: number;
   earliest: string;
   open: boolean;
-  photo: ImageSourcePropType;
+  photo: ImageSourcePropType | null;
   barberNames: string[];
 };
 // Display projection only. No synthetic catalogue, rating or availability fallback.
@@ -29,7 +29,7 @@ export function salonDisplay(salon: SalonRecord, catalog: Catalog): Salon {
     price: prices.length ? Math.min(...prices) : null, wait: minutes === null ? null : [minutes, minutes],
     waiting: salon.waiting, barbers: staff.length, available: staff.filter(b => b.availability === 'available').length,
     earliest: salon.earliest ? minutes === 0 ? 'Now' : time(salon.earliest) : 'No capacity today', open: salon.open_now,
-    photo: salon.photo_url ? { uri: salon.photo_url } : require('../../assets/images/salon.jpg'), barberNames: staff.map(b => b.display_name) };
+    photo: salon.photo_url ? { uri: salon.photo_url } : null, barberNames: staff.map(b => b.display_name) };
 }
 export const waitLabel = (salon: Salon) => !salon.open ? 'Closed' : salon.wait ? salon.wait[0] === 0 ? 'No estimated wait' : `About ${salon.wait[0]} min` : 'No capacity today';
 export const queueLabel = (salon: Salon) => `${salon.waiting} physically waiting · ${salon.barbers} barbers`;

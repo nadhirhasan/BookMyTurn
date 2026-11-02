@@ -117,7 +117,7 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
   });
   return { catalog, calls,photos,collections,finishQueue:()=>{queue.status='completed';session={id:sessionId,queue_entry_id:queueId,appointment_id:null,barber_id:barberId,salon_id:salonId,status:'completed',service_name_snapshot:'Haircut'};},acceptAppointment:()=>{appointment.status='confirmed';appointment.confirmed_start=appointment.requested_start;appointment.confirmed_barber_id=barberId;}, reserve: () => { reserved = true; } };
 }
-export async function signInFixture(page: Page) {
+export async function installAuthFixture(page: Page) {
   const user = { id: 'b04f0000-0000-4000-8000-000000000001', aud: 'authenticated', role: 'authenticated', email: 'pipeline@example.invalid', app_metadata: { provider: 'email' }, user_metadata: {}, identities: [], created_at: '2026-10-30T00:00:00Z' };
   const token = `${Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url')}.${Buffer.from(JSON.stringify({ sub: user.id, aud: 'authenticated', role: 'authenticated', exp: Math.floor(Date.now() / 1000) + 3600 })).toString('base64url')}.fixture`;
   await page.route('**/auth/v1/**', route => {
@@ -129,6 +129,10 @@ export async function signInFixture(page: Page) {
     return route.fulfill({ json: { user, access_token: token, refresh_token: 'fixture-refresh', token_type: 'bearer', expires_in: 3600 } });
   });
   await page.route('**/rest/v1/customer_profiles?**', r => r.fulfill({ json: { id: user.id, display_name: null, created_at: user.created_at, updated_at: user.created_at } }));
+  return user;
+}
+export async function signInFixture(page: Page) {
+  const user = await installAuthFixture(page);
   await page.goto('/sign-in');
   await page.getByLabel('Email address', { exact: true }).fill(user.email);
   await page.getByLabel('Password', { exact: true }).fill('Fixture password 123');

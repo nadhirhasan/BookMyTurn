@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { Text } from 'react-native';
-import { Calendar, addDays } from '@customer/components/Calendar';
+import { Calendar, addDays } from '@/components/Calendar';
 import { Button, Field, Note, Screen, useAction } from '@/components/UI';
 import { useBarber } from '@/providers/BarberProvider';
 import { type } from '@/theme';

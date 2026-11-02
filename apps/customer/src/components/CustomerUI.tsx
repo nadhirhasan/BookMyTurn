@@ -17,11 +17,13 @@ export function DataStatus() {
     return <><Notice>{error}</Notice><Action label="Retry connection" secondary onPress={() => { void refresh(); }}/></>;
   return stale ? <Notice>Availability may be out of date. Refresh before choosing your visit.</Notice> : null;
 }
-export function PrivateGate({ children }: {
+export function PrivateGate({ children, destination }: {
   children: ReactNode;
+  destination?: string;
 }) {
   const session = useSession();
-  const returnTo = usePathname();
+  const pathname = usePathname();
+  const returnTo = destination ?? pathname;
   const { visitError, refresh } = useCustomer();
   if (session.status === 'loading')
     return <ActivityIndicator color={colors.text}/>;
@@ -57,9 +59,9 @@ export function useVisitAction() {
   return { run, error, busy, clearError: () => setError(null) };
 }
 export const styles = StyleSheet.create({
-  card: { padding: 16, borderWidth: 1, borderColor: colors.divider, borderRadius: 14, gap: 12 },
+  card: { padding: 20, borderWidth: 1, borderColor: colors.divider, borderRadius: 20, gap: 14, backgroundColor: colors.card },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
   photo: { width: '100%', height: 190, borderRadius: 14, backgroundColor: colors.surface },
-  input: { fontFamily: fonts.regular, fontSize: 15, color: colors.text, minHeight: 50, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 14 },
+  input: { fontFamily: fonts.regular, fontSize: 16, color: colors.text, minHeight: 54, borderWidth: 1, borderColor: colors.border, borderRadius: 14, padding: 14, backgroundColor: colors.card },
   divider: { height: 1, backgroundColor: colors.divider },
 });

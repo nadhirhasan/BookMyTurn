@@ -3,7 +3,7 @@ import { mockDatabase } from './fixtures';
 test.beforeEach(async ({ page }) => { await mockDatabase(page); });
 test('guest discovery loads the database catalogue and supports search, wait, name and open filters', async ({ page }) => {
   await page.goto('/salons');
-  await expect(page.getByRole('heading', { name: '13 salons in Akurana' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: '13 salons to explore' })).toBeVisible();
   const cards = page.getByRole('button', { name: /^View / });
   await expect(cards).toHaveCount(13);
   await page.getByRole('textbox', { name: 'Search salons or barbers' }).fill('Sameer');
@@ -20,7 +20,7 @@ test('guest discovery loads the database catalogue and supports search, wait, na
 test('salon details expose calendar booking, profiles and the QR shortcut without fake statistics', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'View Royal Saloon', exact: true }).click();
-  await expect(page.getByText('No reviews yet · Open now', { exact: true })).toBeVisible();
+  await expect(page.getByText('Open now', { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'View calendar & times' }).click();
 
   await expect(page.getByRole('button', { name: 'Choose date 2026-10-31' })).toBeVisible();
