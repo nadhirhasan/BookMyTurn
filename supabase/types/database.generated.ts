@@ -1227,6 +1227,10 @@ export type Database = {
         Args: { p_action: string; p_id: string; p_salon: string }
         Returns: Json
       }
+      owner_finance: {
+        Args: { p_action: string; p_data?: Json }
+        Returns: Json
+      }
       qr_visit: {
         Args: {
           p_action: string

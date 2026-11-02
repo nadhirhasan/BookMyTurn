@@ -99,6 +99,13 @@ accounts, uploads and visits. Reload both apps to test the new gallery.
 
 ## Configuration
 
+Owner accounting is deployed with a **Finance** tab to the Manager app for
+completed-sale history, expenses, estimated profit, daily/monthly reports and
+barber performance. Ordinary barbers cannot open owner financial data. Pricing
+still asks for the actual amount only after the haircut. See the
+[accounting plan](docs/OWNER_ACCOUNTING_PLAN.md) and
+[workflow/deployment notes](docs/OWNER_ACCOUNTING_WORKFLOW.md).
+
 Individual barber logins are now deployed through owner-shared invitations.
 Use **Salon → Team → Login access** to create a seven-day invitation. The barber
 opens it or pastes it into **Join a salon**, signs in and accepts the existing
