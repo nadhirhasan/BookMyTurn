@@ -1,4 +1,4 @@
-import { getRandomBytes, randomUUID } from 'expo-crypto';
+import { getRandomValues, randomUUID } from 'expo-crypto';
 import { createURL } from 'expo-linking';
 import { db, errorMessage } from './api';
 import type { Json } from './types';
@@ -6,7 +6,7 @@ import type { Json } from './types';
 export type TeamAccess = { barber_id: string; connected: boolean; account_email: string | null; invitation: null | { id: string; expires_at: string; status: 'pending' | 'accepted' | 'expired' | 'cancelled' } };
 export type Invitation = { id: string; salon_id: string; barber_id: string; salon_name: string; barber_name: string; accepted: boolean; expires_at: string };
 export function newInvitation() {
-  return { id: randomUUID(), token: Array.from(getRandomBytes(32), byte => byte.toString(16).padStart(2, '0')).join('') };
+  return { id: randomUUID(), token: Array.from(getRandomValues(new Uint8Array(32)), byte => byte.toString(16).padStart(2, '0')).join('') };
 }
 export function invitationLink(token: string) { return createURL('/invite', { queryParams: { token } }); }
 export function invitationToken(value: string) {

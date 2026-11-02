@@ -24,6 +24,10 @@ change is needed: the owner shares a private, expiring invitation.
 - [x] Verify invitation retries/expiry/reissue/revocation, cross-salon isolation,
   account switching and finance restrictions in SQL and browser journeys. Run
   existing regressions, lint/types and native/web exports.
+- [x] Open a feature PR with migration and validation evidence; do not merge.
+- [x] Apply the tested migration and verify hosted behavior within authorized
+  scope. If deployment approval is required, finish the reviewable PR first.
+- [ ] User acceptance on phones with separate owner, barber and customer accounts.
 
 Validation: all 12 PostgreSQL suites pass from a fresh disposable PostgreSQL 17
 database. Manager's 31 existing browser journeys plus six invitation/stale-state
@@ -32,10 +36,6 @@ Both workspace lint/type checks, 22 shared Auth/session tests and Manager final
 iOS/Android/web exports pass. Invitation, acceptance and My Work screenshots
 were visually inspected. The local Customer run used an ignored alternate-port
 configuration because another local service occupied its usual port 8082.
-- [ ] Open a feature PR with migration and validation evidence; do not merge.
-- [ ] Apply the tested migration and verify hosted behavior within authorized
-  scope. If deployment approval is required, finish the reviewable PR first.
-- [ ] User acceptance on phones with separate owner, barber and customer accounts.
 
 The invitation secret is a bearer credential; distribute it only to the intended
 barber. Account email is not proof of identity while confirmation is disabled.
@@ -45,3 +45,7 @@ match. The app does not send messages or invitations to other people.
 Later feature PRs: Owner sales/expenses/profit/reports and commission; deployed
 public salon QR links; final cross-device workflow validation. Services and price
 ranges remain a separate product decision and are not restored in this feature.
+
+Deployed after explicit approval on 2 November 2026. PR [#16](https://github.com/nadhirhasan/BookMyTurn/pull/16) is stacked on #15. Hosted versions are `20261102073946_barber_invitations` and `20261102074134_barber_invitation_private_policy`. Hosted invitation and collection regression suites pass with rollback. Data counts are unchanged; final hosted checks and CI are recorded in the workflow. Physical phone acceptance remains pending.
+
+The final token generator uses Expo Crypto getRandomValues directly, so unavailable secure randomness fails rather than falling back to development debugger randomness. The six focused browser journeys, lint/types and final iOS/Android/web exports passed after this refinement.

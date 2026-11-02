@@ -52,7 +52,7 @@ state prevents previous-user responses from appearing under a new account.
 
 ## Validation and deployment
 
-The feature uses `20261102071908_barber_invitations.sql`. It adds a private RLS
+The feature uses `20261102073946_barber_invitations.sql`. It adds a private RLS
 table, owner/team and acceptance RPCs, audit entries without secrets, and stricter
 financial read policies. Existing records and Auth settings are preserved.
 
@@ -62,7 +62,14 @@ cross-salon denial, revoked access, existing-chair continuity and one-sale
 completion. Browser tests cover the same user journeys with mocked APIs, red
 required-field validation, narrow screens and stale check-in protection.
 
-Hosted deployment, final CI and physical iPhone/Android acceptance are tracked in
-[the plan](BARBER_INVITATIONS_PLAN.md). No hosted deployment is claimed here yet.
+Deployed after explicit approval on 2 November 2026, with an explicit deny-all
+policy refinement in `20261102074134_barber_invitation_private_policy.sql`. Hosted
+invitation and collection suites pass with rollback. The two existing accounts,
+one salon, two barbers, one photo and one collection remain; no test identities
+are retained. The public database types were regenerated from hosted Supabase.
+Security advisors show no schema/storage findings; the pre-existing disabled
+[leaked-password protection setting](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)
+is unchanged. Final CI and physical iPhone/Android acceptance are tracked in
+[the plan](BARBER_INVITATIONS_PLAN.md).
 Owner accounting screens, financial permission management, public QR hosting
 and any return to service catalogues/price ranges remain separate features.

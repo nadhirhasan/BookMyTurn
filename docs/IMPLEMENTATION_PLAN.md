@@ -5,7 +5,9 @@ Plan prepared: 29 October 2026 (Asia/Colombo).
 Current stage: invited barber accounts and restricted operational access. See
 [BARBER_INVITATIONS_PLAN.md](BARBER_INVITATIONS_PLAN.md). Implement invitation
 creation, acceptance and revocation, financial privacy and stale-data safeguards
-as one feature PR, preserving current records. Owner accounting and public QR
+in [PR #16](https://github.com/nadhirhasan/BookMyTurn/pull/16). Local and hosted
+checks pass; the approved migrations are deployed and current records are
+preserved. User phone acceptance remains pending. Owner accounting and public QR
 hosting follow as separate validated features.
 
 Previous stage: haircut collections and full-screen previews. See

@@ -99,7 +99,7 @@ accounts, uploads and visits. Reload both apps to test the new gallery.
 
 ## Configuration
 
-The next feature adds individual barber logins through owner-shared invitations.
+Individual barber logins are now deployed through owner-shared invitations.
 Use **Salon → Team → Login access** to create a seven-day invitation. The barber
 opens it or pastes it into **Join a salon**, signs in and accepts the existing
 chair. Owners can replace/cancel links or remove login access without deleting
