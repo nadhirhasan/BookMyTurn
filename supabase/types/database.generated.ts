@@ -1180,7 +1180,12 @@ export type Database = {
         Returns: Json
       }
       barber_context: { Args: never; Returns: Json }
+      barber_invitation: {
+        Args: { p_action: string; p_data: Json }
+        Returns: Json
+      }
       barber_state: { Args: { p_barber: string }; Returns: Json }
+      barber_team: { Args: { p_salon: string }; Returns: Json }
       customer_catalog: { Args: never; Returns: Json }
       customer_collections: {
         Args: { p_action: string; p_data?: Json }

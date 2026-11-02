@@ -12,6 +12,8 @@ export function errorMessage(error: {
   code?: string;
   message?: string;
 }) {
+  const invitationErrors = ['Invitation unavailable or expired', 'This account already belongs to this salon', 'This barber already has an account', 'Activate this barber before inviting', 'Check invitation details', 'Barber unavailable'];
+  if (invitationErrors.includes(error.message ?? '')) return error.message!;
   if (error.code === '42501')
     return 'Your access is unavailable. Refresh or sign in again.';
   if (error.code === '23P01')

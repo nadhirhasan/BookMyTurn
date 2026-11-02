@@ -1,6 +1,19 @@
 import { Text, View } from 'react-native';
 import { Screen, s, useRefresh } from '@/components/UI';
 import { useBarber } from '@/providers/BarberProvider';
-import { money, time, visitDate } from '@/lib/types';
+import { time, visitDate } from '@/lib/types';
 import { type } from '@/theme';
-export default function Performance() { const { data } = useBarber(); useRefresh(); return <Screen title="My Work"><Text accessibilityRole="header" style={type.title}>Your day, recorded.</Text>{data && <><View style={s.card}><Text style={type.section}>Today</Text><Text style={type.title}>{data.performance.today_count} completed</Text><Text style={type.body}>{money(data.performance.today_revenue_minor)} service revenue</Text></View><View style={s.card}><Text style={type.section}>Your completed work</Text><Text style={type.body}>{data.performance.total_count} services · {money(data.performance.total_revenue_minor)} recorded revenue</Text><Text style={type.caption}>Service revenue is not take-home pay or salon profit.</Text></View><Text style={type.section}>Recent services</Text>{data.sessions.filter(ss => ss.status === 'completed').map(ss => <View key={ss.id} style={s.card}><Text style={type.label}>{ss.service_name_snapshot}</Text><Text style={type.body}>{money(ss.final_amount_minor ?? 0)}</Text><Text style={type.caption}>{visitDate(ss.completed_at!)} · {time(ss.completed_at!)}</Text></View>)}{!data.performance.total_count && <Text style={type.body}>Complete your first service to see it here.</Text>}<Text style={type.section}>Your reviews</Text>{data.reviews.map(r => <View key={r.id} style={s.card}><Text style={type.label}>{r.rating}/5</Text>{r.body && <Text style={type.body}>{r.body}</Text>}</View>)}{!data.reviews.length && <Text style={type.body}>Reviews appear after customers rate completed haircuts.</Text>}</>}</Screen>; }
+
+export default function Performance() {
+  const { data } = useBarber(); useRefresh();
+  const completed = data?.sessions.filter(session => session.status === 'completed') ?? [];
+  const average = completed.length ? Math.round(completed.reduce((total, session) => total + Math.max(0, new Date(session.completed_at!).getTime() - new Date(session.started_at).getTime()) / 60000, 0) / completed.length) : null;
+  return <Screen title="My Work"><Text accessibilityRole="header" style={type.title}>Your day, recorded.</Text>{data && <>
+    <View style={s.card}><Text style={type.section}>Today</Text><Text style={type.title}>{data.performance.today_count} completed</Text><Text style={type.body}>{data.performance.total_count} haircuts completed in total</Text></View>
+    {average !== null && <Text style={type.body}>Average haircut: {average} minutes across your recent completed work.</Text>}
+    <Text style={type.section}>Recent haircuts</Text>{completed.map(session => <View key={session.id} style={s.card}><Text style={type.label}>{session.service_name_snapshot}</Text><Text style={type.caption}>{visitDate(session.completed_at!)} ? {time(session.completed_at!)}</Text></View>)}
+    {!data.performance.total_count && <Text style={type.body}>Complete your first haircut to see it here.</Text>}
+    <Text style={type.section}>Your reviews</Text>{data.reviews.map(review => <View key={review.id} style={s.card}><Text style={type.label}>{review.rating}/5</Text>{review.body && <Text style={type.body}>{review.body}</Text>}</View>)}
+    {!data.reviews.length && <Text style={type.body}>Reviews appear after customers rate completed haircuts.</Text>}
+  </>}</Screen>;
+}

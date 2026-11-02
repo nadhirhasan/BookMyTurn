@@ -66,6 +66,7 @@ export type StyleRequest = {
   }[];
 };
 export type State = {
+  can_read_finance?: boolean;
   observed_at: string;
   today: string;
   salon: {
@@ -113,9 +114,9 @@ export type State = {
   }[];
   performance: {
     today_count: number;
-    today_revenue_minor: number;
+    today_revenue_minor?: number;
     total_count: number;
-    total_revenue_minor: number;
+    total_revenue_minor?: number;
   };
 };
 export { money, time, visitDate, statusLabel } from '@customer/lib/customer-types';

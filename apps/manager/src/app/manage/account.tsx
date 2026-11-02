@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Text } from 'react-native';
 import type { ImagePickerAsset } from 'expo-image-picker';
@@ -9,7 +10,7 @@ import { accountPhoto, uploadManagedPhoto, removeManagedPhoto } from '@/lib/phot
 import {PhoneAlerts} from '@/components/PhoneAlerts';
 import { auth } from '@/lib/api';
 import { type } from '@/theme';
-export default function Account() { const { data } = useManager(); return <ManagementScreen title="My account" back navigation>{data && <AccountForm profile={data.profile}/>}</ManagementScreen>; }
+export default function Account() { const { data } = useManager(); return <ManagementScreen title="My account" back navigation>{data && <><Button label="Join a salon" secondary onPress={()=>router.push('/invite')}/><AccountForm profile={data.profile}/></>}</ManagementScreen>; }
 function AccountForm({ profile }: {
   profile: {
     display_name: string;

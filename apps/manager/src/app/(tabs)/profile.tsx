@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import type { ImagePickerAsset } from 'expo-image-picker';
@@ -8,7 +9,7 @@ import { pickPhoto, uploadPhoto, removePhoto } from '@/lib/photos';
 
 import { type } from '@/theme';
 import type { State } from '@/lib/types';
-export default function Profile() { const { data } = useBarber(); useRefresh(); return <Screen title="Profile">{data && <ProfileForm key={data.barber.id} data={data}/>}</Screen>; }
+export default function Profile() { const { data } = useBarber(); useRefresh(); return <Screen title="Profile">{data && <><Button label="Join another salon" secondary onPress={()=>router.push('/invite')}/><ProfileForm key={data.barber.id} data={data}/></>}</Screen>; }
 function ProfileForm({ data }: {
   data: State;
 }) {
