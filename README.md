@@ -99,7 +99,7 @@ accounts, uploads and visits. Reload both apps to test the new gallery.
 
 ## Configuration
 
-The owner accounting feature adds a **Finance** tab to the Manager app for
+Owner accounting is deployed with a **Finance** tab to the Manager app for
 completed-sale history, expenses, estimated profit, daily/monthly reports and
 barber performance. Ordinary barbers cannot open owner financial data. Pricing
 still asks for the actual amount only after the haircut. See the

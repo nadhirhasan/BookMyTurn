@@ -1175,10 +1175,6 @@ export type Database = {
       }
     }
     Functions: {
-      owner_finance: {
-        Args: { p_action: string; p_data?: Json }
-        Returns: Json
-      }
       barber_command: {
         Args: { p_action: string; p_barber: string; p_data: Json }
         Returns: Json
@@ -1229,6 +1225,10 @@ export type Database = {
       manager_state: { Args: never; Returns: Json }
       manager_visit_command: {
         Args: { p_action: string; p_id: string; p_salon: string }
+        Returns: Json
+      }
+      owner_finance: {
+        Args: { p_action: string; p_data?: Json }
         Returns: Json
       }
       qr_visit: {

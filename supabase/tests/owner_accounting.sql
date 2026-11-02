@@ -23,6 +23,7 @@ select public.manager_command('create_salon',jsonb_build_object('id',pg_temp.i('
 select public.manager_command('create_barber',jsonb_build_object('id',pg_temp.i('chair'),'salon_id',pg_temp.i('salon'),'display_name','Finance chair'));
 select public.manager_command('create_barber',jsonb_build_object('id',pg_temp.i('chair2'),'salon_id',pg_temp.i('salon2'),'display_name','Second chair'));
 select pg_temp.ok((public.owner_finance('report',pg_temp.filters())->'summary'->>'revenue_minor')::bigint=0,'Empty business has real zero revenue');
+select pg_temp.ok(exists(select 1 from jsonb_array_elements(public.owner_finance('report',pg_temp.filters())->'categories')c where c->>'code'='rent'),'Database expense categories are available after a clean development reset');
 select pg_temp.denied($q$select public.owner_finance('report',jsonb_build_object('from',pg_temp.today()-400,'to',pg_temp.today()))$q$,'P0001');
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.i('other'))::text,true);
 select public.manager_command('create_salon',jsonb_build_object('id',pg_temp.i('foreign'),'name','Foreign finance fixture','address','Akurana','opens_at','00:00','closes_at','23:59','weekdays','[0,1,2,3,4,5,6]'::jsonb));

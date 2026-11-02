@@ -6,7 +6,9 @@ Current stage: owner sales, expenses, estimated profit and reports. See
 [OWNER_ACCOUNTING_PLAN.md](OWNER_ACCOUNTING_PLAN.md) and
 [the accounting workflow](OWNER_ACCOUNTING_WORKFLOW.md). Pricing remains
 completion-only; services and displayed ranges remain deferred. This feature
-preserves current data and goes through its own PR and validation gates.
+is deployed in [PR #17](https://github.com/nadhirhasan/BookMyTurn/pull/17).
+Local and hosted verification pass; business records are preserved. User phone
+acceptance remains pending.
 
 Previous stage: invited barber accounts and restricted operational access. See
 [BARBER_INVITATIONS_PLAN.md](BARBER_INVITATIONS_PLAN.md). Implement invitation

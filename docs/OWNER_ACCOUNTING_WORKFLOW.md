@@ -74,7 +74,7 @@ refresh keep the workspace current.
 
 ## Validation and deployment
 
-Migration: `20261102084356_owner_accounting.sql`. It extends expense metadata,
+Migration: `20261102090845_owner_accounting.sql`. It extends expense metadata,
 adds an internal retry ledger and guarded reporting/expense RPCs, and adds period
 indexes. It does not reset business data or change Auth settings, completion
 pricing, commission agreements or payment processing.
@@ -87,8 +87,19 @@ All historical SQL suites also run. Browser tests cover the full expense flow,
 filters, pagination, report reconciliation, retry/conflict handling, mobile widths,
 stale data and sign-out privacy. Native iOS/Android and web exports are checked.
 
-Hosted deployment, PR/CI evidence and phone acceptance are tracked in
-[OWNER_ACCOUNTING_PLAN.md](OWNER_ACCOUNTING_PLAN.md). No hosted deployment is
-claimed until the approved migration and hosted checks are recorded there.
+Deployed after explicit approval on 2 November 2026. The hosted accounting and
+barber invitation suites pass with rollback. An existing owner report was checked
+under the authenticated role. Current business records are preserved and no test
+identities or financial transactions remain. Public types were regenerated.
+
+`20261102091048_owner_expense_categories.sql` restores ten reference categories
+removed by the earlier clean reset, preserves existing/custom category names,
+and guarantees an array response even if the catalogue is later emptied. There
+is no client-side category fallback.
+
+Security advisors show no schema/storage findings. The pre-existing disabled
+[leaked-password protection setting](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection)
+is unchanged. PR/CI evidence and phone acceptance are tracked in
+[OWNER_ACCOUNTING_PLAN.md](OWNER_ACCOUNTING_PLAN.md).
 Commission configuration/payment administration, staff permission management
 and public website/QR hosting remain separate features.
