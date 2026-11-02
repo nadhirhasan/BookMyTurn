@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {router} from 'expo-router';
 import {Image,Pressable,ScrollView,StyleSheet,Text,View} from 'react-native';
 import {CalendarDays,ChevronRight,Clock,Scissors,Settings2,Store,Users} from 'lucide-react-native';
-import {Calendar,addDays} from '@customer/components/Calendar';
+import {Calendar,addDays} from './Calendar';
 import {ManagementScreen,Portrait,EmptyTeam,MenuRow,m} from './ManagementUI';
 import {Button,Chip,Note,Field} from './UI';
 import {RecordActions} from './RecordActions';

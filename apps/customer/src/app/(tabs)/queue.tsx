@@ -1,4 +1,6 @@
 import { router } from 'expo-router';
+import { Clock3 } from 'lucide-react-native';
+import { EmptyState } from '@/components/Experience';
 import { Text } from 'react-native';
 import { Action, Screen } from '@/components/UI';
 import { DataStatus, PrivateGate, useRefreshOnFocus } from '@/components/CustomerUI';
@@ -12,7 +14,7 @@ export default function MyQueue() {
   const active = visits.queues.filter(activeQueue);
   const history = visits.queues.filter(q => !activeQueue(q));
   const guest = qrQueues.filter(q => !visits.queues.some(v => v.id === q.id));
-  return <Screen title="My Queue"><Text accessibilityRole="header" style={type.title}>Your turn, without the guesswork.</Text><DataStatus />{guest.map(q => <QueueCard key={q.id} entry={q} qr/>)}<PrivateGate>
-{!active.length && <><Text style={type.section}>No active queue entries</Text><Text style={type.body}>Find a salon and join when you are ready.</Text><Action label="Find a salon" onPress={() => router.navigate('/salons')}/></>}{active.map(q => <QueueCard key={q.id} entry={q}/>)}
+  return <Screen title="My Queue" tab><Text accessibilityRole="header" style={type.title}>Keep an eye on your turn.</Text><DataStatus />{guest.map(q => <QueueCard key={q.id} entry={q} qr/>)}<PrivateGate>
+{!active.length && <EmptyState icon={Clock3} title="No active queue entries" description="A fresh haircut starts with a salon. Check the wait before you go."><Action label="Find a salon" onPress={() => router.navigate('/salons')}/></EmptyState>}{active.map(q => <QueueCard key={q.id} entry={q}/>)}
 {!!history.length && <Text style={type.section}>Past visits</Text>}{history.map(q => <QueueCard key={q.id} entry={q}/>)}</PrivateGate></Screen>;
 }

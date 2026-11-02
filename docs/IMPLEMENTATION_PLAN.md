@@ -2,7 +2,14 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: owner sales, expenses, estimated profit and reports. See
+Current stage: customer-first end-to-end UI/UX redesign, implemented in
+[PR #18](https://github.com/nadhirhasan/BookMyTurn/pull/18); phone review pending. See
+[the research and delivery checklist](CUSTOMER_UX_REDESIGN.md) and
+[the screenshot review](../design/reviews/customer-redesign/README.md).
+The user confirmed Customer first; Owner/Barber redesign follows after review.
+Calendar selection, explicit appointment review and completion-only pricing remain.
+
+Previous stage: owner sales, expenses, estimated profit and reports. See
 [OWNER_ACCOUNTING_PLAN.md](OWNER_ACCOUNTING_PLAN.md) and
 [the accounting workflow](OWNER_ACCOUNTING_WORKFLOW.md). Pricing remains
 completion-only; services and displayed ranges remain deferred. This feature

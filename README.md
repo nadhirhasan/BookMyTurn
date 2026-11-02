@@ -3,7 +3,7 @@
 A customer-first salon app for Akurana, Sri Lanka, built with React Native,
 Expo, TypeScript and Supabase.
 
-The customer workflow uses the approved light design and live Supabase data:
+The customer workflow uses a warm, colourful mobile design and live Supabase data:
 salon discovery, physical queues, calendar/time selection, appointment requests,
 hairstyle sharing, barber profiles and reviews after completed services.
 Email/password signup signs in immediately without verification emails.
@@ -11,6 +11,8 @@ The salon QR web route records arrival without an app or any Auth account.
 See [the complete walkthrough and validation](docs/CUSTOMER_PIPELINE.md).
 
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
+- [Customer redesign: research, decisions and validation](docs/CUSTOMER_UX_REDESIGN.md)
+- [Customer redesign screenshots](design/reviews/customer-redesign/README.md)
 - [Customer UI, validation and phone walkthrough](docs/CUSTOMER_FOUNDATION.md)
 - [Supabase foundation and hosted deployment status](supabase/README.md)
 - [Customer specification](idea/customer.md)

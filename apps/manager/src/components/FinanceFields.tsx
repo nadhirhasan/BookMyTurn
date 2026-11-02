@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { CalendarDays, ChevronDown } from 'lucide-react-native';
-import { Calendar } from '@customer/components/Calendar';
+import { Calendar } from './Calendar';
 import { colors, type } from '@/theme';
 import { s } from './UI';
 

@@ -1,5 +1,6 @@
 import { Redirect, router } from 'expo-router';
-import { UserRound } from 'lucide-react-native';
+import { MenuRow } from '@/components/Experience';
+import { CalendarDays, Clock3, Images, Store, UserRound } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { Action, Screen } from '@/components/UI';
@@ -64,18 +65,13 @@ export default function Account() {
    <Text accessibilityRole="alert" style={type.body}>Your profile could not be loaded. You can keep browsing and try again.</Text>
    <Action label="Retry profile" secondary onPress={() => { setProfileIssueFor(null); setRetry(value => value + 1); }}/>
   </View>}
-  <View style={s.details}>
-   <Text style={type.label}>BookMyTurn Customer</Text>
-   <Text style={type.body}>Explore salons and find a good time for your next visit.</Text>
-   <Text style={type.caption}>Queues and appointments are coming in the next steps.</Text>
-  </View>
-  <Action label="Explore salons" onPress={() => router.replace('/salons')}/>
+  <View><MenuRow icon={Clock3} title="My queue" subtitle="Track your turn and arrival" onPress={()=>router.navigate('/queue')}/><MenuRow icon={CalendarDays} title="My appointments" subtitle="Requests, confirmations and past visits" onPress={()=>router.navigate('/appointments')}/><MenuRow icon={Images} title="My haircut collections" subtitle="Ideas to share with your barber" onPress={()=>router.navigate('/hairstyles')}/><MenuRow icon={Store} title="Explore salons" subtitle="Find your next haircut" onPress={()=>router.navigate('/salons')}/></View>
   {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
   <Action label={busy ? 'Signing out…' : 'Sign out'} secondary disabled={busy} onPress={() => { void signOut(); }}/>
  </Screen>;
 }
 const s = StyleSheet.create({
-  intro: { alignItems: 'center', gap: 12, paddingVertical: 24 }, avatar: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.surface },
+  intro: { alignItems: 'center', gap: 12, paddingVertical: 24 }, avatar: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.peach },
   email: { textAlign: 'center', color: colors.muted }, details: { gap: 8, backgroundColor: colors.surface, borderRadius: 16, padding: 20 },
   notice: { padding: 16, borderWidth: 1, borderColor: colors.border, borderRadius: 12, gap: 4 },
 });

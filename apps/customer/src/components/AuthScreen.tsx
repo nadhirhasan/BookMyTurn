@@ -3,6 +3,7 @@ import { Eye, EyeOff } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ImageBanner } from '@/components/Experience';
 import { Action, Header } from '@/components/UI';
 import { customerAuth } from '@/lib/supabase/auth';
 import { validateCredentials, type AuthMode, type CredentialErrors } from '@/lib/supabase/auth-actions';
@@ -59,6 +60,7 @@ export default function AuthScreen({ mode }: {
   <Header title="BookMyTurn"/>
   <KeyboardAvoidingView style={s.keyboard} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={s.content}>
+    <ImageBanner compact title={signup ? "Your next good hair day." : "A fresh start awaits."} subtitle="Your favourite salons, visits and haircut ideas in one place."/>
     <View style={s.intro}>
      <Text style={s.eyebrow}>YOUR ACCOUNT</Text>
      <Text accessibilityRole="header" style={s.title}>{signup ? 'Create your account' : 'Welcome back'}</Text>
@@ -104,7 +106,7 @@ export default function AuthScreen({ mode }: {
 }
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.background }, keyboard: { flex: 1 },
-  content: { paddingHorizontal: 24, paddingTop: 36, paddingBottom: 28, gap: 28 },
+  content: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 28, gap: 20 },
   intro: { gap: 10 }, eyebrow: { fontFamily: fonts.medium, fontSize: 11, letterSpacing: 1.3, color: colors.muted },
   title: { fontFamily: fonts.bold, fontSize: 28, lineHeight: 36, color: colors.text }, muted: { color: colors.muted },
   form: { gap: 20 }, field: { gap: 8 },

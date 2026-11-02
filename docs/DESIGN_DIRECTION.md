@@ -1,5 +1,10 @@
 # Customer design brief — Figma first
 
+**Superseded for the customer app on 2 November 2026:** the user requested a
+colourful end-to-end redesign. See [the current research and implementation
+brief](CUSTOMER_UX_REDESIGN.md). The neutral direction and Figma approval below
+describe the earlier version, not the current visual target.
+
 Status: the first three editable Figma screens are composed and visually reviewed.
 The full customer journey and clickable prototype are incomplete; user design
 verification of the three discovery screens is approved; implementation is authorised. See [the review summary](../design/README.md).

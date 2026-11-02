@@ -1,27 +1,19 @@
 import { router } from 'expo-router';
-import { Clock3, Star } from 'lucide-react-native';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
-import { queueLabel, waitLabel, type Salon } from '@/data/salons';
+import { Clock3, Star, Users } from 'lucide-react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { waitLabel, type Salon } from '@/data/salons';
+import { Photo } from './Experience';
+import { StatusPill } from './UI';
 import { colors, type } from '@/theme';
-export function SalonCard({ salon, featured = false }: {
-  salon: Salon;
-  featured?: boolean;
-}) {
-  return <Pressable accessibilityRole="button" accessibilityLabel={`View ${salon.name}`} onPress={() => router.push(`/salon/${salon.id}`)} style={({ pressed }) => [featured ? s.featured : s.row, { opacity: pressed ? 0.75 : 1 }]}>
-  <Image source={salon.photo} accessibilityLabel="Illustrative salon photo" style={featured ? s.hero : s.thumb}/>
-  <View style={featured ? s.info : s.compactInfo}>
-   <View style={s.nameRow}><Text style={featured ? type.section : type.label}>{salon.name}</Text>{featured && salon.rating !== null && <View style={s.rating}><Star size={14} color={colors.text}/><Text style={[type.caption, { color: colors.text }]}>{salon.rating}</Text></View>}</View>
-   <Text style={type.caption}>{salon.reviews ? `${salon.rating} (${salon.reviews})` : 'No reviews yet'}</Text>
-   <View style={s.wait}>{featured && <Clock3 size={17} color={colors.text}/>}<Text style={type.label}>{waitLabel(salon)}</Text></View>
-   <Text style={type.caption}>{queueLabel(salon)}</Text>
-   {featured ? <View style={s.earliest}><Text style={type.caption}>Earliest service</Text><Text style={type.label}>{salon.earliest}</Text></View> : <Text style={type.caption}>Earliest service: {salon.earliest}</Text>}
-  </View>
- </Pressable>;
+
+export function SalonCard({ salon, featured = false }: { salon: Salon; featured?: boolean }) {
+  return <Pressable accessibilityRole="button" accessibilityLabel={`View ${salon.name}`} onPress={() => router.push(`/salon/${salon.id}`)} style={({ pressed }) => [s.card, { opacity: pressed ? 0.8 : 1 }]}>
+    <Photo source={salon.photo} label={`${salon.name} photo`} height={featured?160:130}/>
+    <View style={s.info}>
+      <View style={s.line}><Text style={[type.section,{flex:1}]}>{salon.name}</Text><StatusPill label={salon.open?'Open':'Closed'} tone={salon.open?'success':'neutral'}/></View>
+      <View style={s.line}><Star size={15} color={colors.amber}/><Text style={type.caption}>{salon.reviews ? `${salon.rating} (${salon.reviews} reviews)` : 'No reviews yet'}</Text></View>
+      <View style={s.availability}><Clock3 size={18} color={colors.green}/><View style={{flex:1,gap:2}}><Text style={[type.label,{color:colors.green}]}>{waitLabel(salon)}</Text><Text style={type.caption}>Earliest service: {salon.earliest}</Text></View><View style={s.count}><Users size={16} color={colors.muted}/><Text style={type.caption}>{salon.waiting} waiting</Text></View></View>
+    </View>
+  </Pressable>;
 }
-const s = StyleSheet.create({
-  featured: { borderWidth: 1, borderColor: colors.divider, borderRadius: 16, overflow: 'hidden' },
-  hero: { width: '100%', height: 142, borderRadius: 12 }, info: { padding: 16, gap: 10 },
-  nameRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 8 }, rating: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  wait: { flexDirection: 'row', alignItems: 'center', gap: 8 }, earliest: { borderTopWidth: 1, borderColor: colors.divider, paddingTop: 10, flexDirection: 'row', justifyContent: 'space-between' },
-  row: { flexDirection: 'row', gap: 12, alignItems: 'flex-start' }, thumb: { width: 94, height: 110, borderRadius: 12 }, compactInfo: { flex: 1, gap: 5, minWidth: 0 },
-});
+const s=StyleSheet.create({card:{borderWidth:1,borderColor:colors.divider,borderRadius:22,overflow:'hidden',backgroundColor:colors.card},info:{padding:16,gap:12},line:{flexDirection:'row',alignItems:'center',gap:8},availability:{flexDirection:'row',alignItems:'center',gap:10,borderTopWidth:1,borderTopColor:colors.divider,paddingTop:12},count:{alignItems:'center',gap:4}});
