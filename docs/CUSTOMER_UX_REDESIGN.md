@@ -1,5 +1,8 @@
 # Customer experience redesign
 
+Colour update: the coral/peach palette below is superseded by
+[eucalyptus and sage](COLOR_DIRECTION.md), requested on 3 November 2026.
+
 Status: implemented in [PR #18](https://github.com/nadhirhasan/BookMyTurn/pull/18);
 phone acceptance pending, 2 November 2026.
 Scope confirmed by the user: customer first; Owner/Barber follows separately.

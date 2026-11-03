@@ -22,9 +22,9 @@ export function StepIndicator({ current }: { current: number }) {
   return <View accessibilityLabel={`Step ${current + 1} of 2`} style={{ flexDirection: 'row', gap: 12 }}>{['Choose a time', 'Review & request'].map((label, i) => <View key={label} style={{ flex: 1, gap: 8 }}><View style={{ height: 4, borderRadius: 2, backgroundColor: i <= current ? colors.action : colors.divider }}/><Text style={[type.caption, { color: i === current ? colors.action : colors.muted }]}>{i + 1}. {label}</Text></View>)}</View>;
 }
 const s = StyleSheet.create({
-  photo: { width: '100%', borderRadius: 20, backgroundColor: colors.peach, overflow: 'hidden' }, placeholder: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 },
-  banner: { backgroundColor: colors.peach, borderRadius: 22, overflow: 'hidden', flexDirection: 'row', minHeight: 170 },
-  empty: { alignItems: 'center', paddingVertical: 24, gap: 14 }, emptyIcon: { width: 72, height: 72, borderRadius: 24, backgroundColor: colors.peach, alignItems: 'center', justifyContent: 'center' },
+  photo: { width: '100%', borderRadius: 20, backgroundColor: colors.brandSoft, overflow: 'hidden' }, placeholder: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10 },
+  banner: { backgroundColor: colors.brandSoft, borderRadius: 22, overflow: 'hidden', flexDirection: 'row', minHeight: 170 },
+  empty: { alignItems: 'center', paddingVertical: 24, gap: 14 }, emptyIcon: { width: 72, height: 72, borderRadius: 24, backgroundColor: colors.brandSoft, alignItems: 'center', justifyContent: 'center' },
   menu: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: colors.divider, minHeight: 72 },
   menuIcon: { width: 44, height: 44, backgroundColor: colors.surface, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
 });

@@ -1,5 +1,8 @@
 # Manager and Barber mobile redesign
 
+Colour update: the coral/peach palette below is superseded by
+[eucalyptus and sage](COLOR_DIRECTION.md), requested on 3 November 2026.
+
 Status: implemented and locally validated on 2 November 2026; published in
 [PR #19](https://github.com/nadhirhasan/BookMyTurn/pull/19) on 3 November 2026.
 Customer redesign is PR #18; this is a separate feature branch.

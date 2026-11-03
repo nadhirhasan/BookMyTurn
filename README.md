@@ -11,6 +11,7 @@ The salon QR web route records arrival without an app or any Auth account.
 See [the complete walkthrough and validation](docs/CUSTOMER_PIPELINE.md).
 
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
+- [Current colour direction: eucalyptus and sage](docs/COLOR_DIRECTION.md)
 - [Customer redesign: research, decisions and validation](docs/CUSTOMER_UX_REDESIGN.md)
 - [Customer redesign screenshots](design/reviews/customer-redesign/README.md)
 - [Manager and Barber redesign](docs/STAFF_UX_REDESIGN.md)

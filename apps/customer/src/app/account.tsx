@@ -71,7 +71,7 @@ export default function Account() {
  </Screen>;
 }
 const s = StyleSheet.create({
-  intro: { alignItems: 'center', gap: 12, paddingVertical: 24 }, avatar: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.peach },
+  intro: { alignItems: 'center', gap: 12, paddingVertical: 24 }, avatar: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.brandSoft },
   email: { textAlign: 'center', color: colors.muted }, details: { gap: 8, backgroundColor: colors.surface, borderRadius: 16, padding: 20 },
   notice: { padding: 16, borderWidth: 1, borderColor: colors.border, borderRadius: 12, gap: 4 },
 });
