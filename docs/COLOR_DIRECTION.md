@@ -4,6 +4,8 @@
 Customer, Manager and Barber. The user asked for a softer alternative and has
 previously excluded blue and dark themes.
 
+Implemented in [PR #20](https://github.com/nadhirhasan/BookMyTurn/pull/20).
+
 ## Research and choice
 
 - [Android colour guidance](https://developer.android.com/design/ui/mobile/guides/styles/color)
@@ -56,7 +58,7 @@ certification. Existing layout, behaviour, permissions and data APIs are unchang
 - [x] Update both existing theme files and references.
 - [x] Verify contrast and run both workspace lint/type checks.
 - [x] Inspect rendered customer/staff journeys and publish previews.
-- [ ] Open a separate PR.
+- [x] Open a separate PR.
 - [ ] User reviews colours on their phone.
 
 Both existing visual journey tests pass, covering customer discovery/booking/queue

@@ -4,6 +4,7 @@ Plan prepared: 29 October 2026 (Asia/Colombo).
 
 Current stage: replace the coral brand accent with eucalyptus and sage across all
 apps. See [the colour research, contrast checks and previews](COLOR_DIRECTION.md).
+Implemented in [PR #20](https://github.com/nadhirhasan/BookMyTurn/pull/20); phone review pending.
 
 Previous stage: Manager and Barber mobile UI/UX redesign, implemented in
 [PR #19](https://github.com/nadhirhasan/BookMyTurn/pull/19); phone review pending. See
