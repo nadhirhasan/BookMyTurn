@@ -1,6 +1,6 @@
 // Staff foundation aligned with the customer brand.
 import { StyleSheet } from 'react-native';
-const foundationColors = { background: '#FFFCF8', text: '#28241F', action: '#B83E28', muted: '#70665D', surface: '#F5EFE8', border: '#B8ACA0', divider: '#E6DDD4', canvas: '#EEE6DC' };
+const foundationColors = { background: '#FFFCF8', text: '#28241F', action: '#176B52', muted: '#70665D', surface: '#F5EFE8', border: '#B8ACA0', divider: '#E6DDD4', canvas: '#EEE6DC' };
 export const fonts = { regular: 'DMSans_400Regular', medium: 'DMSans_500Medium', semibold: 'DMSans_600SemiBold', bold: 'DMSans_700Bold' };
 export const layout = { maxWidth: 560, gutter: 20 };
 export const type = StyleSheet.create({
@@ -12,4 +12,4 @@ export const type = StyleSheet.create({
   eyebrow: { fontFamily: fonts.bold, fontSize: 12, lineHeight: 18, letterSpacing: 1, color: foundationColors.action },
 });
 
-export const colors={...foundationColors,card:'#FFFFFF',onAction:'#FFFFFF',peach:'#FBE1D3',positive:'#23634B',positiveSoft:'#E3F2E8',pending:'#84510B',pendingSoft:'#FFF0C9',error:'#B42318',errorSurface:'#FFF0EE'};
+export const colors={...foundationColors,card:'#FFFFFF',onAction:'#FFFFFF',brandSoft:'#E6F1E8',positive:'#23634B',positiveSoft:'#E3F2E8',pending:'#84510B',pendingSoft:'#FFF0C9',error:'#B42318',errorSurface:'#FFF0EE'};
