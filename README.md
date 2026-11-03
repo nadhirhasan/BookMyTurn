@@ -13,6 +13,8 @@ See [the complete walkthrough and validation](docs/CUSTOMER_PIPELINE.md).
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
 - [Customer redesign: research, decisions and validation](docs/CUSTOMER_UX_REDESIGN.md)
 - [Customer redesign screenshots](design/reviews/customer-redesign/README.md)
+- [Manager and Barber redesign](docs/STAFF_UX_REDESIGN.md)
+- [Staff screen previews](design/reviews/staff-redesign/README.md)
 - [Customer UI, validation and phone walkthrough](docs/CUSTOMER_FOUNDATION.md)
 - [Supabase foundation and hosted deployment status](supabase/README.md)
 - [Customer specification](idea/customer.md)

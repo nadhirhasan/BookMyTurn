@@ -2,11 +2,16 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: customer-first end-to-end UI/UX redesign, implemented in
+Current stage: Manager and Barber mobile UI/UX redesign, implemented in
+[PR #19](https://github.com/nadhirhasan/BookMyTurn/pull/19); phone review pending. See
+[the staff delivery checklist](STAFF_UX_REDESIGN.md) and
+[the screen review](../design/reviews/staff-redesign/README.md).
+
+Previous stage: customer-first end-to-end UI/UX redesign, implemented in
 [PR #18](https://github.com/nadhirhasan/BookMyTurn/pull/18); phone review pending. See
 [the research and delivery checklist](CUSTOMER_UX_REDESIGN.md) and
 [the screenshot review](../design/reviews/customer-redesign/README.md).
-The user confirmed Customer first; Owner/Barber redesign follows after review.
+The user confirmed Customer first and subsequently authorized Owner/Barber redesign.
 Calendar selection, explicit appointment review and completion-only pricing remain.
 
 Previous stage: owner sales, expenses, estimated profit and reports. See
