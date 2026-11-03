@@ -11,7 +11,7 @@ export default function TabsLayout() {
   const { data, loading } = useBarber();
   if (session.status !== 'authenticated' || (!loading && !data))
     return <Redirect href="/"/>;
-  return <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: colors.text, tabBarInactiveTintColor: colors.muted, tabBarLabelStyle: { fontFamily: fonts.medium, fontSize: 11 }, tabBarStyle: { height: 60 + Math.max(insets.bottom, 12), paddingTop: 8, paddingBottom: Math.max(insets.bottom, 12), backgroundColor: colors.background } }}>
+  return <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: colors.action, tabBarInactiveTintColor: colors.muted, tabBarLabelStyle: { fontFamily: fonts.medium, fontSize: 12 }, tabBarStyle: { height: 60 + Math.max(insets.bottom, 12), paddingTop: 8, paddingBottom: Math.max(insets.bottom, 12), backgroundColor: colors.card } }}>
 <Tabs.Screen name="queue" options={{ title: 'My Queue', tabBarIcon: ({ color }) => <Scissors color={color} size={22}/> }}/><Tabs.Screen name="appointments" options={{ title: 'Appointments', tabBarIcon: ({ color }) => <CalendarDays color={color} size={22}/> }}/><Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({ color }) => <UserRound color={color} size={22}/> }}/><Tabs.Screen name="performance" options={{ title: 'My Work', tabBarIcon: ({ color }) => <ChartNoAxesColumn color={color} size={22}/> }}/>
 </Tabs>;
 }
