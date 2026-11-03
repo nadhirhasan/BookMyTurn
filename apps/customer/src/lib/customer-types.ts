@@ -150,4 +150,5 @@ export const money = (minor: number) => `Rs. ${(minor / 100).toLocaleString('en-
 export const time = (value: string) => new Date(value).toLocaleTimeString('en-LK', { timeZone: 'Asia/Colombo', hour: 'numeric', minute: '2-digit' });
 export const visitDate = (value: string) => new Date(value).toLocaleDateString('en-LK', { timeZone: 'Asia/Colombo', day: 'numeric', month: 'short', year: 'numeric' });
 export const activeQueue = (q: QueueEntry) => ['joined', 'arrived', 'in_service'].includes(q.status);
+export const activeAppointment = (entry: Pick<Appointment, 'status'>) => ['pending', 'confirmed', 'alternative_suggested', 'arrived', 'in_service'].includes(entry.status);
 export const statusLabel = (status: string) => ({ joined: 'Joined — not yet arrived', arrived: 'Arrived — waiting', pending: 'Pending salon confirmation', alternative_suggested: 'Alternative time suggested', confirmed: 'Confirmed', in_service: 'In service', completed: 'Completed', cancelled: 'Cancelled', declined: 'Declined', no_show: 'Not attended' })[status] ?? status;

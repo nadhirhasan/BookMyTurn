@@ -48,7 +48,8 @@ function BarberForm({ salon, barber }: {
       if (uploaded?.url)
         setPhotoUrl(uploaded.url);
       setPhoto(null);
-      router.dismissTo(`/manage/salon/${salon.id}`);
+      if (barber) router.dismissTo(`/manage/salon/${salon.id}?tab=team`);
+      else router.replace(`/manage/barber-access/${id}?salon=${salon.id}&created=1`);
     }
     catch (e) {
       if (uploaded)

@@ -7,7 +7,7 @@ import { Screen, SearchField, SectionHeading, StatusPill } from '@/components/UI
 import { EmptyState, ImageBanner } from '@/components/Experience';
 import { DataStatus, useRefreshOnFocus } from '@/components/CustomerUI';
 import { salonDisplay, searchSalons } from '@/data/salons';
-import { activeQueue, statusLabel, time, visitDate } from '@/lib/customer-types';
+import { activeAppointment, activeQueue, statusLabel, time, visitDate } from '@/lib/customer-types';
 import { useCustomer } from '@/providers/CustomerProvider';
 import { colors, type } from '@/theme';
 
@@ -18,7 +18,7 @@ export default function HomeScreen() {
   const salons = catalog?.salons.map(s => salonDisplay(s, catalog)).sort((a, b) => Number(b.open) - Number(a.open) || (a.wait?.[0] ?? Infinity) - (b.wait?.[0] ?? Infinity)) ?? [];
   const results = searchSalons(salons, query);
   const queue = [...visits.queues, ...qrQueues].find(activeQueue);
-  const booking = visits.appointments.filter(a => ['pending', 'confirmed', 'alternative_suggested'].includes(a.status)).sort((a,b) => (a.confirmed_start ?? a.requested_start).localeCompare(b.confirmed_start ?? b.requested_start))[0];
+  const booking = visits.appointments.filter(activeAppointment).sort((a,b) => (a.confirmed_start ?? a.requested_start).localeCompare(b.confirmed_start ?? b.requested_start))[0];
   return <Screen title="BookMyTurn" home tab>
     <SearchField value={query} onChange={setQuery} onSubmit={() => router.navigate({ pathname: '/salons', params: { q: query } })}/>
     <DataStatus/>

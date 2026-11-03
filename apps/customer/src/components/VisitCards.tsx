@@ -48,7 +48,11 @@ export function AppointmentCard({entry}:{entry:Appointment}) {
  return <View style={styles.card}><StatusPill label={statusLabel(entry.status)} tone={['confirmed','completed'].includes(entry.status)?'success':['pending','alternative_suggested'].includes(entry.status)?'warning':'neutral'}/>
    <Text style={type.section}>{salon?.name??entry.salon_name??'Salon'}</Text><View style={{padding:16,borderRadius:16,backgroundColor:colors.brandSoft,flexDirection:'row',gap:12,alignItems:'center'}}><CalendarDays size={28} color={colors.action}/><View style={{flex:1,gap:3}}><Text style={type.section}>{visitDate(date)}</Text><Text style={type.body}>{time(date)} · Sri Lanka time</Text></View></View><Text style={type.body}>{entry.service_name??'Haircut'} · {barber?.display_name??entry.barber_name??'Any Available Barber'}</Text>
    <VisitCode reference={entry.reference}/>
-   {entry.status==='pending'&&<Text style={type.caption}>Your time is held while the salon reviews your request.</Text>}
+   {entry.status==='pending'&&<Text style={type.caption}>Your time is held while the salon reviews your request. Wait for confirmation here before travelling; you do not need to join the queue as well.</Text>}
+   {entry.status==='confirmed'&&<Notice>Your time is confirmed. Show this code to staff when you arrive. They will check in this appointment; do not create another queue entry.</Notice>}
+   {entry.status==='arrived'&&<Notice>You are checked in. Your barber will call you when your chair is ready.</Notice>}
+   {entry.status==='in_service'&&<Text style={type.caption}>Your haircut is underway. You can leave a review after it is completed.</Text>}
+   {['cancelled','declined','no_show'].includes(entry.status)&&salon&&<Action label="Choose another time" secondary onPress={()=>router.push(`/salon/${salon.id}/appointment`)}/>}
    {entry.status==='alternative_suggested'&&proposal&&<><Notice>Alternative time: {visitDate(proposal.starts_at)} at {time(proposal.starts_at)}.</Notice><Action label="Accept alternative time" disabled={busy} onPress={()=>{void run('accept_alternative',{id:entry.id,proposal_id:proposal.id});}}/></>}
    {['pending','alternative_suggested','confirmed'].includes(entry.status)&&<Action label="Cancel appointment" secondary disabled={busy} onPress={()=>{void run('cancel_appointment',{id:entry.id});}}/>}
    {error&&<Text accessibilityRole="alert" style={[type.body,{color:colors.error}]}>{error}</Text>}<ReviewLink appointment={entry.id}/>

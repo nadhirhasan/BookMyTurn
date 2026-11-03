@@ -14,7 +14,7 @@ export function BarberAccess({ salonId, barberId }: { salonId: string; barberId:
   return <AccessForm key={`${uid}:${barberId}`} salonId={salonId} barberId={barberId} />;
 }
 function AccessForm({ salonId, barberId }: { salonId: string; barberId: string }) {
-  const { refresh, lastUpdated } = useManager();
+  const { refresh, lastUpdated, stale } = useManager();
   const [access, setAccess] = useState<TeamAccess | null>(null), [loading, setLoading] = useState(true), [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null), [secret, setSecret] = useState<ReturnType<typeof newInvitation> | null>(null);
   const [confirm, setConfirm] = useState(false);
@@ -22,7 +22,7 @@ function AccessForm({ salonId, barberId }: { salonId: string; barberId: string }
   const load = useCallback(async () => { const items = await teamAccess(salonId); setAccess(items.find(a => a.barber_id === barberId) ?? null); }, [salonId, barberId]);
   useEffect(() => { let active = true; teamAccess(salonId).then(items => { if (active) setAccess(items.find(a => a.barber_id === barberId) ?? null); }, e => { if (active) setError(e.message); }).finally(() => { if (active) setLoading(false); }); return () => { active = false; }; }, [salonId, barberId, lastUpdated]);
   const run = async (action: 'create' | 'cancel' | 'revoke') => {
-    if (pending.current) return;
+    if (pending.current || stale || loading) return;
     pending.current = true; setBusy(true); setError(null);
     try {
       if (action === 'create') {
@@ -39,13 +39,14 @@ function AccessForm({ salonId, barberId }: { salonId: string; barberId: string }
   };
   return <Section title="Barber login" subtitle="One personal account for this chair.">
     <View style={s.row}>{access?.connected ? <UserRoundCheck size={22} color={colors.positive} /> : <UserRoundPlus size={22} color={colors.muted} />}<Text style={type.label}>{loading ? 'Checking access…' : access?.connected ? 'Account connected' : 'No account connected'}</Text></View>
-    {access?.connected ? <><Text style={type.body}>{access.account_email}</Text><Text style={type.caption}>Queue, appointments, hairstyle requests and personal profile. Owner finances stay private.</Text>{confirm ? <><Note>Remove this account’s access? The chair, customers and haircut history stay in your salon.</Note><Button label="Confirm remove access" disabled={busy} onPress={() => { void run('revoke'); }} /><Button label="Keep access" secondary disabled={busy} onPress={() => setConfirm(false)} /></> : <Button label="Remove barber access" secondary disabled={busy} onPress={() => setConfirm(true)} />}</> : <>
+    {access?.connected ? <><Text style={type.body}>{access.account_email}</Text><Text style={type.caption}>Queue, appointments, hairstyle requests and personal profile. Owner finances stay private.</Text>{confirm ? <><Note>Remove this account’s access? The chair, customers and haircut history stay in your salon.</Note><Button label="Confirm remove access" disabled={busy || stale} onPress={() => { void run('revoke'); }} /><Button label="Keep access" secondary disabled={busy || stale} onPress={() => setConfirm(false)} /></> : <Button label="Remove barber access" secondary disabled={busy || stale} onPress={() => setConfirm(true)} />}</> : <>
       {access?.invitation && <Text style={type.caption}>Invitation {access.invitation.status} · {new Date(access.invitation.expires_at).toLocaleDateString()}</Text>}
-      {secret && <><Text style={type.label}>Private invitation link</Text><TextInput accessibilityLabel="Private invitation link" value={invitationLink(secret.token)} editable={false} selectTextOnFocus multiline style={[s.input, { minHeight: 128, fontSize: 13, lineHeight: 20 }]} /><Button label="Share invitation" secondary onPress={() => { void Share.share({ message: invitationLink(secret.token) }).catch(() => setError('Could not open sharing. Select and copy the link above.')); }} /><Text style={type.caption}>Share only with your barber. They can also paste this link into Join a salon. Expires in seven days.</Text></>}
-      <Button label={busy ? 'Please wait…' : access?.invitation?.status === 'pending' ? 'Replace invitation' : 'Create invitation'} disabled={busy || loading} onPress={() => { void run('create'); }} />
-      {access?.invitation?.status === 'pending' && <Button label="Cancel invitation" secondary disabled={busy} onPress={() => { void run('cancel'); }} />}
+      {secret && <><Text style={type.label}>Next: send this link to your barber</Text><Button label="Share invitation" disabled={busy || loading || stale} onPress={() => { void Share.share({ message: `Join your salon on BookMyTurn: ${invitationLink(secret.token)}\nSign in or create your own account, then accept the invitation.` }).catch(() => setError('Could not open sharing. Select and copy the private link on this screen.')); }} /><Text style={type.label}>Private invitation link</Text><TextInput accessibilityLabel="Private invitation link" value={invitationLink(secret.token)} editable={false} selectTextOnFocus multiline style={[s.input, { minHeight: 88, fontSize: 13, lineHeight: 20 }]} /><Text style={type.caption}>Share only with your barber. They can also paste this link into Join a salon. Expires in seven days. No email is sent automatically.</Text></>}
+      <Button label={busy ? 'Please wait…' : access?.invitation?.status === 'pending' ? 'Replace invitation' : 'Create invitation'} secondary={!!secret} disabled={busy || loading || stale || !!error} onPress={() => { void run('create'); }} />
+      {access?.invitation?.status === 'pending' && <Text style={type.caption}>Replacing this invitation makes the previous link stop working. If you leave without saving the link, return here to replace it.</Text>}
+      {access?.invitation?.status === 'pending' && <Button label="Cancel invitation" secondary disabled={busy || stale} onPress={() => { void run('cancel'); }} />}
     </>}
     {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
-    {!access && !loading && <Button label="Retry access check" secondary disabled={busy} onPress={() => { setError(null); void load().catch(e => setError(e.message)); }} />}
+    {error && !loading && <Button label="Retry access check" secondary disabled={busy || stale} onPress={() => { setError(null); setLoading(true); void load().catch(e => setError(e.message)).finally(() => setLoading(false)); }} />}
   </Section>;
 }
