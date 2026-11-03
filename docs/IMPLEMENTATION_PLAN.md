@@ -2,7 +2,8 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: Manager and Barber mobile UI/UX redesign. See
+Current stage: Manager and Barber mobile UI/UX redesign, implemented in
+[PR #19](https://github.com/nadhirhasan/BookMyTurn/pull/19); phone review pending. See
 [the staff delivery checklist](STAFF_UX_REDESIGN.md) and
 [the screen review](../design/reviews/staff-redesign/README.md).
 

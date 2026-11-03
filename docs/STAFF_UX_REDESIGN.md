@@ -1,6 +1,7 @@
 # Manager and Barber mobile redesign
 
-Status: implemented and locally validated, PR pending, 2 November 2026.
+Status: implemented and locally validated on 2 November 2026; published in
+[PR #19](https://github.com/nadhirhasan/BookMyTurn/pull/19) on 3 November 2026.
 Customer redesign is PR #18; this is a separate feature branch.
 
 ## Plan and review gates
@@ -13,7 +14,7 @@ Customer redesign is PR #18; this is a separate feature branch.
 - [x] Finance: clearer owner-only hierarchy, filters and reports; preserve accounting behaviour.
 - [x] Validate permissions, stale states, CRUD and cross-app workflows; inspect phone-size screenshots.
 - [x] Run lint/types and iOS/Android/web exports.
-- [ ] Open a separate PR.
+- [x] Open a separate PR.
 - [ ] Physical iPhone/Android acceptance with native keyboard and large text.
 
 ## Direction
