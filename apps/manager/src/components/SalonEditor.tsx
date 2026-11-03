@@ -21,7 +21,7 @@ export function SalonEditor({salon}:{salon?:ManagedSalon}){
   try{if(!created.current){await save('create_salon',{id,name:name.trim(),address:address.trim(),weekdays:hours.map(h=>h.weekday),opens_at:hours[0]!.opens_at,closes_at:hours[0]!.closes_at});created.current=true;}
    if(photo)uploaded=await uploadManagedPhoto('salon',id,photo);
    await save('salon',{salon_id:id,name:name.trim(),address:address.trim(),is_open:open,photo_url:uploaded?.url??url,hours});
-   setPhoto(null);if(uploaded?.url)setUrl(uploaded.url);router.dismissTo(`/manage/salon/${id}`);
+   setPhoto(null);if(uploaded?.url)setUrl(uploaded.url);router.dismissTo(`/manage/salon/${id}?tab=${salon?'details':'team'}`);
   }catch(e){if(uploaded)await removeManagedPhoto(uploaded);setError(e instanceof Error?e.message:'Could not save your salon.');}finally{pending.current=false;setSaving(false);}
  };
  if(salon?.archived_at)return <><Text style={type.title}>{salon.name}</Text><RecordActions disabled={saving} kind="salon" id={id} salonId={id} name={salon.name} archived/></>;

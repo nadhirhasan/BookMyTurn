@@ -61,7 +61,6 @@ test('invited barber signs up, accepts the existing chair and sees nonfinancial 
   await page.getByLabel('Email address', { exact: true }).fill('amir@example.invalid'); await page.getByLabel('Password', { exact: true }).fill('Fixture password 123');
   await page.getByRole('button', { name: 'Create account', exact: true }).click();
   await expect(page.getByLabel('Invitation link or token')).toHaveValue('a'.repeat(64));
-  await page.getByRole('button', { name: 'Check invitation', exact: true }).click();
   await expect(page.getByText('Amir Studio', { exact: true })).toBeVisible(); await page.screenshot({ path: info.outputPath('accept-barber-invitation.png') });
   await page.getByRole('button', { name: 'Accept invitation', exact: true }).click();
   await expect(page.getByRole('heading', { name: '0 waiting for you.' })).toBeVisible();
@@ -82,7 +81,7 @@ test('manual invitation entry highlights missing input and handles expired links
 for (const width of [320, 430]) test(`invitation acceptance fits ${width}px`, async ({ page }) => {
   await staffFixture(page); await page.setViewportSize({ width, height: 780 }); await page.goto(`/invite?token=${'a'.repeat(64)}`);
   await page.getByLabel('Email address', { exact: true }).fill('amir@example.invalid'); await page.getByLabel('Password', { exact: true }).fill('Fixture password 123'); await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-  await page.getByRole('button', { name: 'Check invitation', exact: true }).click(); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await expect(page.getByRole('button', { name: 'Accept invitation', exact: true })).toBeVisible(); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
 test('offline salon data is labelled stale and cannot perform check-in until refreshed', async ({ page }) => {

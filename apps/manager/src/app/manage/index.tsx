@@ -16,6 +16,7 @@ function SalonListContent() {
   const salons=all.filter(s=>archived?!!s.archived_at:!s.archived_at);
   return <ManagementScreen title="BookMyTurn">
     <View style={{gap:8}}><Text style={type.eyebrow}>MANAGER WORKSPACE</Text><Text accessibilityRole="header" style={type.title}>Your salons.</Text><Text style={type.body}>{data?.profile.display_name?`Welcome back, ${data.profile.display_name}.`:'A clear view of your day.'}</Text><StatusBadge label={live?'Live updates connected':'Auto-refresh every 5 seconds'} tone={live?'success':'neutral'}/></View>
+    {!all.length&&<View style={{gap:10,padding:18,borderRadius:20,backgroundColor:colors.brandSoft}}><Text style={type.section}>Joining an existing team?</Text><Text style={type.body}>Use the invitation your manager shared. You do not need to create a salon.</Text><Button label="Join a salon as a barber" onPress={()=>router.push('/invite')}/></View>}
     {!!active.length&&<StatsGrid items={[
       {label:'Waiting',value:active.reduce((n,s)=>n+s.waiting,0),icon:Users,tone:'mint'},
       {label:'Requests',value:active.reduce((n,s)=>n+s.pending,0),icon:CalendarDays,tone:'amber'},
@@ -28,6 +29,6 @@ function SalonListContent() {
       <View style={m.cardBody}><View style={{flexDirection:'row',gap:12,alignItems:'flex-start'}}><View style={{flex:1,gap:4}}><Text style={type.section}>{salon.name}</Text><Text style={type.caption}>{salon.address||'Address not provided'}</Text></View><ChevronRight size={22} color={colors.action}/></View><StatusBadge label={salon.archived_at?'Archived':salon.is_open?'Open':'Closed'} tone={salon.is_open&&!salon.archived_at?'success':'neutral'}/><Text style={type.body}>{salon.waiting} waiting · {salon.barbers.filter(b=>b.is_active).length} barbers</Text><View style={{borderTopWidth:1,borderColor:colors.divider,paddingTop:12,gap:4}}><Text style={type.caption}>{salon.incoming??0} on the way · {salon.in_service??0} in service</Text><Text style={[type.label,{color:salon.pending?colors.pending:colors.action}]}>{salon.pending?`${salon.pending} request${salon.pending===1?'':'s'} to review`:'Open salon workspace'}</Text></View></View>
     </Pressable>)}
     <Text style={type.caption}>Waiting counts customers who have arrived. Remote joins stay On the way until check-in.</Text>
-    <Button label="Join a salon as a barber" secondary onPress={()=>router.push('/invite')}/>
+    {!!all.length&&<Button label="Join a salon as a barber" secondary onPress={()=>router.push('/invite')}/>}
   </ManagementScreen>;
 }

@@ -15,6 +15,6 @@ export default function MyQueue() {
   const history = visits.queues.filter(q => !activeQueue(q));
   const guest = qrQueues.filter(q => !visits.queues.some(v => v.id === q.id));
   return <Screen title="My Queue" tab><Text accessibilityRole="header" style={type.title}>Keep an eye on your turn.</Text><DataStatus />{guest.map(q => <QueueCard key={q.id} entry={q} qr/>)}<PrivateGate>
-{!active.length && <EmptyState icon={Clock3} title="No active queue entries" description="A fresh haircut starts with a salon. Check the wait before you go."><Action label="Find a salon" onPress={() => router.navigate('/salons')}/></EmptyState>}{active.map(q => <QueueCard key={q.id} entry={q}/>)}
+{!active.length && !guest.some(activeQueue) && <EmptyState icon={Clock3} title="No active queue entries" description="A fresh haircut starts with a salon. Check the wait before you go."><Action label="Find a salon" onPress={() => router.navigate('/salons')}/></EmptyState>}{active.map(q => <QueueCard key={q.id} entry={q}/>)}
 {!!history.length && <Text style={type.section}>Past visits</Text>}{history.map(q => <QueueCard key={q.id} entry={q}/>)}</PrivateGate></Screen>;
 }
