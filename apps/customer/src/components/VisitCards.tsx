@@ -20,9 +20,9 @@ function VisitCode({reference}:{reference:string}) {
  return <View style={{gap:5,paddingVertical:18,borderTopWidth:1,borderBottomWidth:1,borderStyle:'dashed',borderColor:colors.border}}><Text style={type.eyebrow}>YOUR VISIT CODE</Text><Text selectable style={{fontFamily:fonts.bold,fontSize:36,lineHeight:44,letterSpacing:5,color:colors.text}}>{reference}</Text><Text style={type.caption}>Show this code to your barber.</Text></View>;
 }
 function QueueProgress({status}:{status:string}) {
- const stage=['joined','arrived','in_service','completed'].indexOf(status);
+ const stage=status==='joined'?0:['arrived','in_service','completed'].indexOf(status);
  if(stage<0)return null;
- return <View style={{gap:12}}>{[{label:'Joined',detail:'Your visit is registered',icon:Check},{label:'At the salon',detail:'Arrival recorded',icon:Clock3},{label:'In the chair',detail:'Your haircut is underway',icon:Scissors}].map((item,i)=><View key={item.label} style={{flexDirection:'row',gap:12,alignItems:'center'}}><View style={{width:32,height:32,borderRadius:16,backgroundColor:stage>=i?colors.mint:colors.surface,justifyContent:'center',alignItems:'center'}}><item.icon size={17} color={stage>=i?colors.green:colors.muted}/></View><View style={{flex:1}}><Text style={[type.label,{color:stage>=i?colors.text:colors.muted}]}>{item.label}</Text>{stage===i&&<Text style={type.caption}>{item.detail}</Text>}</View>{stage>i&&<Check size={18} color={colors.green}/>}</View>)}</View>;
+ return <View style={{gap:12}}>{[{label:'Waiting',detail:'Your place is registered',icon:Clock3},{label:'In the chair',detail:'Your barber has started your haircut',icon:Scissors},{label:'Completed',detail:'Your haircut is finished',icon:Check}].map((item,i)=><View key={item.label} style={{flexDirection:'row',gap:12,alignItems:'center'}}><View style={{width:32,height:32,borderRadius:16,backgroundColor:stage>=i?colors.mint:colors.surface,justifyContent:'center',alignItems:'center'}}><item.icon size={17} color={stage>=i?colors.green:colors.muted}/></View><View style={{flex:1}}><Text style={[type.label,{color:stage>=i?colors.text:colors.muted}]}>{item.label}</Text>{stage===i&&<Text style={type.caption}>{item.detail}</Text>}</View>{stage>i&&<Check size={18} color={colors.green}/>}</View>)}</View>;
 }
 export function QueueCard({entry,confirmation=false,qr=false}:{entry:QueueEntry;confirmation?:boolean;qr?:boolean}) {
  const {catalog,refresh}=useCustomer(),{run,error,busy}=useVisitAction(),session=useSession();
@@ -31,11 +31,11 @@ export function QueueCard({entry,confirmation=false,qr=false}:{entry:QueueEntry;
  const salon=catalog?.salons.find(s=>s.id===entry.salon_id),barber=catalog?.barbers.find(b=>b.id===(entry.assigned_barber_id??entry.preferred_barber_id));
  return <View style={styles.card}>
    {confirmation&&<Text accessibilityRole="header" style={type.title}>{activeQueue(entry)?'You’re in the queue!':'Your queue visit'}</Text>}
-   <StatusPill label={statusLabel(entry.status)} tone={['arrived','in_service','completed'].includes(entry.status)?'success':entry.status==='joined'?'warning':'neutral'}/>
+   <StatusPill label={['joined','arrived'].includes(entry.status)?'Waiting':statusLabel(entry.status)} tone={['arrived','in_service','completed'].includes(entry.status)?'success':entry.status==='joined'?'warning':'neutral'}/>
    <Text style={type.section}>{salon?.name??entry.salon_name??'Salon'}</Text><Text style={type.body}>{barber?.display_name??entry.barber_name??'Any Available Barber'} · {entry.service_name??'Haircut'}</Text>
    <VisitCode reference={entry.reference}/>
    {activeQueue(entry)&&<><View style={{padding:14,borderRadius:14,backgroundColor:colors.mint,gap:4}}><Text style={type.caption}>Estimated start</Text><Text style={[type.section,{color:colors.green}]}>{entry.estimated_start?time(entry.estimated_start):'Check with your salon'}</Text></View><QueueProgress status={entry.status}/></>}
-   {entry.status==='joined'&&<><Notice>Check in when you reach the salon to join the physical waiting list.</Notice><Action label="I’ve Arrived — Check In" disabled={busy} onPress={()=>{void run('check_in',{id:entry.id});}}/></>}
+   {['joined','arrived'].includes(entry.status)&&<Notice>You are in the waiting queue. Head to the salon and show this code to your barber. Staff will handle the rest; this screen updates automatically.</Notice>}
    {['joined','arrived'].includes(entry.status)&&<Action label="Cancel queue entry" secondary disabled={busy||pending} onPress={()=>{if(qr)void receiptAction('cancel');else void run('cancel_queue',{id:entry.id});}}/>}
    {qr&&session.status==='authenticated'&&entry.status==='arrived'&&<Action label="Link this visit to my account" secondary disabled={pending} onPress={()=>{void receiptAction('link');}}/>}
    {(error||qrError)&&<Text accessibilityRole="alert" style={[type.body,{color:colors.error}]}>{error??qrError}</Text>}<ReviewLink queue={entry.id}/>

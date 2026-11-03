@@ -4,10 +4,10 @@ A customer-first salon app for Akurana, Sri Lanka, built with React Native,
 Expo, TypeScript and Supabase.
 
 The customer workflow uses a warm, colourful mobile design and live Supabase data:
-salon discovery, physical queues, calendar/time selection, appointment requests,
+salon discovery, immediate waiting queues, calendar/time selection, appointment requests,
 hairstyle sharing, barber profiles and reviews after completed services.
 Email/password signup signs in immediately without verification emails.
-The salon QR web route records arrival without an app or any Auth account.
+The salon QR web route joins the waiting queue without an app or any Auth account.
 See [the complete walkthrough and validation](docs/CUSTOMER_PIPELINE.md).
 
 - [Implementation checklist](docs/IMPLEMENTATION_PLAN.md)
@@ -79,8 +79,10 @@ required. Existing salons/accounts are preserved. Each new salon appears in the
 Customer app; bookable capacity appears after adding an active barber.
 See the [manager walkthrough](docs/MANAGER_WORKFLOW.md).
 
-The salon opens on a live Queue board with separate **On the way**, **Waiting**
-and **In service** views. **Agenda** contains appointment requests across all
+The salon opens on a live Queue board with **Waiting** and **In service** views.
+Every Join Queue counts immediately; customers receive a code with no arrival
+confirmation. Staff verify the code, start the haircut and record the final price
+on completion. See [the single-step queue workflow](docs/SINGLE_STEP_QUEUE.md). **Agenda** contains appointment requests across all
 dates plus the selected day's schedule. **Activity** keeps joins, arrivals and
 booking updates with unread badges. Private Realtime invalidations refresh the
 database views, with a five-second foreground polling fallback.

@@ -26,7 +26,7 @@ select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.bid('cus
 select pg_temp.barber_denied($q$select public.barber_state(pg_temp.bid('barber'))$q$,'42501');
 insert into barber_ids select 'queue',(public.customer_command('join_queue',jsonb_build_object('salon_id',pg_temp.bid('salon'),'service_id',pg_temp.bid('service'),'barber_id',pg_temp.bid('barber'),'request_key',gen_random_uuid()))->>'id')::uuid;
 select set_config('request.jwt.claims',jsonb_build_object('sub',pg_temp.bid('owner'))::text,true);
-select pg_temp.barber_denied($q$select public.barber_command(pg_temp.bid('barber'),'start',jsonb_build_object('id',pg_temp.bid('queue'),'agreed_price_minor',120000,'price_agreed',true))$q$,'P0001');
+select pg_temp.assert_barber((select status='arrived' from public.queue_entries where id=pg_temp.bid('queue')),'Customer join is already ready for staff verification');
 select public.barber_command(pg_temp.bid('barber'),'check_in',jsonb_build_object('reference',(select reference from public.queue_entries where id=pg_temp.bid('queue'))));
 -- A reserved break must prevent a conflicting service from starting.
 reset role;

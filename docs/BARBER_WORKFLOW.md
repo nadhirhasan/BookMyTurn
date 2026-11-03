@@ -1,5 +1,7 @@
 # Barber app and shared customer workflow
 
+> Queue rule updated 3 November 2026: joining counts as waiting immediately. Customer arrival confirmations and the On the way stage below are superseded by [the single-step queue workflow](SINGLE_STEP_QUEUE.md). Appointments remain separate.
+
 **Updated account structure:** the [Manager workflow](MANAGER_WORKFLOW.md)
 supersedes the original separate-email-per-salon onboarding below. One manager
 now owns multiple salons and creates their barber teams. Existing chair/service

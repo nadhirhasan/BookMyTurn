@@ -32,7 +32,7 @@ export function salonDisplay(salon: SalonRecord, catalog: Catalog): Salon {
     photo: salon.photo_url ? { uri: salon.photo_url } : null, barberNames: staff.map(b => b.display_name) };
 }
 export const waitLabel = (salon: Salon) => !salon.open ? 'Closed' : salon.wait ? salon.wait[0] === 0 ? 'No estimated wait' : `About ${salon.wait[0]} min` : 'No capacity today';
-export const queueLabel = (salon: Salon) => `${salon.waiting} physically waiting · ${salon.barbers} barbers`;
+export const queueLabel = (salon: Salon) => `${salon.waiting} waiting · ${salon.barbers} barbers`;
 export function searchSalons(salons: Salon[], query: string) {
   const term = query.trim().toLocaleLowerCase();
   return salons.filter(salon => [salon.name, ...salon.barberNames].some(value => value.toLocaleLowerCase().includes(term)));
