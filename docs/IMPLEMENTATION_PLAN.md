@@ -5,7 +5,8 @@ Plan prepared: 29 October 2026 (Asia/Colombo).
 Current stage: guided customer, manager and barber workflows. See
 [the audit and delivery checklist](GUIDED_WORKFLOWS.md) and
 [mobile screen review](../design/reviews/guided-workflows/README.md).
-Implementation and local validation complete; PR link and phone review pending.
+Implementation and local validation complete in
+[PR #21](https://github.com/nadhirhasan/BookMyTurn/pull/21); phone review pending.
 
 Previous stage: replace the coral brand accent with eucalyptus and sage across all
 apps. See [the colour research, contrast checks and previews](COLOR_DIRECTION.md).

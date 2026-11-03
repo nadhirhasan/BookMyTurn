@@ -12,7 +12,7 @@
 - [x] Keep arrived customer appointments in upcoming visits and explain pending, confirmed, arrived and cancelled next steps.
 - [x] Verify customer navigation, collections, queue/QR, booking, review, manager CRUD, operations, invitations, barber service/break/profile and finance permissions with regression tests.
 - [x] Review mobile-width screenshots; run lint/types and platform exports.
-- [ ] Open a feature PR.
+- [x] Open [PR #21](https://github.com/nadhirhasan/BookMyTurn/pull/21).
 
 ## Boundaries
 
