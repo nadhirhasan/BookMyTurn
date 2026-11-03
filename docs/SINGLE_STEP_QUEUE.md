@@ -10,7 +10,7 @@ The user changed the queue rule on 3 November 2026. Joining means the customer i
 - [x] Make staff code lookup open the matching visit for review/start; completion records the final price. No second queue entry or customer price confirmation.
 - [x] Remove obsolete On the way and physical-count wording from active screens. Keep appointments separate and salon-confirmed.
 - [x] Run isolated database security/workflow tests, cross-app browser tests, lint/types and platform exports; open a feature PR.
-- [ ] Apply and verify the hosted migration when authorized; record its exact result.
+- [x] Apply and verify the hosted migration when authorized; record its exact result.
 
 ## Implementation contract
 
@@ -41,4 +41,8 @@ Supabase's existing function permissions and finance/privacy restrictions are pr
 
 ## Deployment
 
-The migration is prepared and locally validated. Hosted application and verification are pending. Existing accounts, photos, visits, codes and financial history are preserved; no data reset is required.
+Implemented in [PR #22](https://github.com/nadhirhasan/BookMyTurn/pull/22), stacked on #21. Not merged.
+
+Applied to hosted BookMyTurn as `20261103062111_single_step_queue` on 3 November 2026. The unchanged local migration was renamed to match the hosted version and prevent duplicate CLI application. All three changed function definitions match the fresh local database exactly (MD5 comparison). Authenticated API execution is retained; anonymous access and direct access to the legacy helper remain denied. Before and after, the hosted queue contained one completed visit and no legacy joins to backfill. No accounts or records were deleted.
+
+Security advisors report no new findings. The pre-existing [disabled leaked-password protection setting](https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection) is unchanged. No Auth settings were modified. No hosted test accounts or synthetic visits were created for this deployment; the full functional/security regression tests ran in the disposable local database.
