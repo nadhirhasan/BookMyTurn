@@ -2,7 +2,12 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: guided customer, manager and barber workflows. See
+Current stage: single-step customer queue with staff-led service progression. See
+[the implementation, migration and validation checklist](SINGLE_STEP_QUEUE.md).
+Implemented and locally validated in [PR #22](https://github.com/nadhirhasan/BookMyTurn/pull/22);
+hosted migration applied and definitions/permissions verified. Phone acceptance pending.
+
+Previous stage: guided customer, manager and barber workflows. See
 [the audit and delivery checklist](GUIDED_WORKFLOWS.md) and
 [mobile screen review](../design/reviews/guided-workflows/README.md).
 Implementation and local validation complete in

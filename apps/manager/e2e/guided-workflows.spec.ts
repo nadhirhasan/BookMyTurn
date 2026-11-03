@@ -70,11 +70,13 @@ test('barber arrival tools precede the queue and reuse the existing customer cod
   });
   await login(page); await page.getByRole('button', { name: `Manage ${salon.name}`, exact: true }).click();
   await page.getByRole('button', { name: 'Team', exact: true }).click(); await page.getByRole('button', { name: "Open Amir's chair", exact: true }).click();
-  const input = await page.getByRole('button', { name: 'Check in an arrival', exact: true }).boundingBox();
+  const input = await page.getByRole('button', { name: 'Verify customer code', exact: true }).boundingBox();
   const queue = await page.getByRole('heading', { name: 'Your queue', exact: true }).boundingBox();
   expect(input!.y).toBeLessThan(queue!.y);
-  await page.getByRole('button', { name: 'Mark arrived', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '1 waiting for you.' })).toBeVisible(); expect(salon.queues).toHaveLength(1);
+  await page.getByRole('button', { name: 'Verify customer code', exact: true }).click();
+  await page.getByLabel('Customer queue code', { exact: true }).fill('123456');
+  await page.getByRole('button', { name: 'Find customer', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Nadeem', exact: true })).toBeVisible(); expect(salon.queues).toHaveLength(1);
 });
 
 test('a mistyped customer code explains the empty view and can be cleared', async ({ page }) => {

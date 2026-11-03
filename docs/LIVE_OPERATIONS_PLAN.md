@@ -1,5 +1,7 @@
 # Live queue, staff alerts and Manager redesign
 
+> Queue rule updated 3 November 2026: joining counts as waiting immediately. Customer arrival confirmations and the On the way stage below are superseded by [the single-step queue workflow](SINGLE_STEP_QUEUE.md). Appointments remain separate.
+
 Requested after phone testing on 30 October 2026. Preserve all existing accounts,
 salons, queues and bookings. Deliver through a separate PR stacked on Manager #11.
 

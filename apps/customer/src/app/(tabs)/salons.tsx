@@ -26,6 +26,6 @@ export default function SalonsScreen() {
   <DataStatus />
   {results.map(s => <View key={s.id} style={{ gap: 16 }}><SalonCard salon={s} featured/></View>)}
   {catalog && !results.length && <><Text style={type.section}>No salons found</Text><Action label="Reset search and filters" onPress={() => { router.setParams({ q: '' }); setOpenOnly(false); setSort('wait'); }}/></>}
-  <Notice>Only checked-in customers count as physically waiting. Joining remotely does not reserve a physical position.</Notice>
+  <Notice>Queue joins count as waiting immediately. Join when you are ready to head to the salon; your barber will verify your code.</Notice>
  </Screen>;
 }

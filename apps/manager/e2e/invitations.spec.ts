@@ -92,9 +92,9 @@ test('offline salon data is labelled stale and cannot perform check-in until ref
   await page.route('**/rest/v1/rpc/manager_state', r => r.fulfill({ status: 503, json: { message: 'offline fixture' } }));
   await page.getByRole('button', { name: 'Refresh salons', exact: true }).click();
   await expect(page.getByText('Data may be out of date. Refresh before changing the queue.', { exact: true }).filter({ visible: true })).toBeVisible();
-  await page.getByRole('button', { name: 'Mark arrived', exact: true }).click();
+  await page.getByRole('button', { name: 'Verify code', exact: true }).click();
   await expect(page.getByText('Your salon data is out of date. Refresh before making changes.', { exact: true })).toBeVisible(); expect(mutations).toBe(0);
   await page.unroute('**/rest/v1/rpc/manager_state'); await page.getByRole('button', { name: 'Refresh salons', exact: true }).click();
   await expect(page.getByText('Data may be out of date. Refresh before changing the queue.', { exact: true }).filter({ visible: true })).toHaveCount(0);
-  await page.getByRole('button', { name: 'Mark arrived', exact: true }).click(); await expect(page.getByTestId(`queue-${visit}`).getByText('Waiting', { exact: true })).toBeVisible(); expect(mutations).toBe(1);
+  await page.getByRole('button', { name: 'Verify code', exact: true }).click(); await expect(page.getByTestId(`queue-${visit}`).getByText('Waiting', { exact: true })).toBeVisible(); expect(mutations).toBe(1);
 });

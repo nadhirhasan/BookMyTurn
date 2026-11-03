@@ -24,7 +24,7 @@ export default function HomeScreen() {
     <DataStatus/>
     {!query.trim() && <>
       {queue && <Pressable accessibilityRole="button" accessibilityLabel="Track my queue" onPress={() => router.push(`/queue-entry/${queue.id}`)} style={s.active}>
-        <StatusPill label={statusLabel(queue.status)} tone="success"/><View style={s.line}><View style={{flex:1,gap:4}}><Text style={type.section}>Your turn is on its way</Text><Text style={type.caption}>{catalog?.salons.find(s=>s.id===queue.salon_id)?.name ?? queue.salon_name ?? 'Your salon'} · Code {queue.reference}</Text></View><ArrowUpRight color={colors.green} size={24}/></View>
+        <StatusPill label={['joined','arrived'].includes(queue.status)?'Waiting':statusLabel(queue.status)} tone="success"/><View style={s.line}><View style={{flex:1,gap:4}}><Text style={type.section}>Your turn is on its way</Text><Text style={type.caption}>{catalog?.salons.find(s=>s.id===queue.salon_id)?.name ?? queue.salon_name ?? 'Your salon'} · Code {queue.reference}</Text></View><ArrowUpRight color={colors.green} size={24}/></View>
       </Pressable>}
       {!queue && booking && <Pressable accessibilityRole="button" accessibilityLabel="View my appointment" onPress={() => router.navigate('/appointments')} style={s.active}><StatusPill label={statusLabel(booking.status)} tone={booking.status==='confirmed'?'success':'warning'}/><Text style={type.section}>{visitDate(booking.confirmed_start??booking.requested_start)} · {time(booking.confirmed_start??booking.requested_start)}</Text><Text style={type.caption}>View your appointment</Text></Pressable>}
       {!queue&&!booking&&<ImageBanner compact title="Good hair. Less waiting." subtitle=""/>}

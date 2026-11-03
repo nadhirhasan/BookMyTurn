@@ -71,12 +71,10 @@ export async function mockDatabase(page: Page, options: {twoBarbers?: boolean} =
     const { p_action: action, p_data: data } = route.request().postDataJSON();
     calls.push({ action, data });
     if (action === 'join_queue') {
-      queue ??= { id: queueId, salon_id: salonId, reference: '184205', preferred_barber_id: data.barber_id, assigned_barber_id: null, service_id: data.service_id, source: data.source, status: data.present ? 'arrived' : 'joined', created_at: new Date().toISOString(), estimated_start: new Date().toISOString() };
-    }
-    else if (action === 'check_in') {
-      queue.status = 'arrived';
+      queue ??= { id: queueId, salon_id: salonId, reference: '184205', preferred_barber_id: data.barber_id, assigned_barber_id: null, service_id: data.service_id, source: data.source, status: 'arrived', created_at: new Date().toISOString(), estimated_start: new Date().toISOString() };
       catalog.salons[0]!.waiting = 1;
     }
+    else if (action === 'check_in') { throw new Error('Customers must not confirm arrival'); }
     else if (action === 'cancel_queue') {
       queue.status = 'cancelled';
       catalog.salons[0]!.waiting = 0;

@@ -1,5 +1,7 @@
 # Guided customer and staff workflows
 
+> Queue rule updated 3 November 2026: joining counts as waiting immediately. Customer arrival confirmations and the On the way stage below are superseded by [the single-step queue workflow](SINGLE_STEP_QUEUE.md). Appointments remain separate.
+
 ## Plan and acceptance checklist
 
 - [x] Audit entry, next action, success, empty, failure and recovery states across customer and staff routes.

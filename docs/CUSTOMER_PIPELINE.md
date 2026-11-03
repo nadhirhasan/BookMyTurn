@@ -1,5 +1,7 @@
 # Customer workflow — database integration
 
+> Queue rule updated 3 November 2026: joining counts as waiting immediately. Customer arrival confirmations and the On the way stage below are superseded by [the single-step queue workflow](SINGLE_STEP_QUEUE.md). Appointments remain separate.
+
 Implemented on 30 October 2026 on `feat/customer-workflow`, stacked on the Expo
 tunnel fix. User requested the whole customer pipeline together, replacing the
 earlier one-feature-at-a-time implementation gates. PR review and physical-device

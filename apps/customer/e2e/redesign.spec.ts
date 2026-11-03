@@ -52,7 +52,7 @@ test('Home resumes an active visit and missing venue photos stay honest', async 
   await signInFixture(page);await page.goto('/salon/royal-saloon');
   await expect(page.getByText('Photo coming soon',{exact:true})).toBeVisible();
   await page.getByRole('button',{name:'Join Queue',exact:true}).click();
-  await page.getByRole('button',{name:'Confirm & join queue'}).click();
+  await page.getByRole('button',{name:'Join Queue'}).click();
   await expect(page.getByText('184205',{exact:true})).toBeVisible();
   await page.goto('/');await page.getByRole('button',{name:'Track my queue'}).click();
   await expect(page.getByText('184205',{exact:true})).toBeVisible();
@@ -84,9 +84,9 @@ test('customer design review with realistic photo fixtures across the complete j
   await expect(page.getByText('Pending salon confirmation',{exact:true})).toBeVisible();
   await page.screenshot({path:info.outputPath('bookings.png')});
   await page.goto('/salon/royal-saloon/join');
-  await expect(page.getByRole('button',{name:'Confirm & join queue'})).toBeVisible();
+  await expect(page.getByRole('button',{name:'Join Queue'})).toBeVisible();
   await page.screenshot({path:info.outputPath('join.png')});
-  await page.getByRole('button',{name:'Confirm & join queue'}).click();
+  await page.getByRole('button',{name:'Join Queue'}).click();
   await expect(page.getByText('184205',{exact:true})).toBeVisible();
   await page.screenshot({path:info.outputPath('queue.png')});
 });
