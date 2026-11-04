@@ -2,6 +2,8 @@
 
 4 November 2026. Replace the typed `HH:MM` alternative-time field with the same calendar → time selection pattern used by customers.
 
+Implemented in [PR #23](https://github.com/nadhirhasan/BookMyTurn/pull/23), stacked on #22. Local checks passed; GitHub CI and phone acceptance can be tracked separately. No hosted migration is required.
+
 - [x] Show the appointment/customer context, calendar and database-backed times for the selected chair.
 - [x] Group times into Morning, Afternoon and Evening; disable unavailable times and highlight a missing selection inline.
 - [x] Clear selection when the day changes; ignore late responses and handle loading, empty days, errors and refreshed availability safely.
