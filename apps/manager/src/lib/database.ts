@@ -1,9 +1,10 @@
-import type { Json } from '@core/database.types';
+import type { Database as CustomerDatabase, Json } from '@core/database.types';
 export type Database = {
   public: {
     Tables: Record<never, never>;
     Views: Record<never, never>;
     Functions: {
+      customer_slots: CustomerDatabase['public']['Functions']['customer_slots'];
       owner_finance: { Args: { p_action: string; p_data?: Json }; Returns: Json };
       barber_team: { Args: { p_salon: string }; Returns: Json };
       barber_invitation: { Args: { p_action: string; p_data: Json }; Returns: Json };
