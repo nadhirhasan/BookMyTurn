@@ -2,7 +2,11 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: single-step customer queue with staff-led service progression. See
+Current stage: calendar and database-backed time selection for barber appointment alternatives.
+See [the picker plan and validation](BARBER_APPOINTMENT_PICKER.md).
+Implemented and locally validated in [PR #23](https://github.com/nadhirhasan/BookMyTurn/pull/23); phone review pending.
+
+Previous stage: single-step customer queue with staff-led service progression. See
 [the implementation, migration and validation checklist](SINGLE_STEP_QUEUE.md).
 Implemented and locally validated in [PR #22](https://github.com/nadhirhasan/BookMyTurn/pull/22);
 hosted migration applied and definitions/permissions verified. Phone acceptance pending.

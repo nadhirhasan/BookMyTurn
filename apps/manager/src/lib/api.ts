@@ -1,6 +1,7 @@
 import { createAuthActions } from '@core/auth-actions';
 import { getSupabaseClient } from './client';
 import type { Context, State, Json } from './types';
+import type { Slot } from '@customer/lib/customer-types';
 export const auth = createAuthActions({ getClient: getSupabaseClient });
 export function db() {
   const { client } = getSupabaseClient();
@@ -52,4 +53,9 @@ export async function setup(data: Json) {
   return r.data as {
     barber_id: string;
   };
+}
+export async function appointmentSlots(salon: string, service: string | null, day: string, barber: string): Promise<Slot[]> {
+  const { data, error } = await db().rpc('customer_slots', { p_salon: salon, p_service: service, p_day: day, p_barber: barber });
+  if (error) throw new Error('Could not load available times. Try again.');
+  return data;
 }
