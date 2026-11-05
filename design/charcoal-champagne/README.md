@@ -31,7 +31,7 @@ Preserved product rules: no service catalogue or upfront prices, queue separate 
 - Background `#141613`; surfaces `#20231E` / `#2A2E26`; text `#F4F0E7`; muted text `#B1B4A8`; champagne `#CBB58F`; status sage `#B2C7A9`.
 - Existing DM Sans, with clearer hierarchy and larger supporting text. Real photos provide character without neon edges or glowing controls.
 - Page navigation: approximately 280–300 ms, directional horizontal movement and a restrained fade. Sheet entrance: 360 ms from the bottom. Pressed controls respond immediately.
-- Fixed booking summary/CTA. Disabled taken times. Scrollable screen content, persistent navigation, keyboard focus indicators and dialog focus trapping.
+- Fixed salon queue/appointment actions and booking summary/CTA. Disabled taken times. Scrollable screen content, persistent navigation, keyboard focus indicators and dialog focus trapping.
 - Reduced-motion OS preference and an explicit preview Motion switch. No autoplay backgrounds, particle effects or continuous decorative animation.
 
 ## Validation

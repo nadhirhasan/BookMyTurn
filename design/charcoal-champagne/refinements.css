@@ -23,3 +23,11 @@
 .board-shell .page{scrollbar-width:none}
 .phone .sheet .primary{font-size:14px}
 .page-titlebar{position:sticky;top:0;z-index:3;background:var(--bg)}
+.bottom-nav.is-visit{display:block;height:103px;padding:12px 20px;background:var(--bg)}
+.viewport.visit-view{bottom:118px}
+.detail-footer .detail-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.detail-footer .primary,.detail-footer .secondary{display:flex;flex-direction:row;gap:6px;min-height:51px;padding:10px;font-size:12px}
+.detail-footer .primary{color:var(--ink);font-weight:700}
+.detail-footer .secondary{color:var(--text)}
+.detail-footer button:after{display:none}
+.detail-footer p{font-size:9px;text-align:center;color:var(--muted);margin-top:10px}
