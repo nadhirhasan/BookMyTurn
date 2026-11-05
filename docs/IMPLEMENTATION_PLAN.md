@@ -2,7 +2,13 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: owner barber performance analytics, with daily/weekly haircut counts,
+Current stage: salon map pins and customer directions. Managers select and confirm
+the salon entrance on a map, optionally using their current location. Customers open
+the saved coordinates in Google Maps or Apple Maps. See [the location plan](SALON_LOCATION_PLAN.md).
+Local database, browser and native/web export validation passed; PR/hosted rollout
+are in progress. Phone map/GPS acceptance pending.
+
+Previous stage: owner barber performance analytics, with daily/weekly haircut counts,
 generated revenue, charts, calendar filters and individual barber results. See
 [the research, implementation and validation checklist](OWNER_PERFORMANCE_ANALYTICS.md).
 Local database, mobile browser, lint/types and native-export validation passed in

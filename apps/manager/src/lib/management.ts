@@ -21,6 +21,8 @@ export type ManagedSalon = {
   name: string;
   slug: string;
   address: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   photo_url: string | null;
   is_open: boolean;
   archived_at?: string | null;

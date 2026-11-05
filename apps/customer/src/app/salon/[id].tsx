@@ -6,6 +6,7 @@ import { MenuRow, Photo } from '@/components/Experience';
 import { DataStatus, styles, useRefreshOnFocus } from '@/components/CustomerUI';
 import { salonDisplay, waitLabel } from '@/data/salons';
 import { useCustomer } from '@/providers/CustomerProvider';
+import { SalonDirections } from '@/components/salon-directions';
 import { colors, type } from '@/theme';
 
 export default function SalonScreen() {
@@ -20,7 +21,7 @@ export default function SalonScreen() {
     <View style={{gap:8}}><StatusPill label={salon.open_now?'Open now':'Closed now'} tone={salon.open_now?'success':'neutral'}/><Text accessibilityRole="header" style={type.title}>{salon.name}</Text>
       <View style={styles.row}><Star size={17} color={colors.amber}/><Text style={type.caption}>{salon.review_count?`${salon.rating} · ${salon.review_count} reviews`:'No reviews yet'}</Text></View>
       <View style={{flexDirection:'row',gap:8}}><MapPin size={17} color={colors.muted}/><Text style={[type.body,{flex:1,color:colors.muted}]}>{salon.address??'Address not provided'}</Text></View>
-    </View><DataStatus/>
+    </View><DataStatus/><SalonDirections salon={salon}/>
     <View style={{padding:20,borderRadius:22,backgroundColor:colors.mint,gap:16}}><View style={styles.row}><Clock3 size={22} color={colors.green}/><Text style={[type.section,{color:colors.green}]}>{waitLabel(display)}</Text></View><View style={{flexDirection:'row',gap:20}}><View style={{flex:1,gap:4}}><Text style={type.title}>{display.earliest}</Text><Text style={type.caption}>Earliest estimated service</Text></View><View style={{gap:4}}><View style={styles.row}><Users size={20} color={colors.green}/><Text style={type.title}>{salon.waiting}</Text></View><Text style={type.caption}>waiting</Text></View></View><Text style={type.caption}>Waits are estimates and can change as haircuts finish.</Text></View>
     <MenuRow icon={CalendarDays} title="View calendar & times" subtitle="Pick a date, choose a time, request your visit." onPress={()=>router.push(`/salon/${salon.slug}/appointment`)}/>
     <SectionHeading title="Meet your barbers"/>

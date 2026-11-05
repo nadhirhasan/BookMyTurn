@@ -3,6 +3,8 @@ export type SalonRecord = {
   slug: string;
   name: string;
   address: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   photo_url: string | null;
   photo_attribution: string | null;
   open_now: boolean;
