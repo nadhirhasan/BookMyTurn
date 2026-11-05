@@ -7,7 +7,7 @@ Prepared 5 November 2026. Feature PR required; phone acceptance follows validati
 - [x] Require a pin in the updated salon form. Open a full-screen map to tap/drag the salon pin, optionally show/use the manager's current position, confirm or cancel without losing the form.
 - [x] Display saved location in salon management and customer details. Open the exact coordinates in Google Maps, with Apple Maps available on iPhone. Explain missing legacy pins without inventing coordinates.
 - [x] Verify permissions, invalid coordinates, create retries, persistence, customer catalog, browser interactions, denied GPS, narrow screens and native/web exports.
-- [ ] Open the PR; deploy and verify the tested migration. Preserve business records.
+- [x] Open the PR; deploy and verify the tested migration. Preserve business records.
 
 ## Implementation choices
 
@@ -38,4 +38,12 @@ Both apps pass lint and TypeScript. iPhone, Android and web production exports p
 
 The local Edge policy blocks opening Google Maps externally; the browser test verifies the exact URL sent to the platform's open-URL function without changing that policy. Native map rendering, phone GPS permission/accuracy and the Google/Apple Maps app handoff require device acceptance. Google Maps Android store builds need a restricted `GOOGLE_MAPS_ANDROID_API_KEY`, supported by manager app.config.ts; Expo Go needs no extra key.
 
-Hosted preflight security advisor has the existing leaked-password-protection warning and no new findings. Hosted rollout and PR are pending below.
+Hosted security advisor matches the existing leaked-password-protection warning, with no new findings.
+
+## Hosted rollout
+
+[PR #25](https://github.com/nadhirhasan/BookMyTurn/pull/25) is stacked on #24; no automatic merge. Migration `20261105071423_salon_location_pins` is applied. The unchanged local migration was renamed from its CLI preparation timestamp (`20261105064909`) to match hosted history and prevent duplicate future application.
+
+The complete salon-location SQL suite passed on hosted Supabase, with every fixture change rolled back. Independent checks confirm zero fixture accounts/salons remain, no anonymous write-RPC access, no client execution of the private legacy command, and zero invalid coordinate pairs. Existing business records are preserved.
+
+Phone acceptance: in Manager, create/edit a salon → Choose on map → Use my location or tap/drag → Use this pin → Save. In Customer, open that salon → Get directions in Google Maps (or Apple Maps on iPhone). Verify both the pin and arrival route on the device.

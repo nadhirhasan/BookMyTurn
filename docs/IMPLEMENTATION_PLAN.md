@@ -5,8 +5,9 @@ Plan prepared: 29 October 2026 (Asia/Colombo).
 Current stage: salon map pins and customer directions. Managers select and confirm
 the salon entrance on a map, optionally using their current location. Customers open
 the saved coordinates in Google Maps or Apple Maps. See [the location plan](SALON_LOCATION_PLAN.md).
-Local database, browser and native/web export validation passed; PR/hosted rollout
-are in progress. Phone map/GPS acceptance pending.
+Local database, browser, unit and native/web export validation passed in
+[PR #25](https://github.com/nadhirhasan/BookMyTurn/pull/25). Hosted migration,
+permissions and rolled-back fixture cleanup are verified. Phone map/GPS acceptance pending.
 
 Previous stage: owner barber performance analytics, with daily/weekly haircut counts,
 generated revenue, charts, calendar filters and individual barber results. See
