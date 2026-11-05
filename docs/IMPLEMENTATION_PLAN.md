@@ -2,11 +2,16 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: design-first charcoal/champagne dark-theme review. The user supplied
-a neon dark reference and requested a non-neon alternative with smooth transitions.
-[Interactive design preview and approval checklist](../design/charcoal-champagne/README.md).
-Ten sample views and an eight-screen board are prepared; application implementation
-awaits the user's review. Figma editing is blocked by the account's Starter tool limit.
+Current stage: implement the user's new cream and teal mobile reference across
+Customer, Manager and Barber. It replaces the earlier dark direction. The apps share
+warm surfaces, teal actions, square salon grids, calendar/time selection, smooth
+interaction feedback and explicit loading/retry states. See [the current checklist
+and validation](CREAM_TEAL_DESIGN.md) and [running-app screenshots](../design/reviews/cream-teal/README.md).
+Phone acceptance follows local validation. Existing Supabase workflows and
+completion-only pricing are preserved; no hosted schema or data changes are needed.
+
+Previous visual direction: [Charcoal & Champagne implementation](CHARCOAL_IMPLEMENTATION.md),
+now superseded by the supplied cream and teal reference in the same PR #27.
 
 Previous stage: salon map pins and customer directions. Managers select and confirm
 the salon entrance on a map, optionally using their current location. Customers open

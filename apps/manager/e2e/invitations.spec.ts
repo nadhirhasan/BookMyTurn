@@ -63,9 +63,10 @@ test('invited barber signs up, accepts the existing chair and sees nonfinancial 
   await expect(page.getByLabel('Invitation link or token')).toHaveValue('a'.repeat(64));
   await expect(page.getByText('Amir Studio', { exact: true })).toBeVisible(); await page.screenshot({ path: info.outputPath('accept-barber-invitation.png') });
   await page.getByRole('button', { name: 'Accept invitation', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '0 waiting for you.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Your chair is ready/ })).toBeVisible();
   await expect(page.getByRole('button', { name: 'My salons', exact: true })).toHaveCount(0);
-  await page.getByRole('tab', { name: /My Work/ }).click();
+  await page.getByRole('tab', { name: /Profile/ }).click();
+  await page.getByRole('button', { name: 'My work & reviews', exact: true }).click();
   await expect(page.getByText('2 completed', { exact: true })).toBeVisible(); await expect(page.getByText('Great haircut.', { exact: true })).toBeVisible();
   await expect(page.getByText(/revenue|profit|Rs\./i)).toHaveCount(0); await page.screenshot({ path: info.outputPath('barber-nonfinancial-work.png') });
 });

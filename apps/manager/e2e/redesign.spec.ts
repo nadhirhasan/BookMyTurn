@@ -24,9 +24,9 @@ test('manager and chair journey has reviewable mobile screens and one completion
   await page.screenshot({path:info.outputPath('salon-agenda.png')});
   await page.getByRole('button',{name:'Team',exact:true}).click();await expect(page.getByRole('button',{name:"Open Amir's chair",exact:true})).toBeVisible();
   await page.screenshot({path:info.outputPath('salon-team.png')});
-  await page.getByRole('button',{name:"Open Amir's chair",exact:true}).click();await expect(page.getByRole('heading',{name:'1 waiting for you.'})).toBeVisible();
+  await page.getByRole('button',{name:"Open Amir's chair",exact:true}).click();await expect(page.getByRole('heading',{name:/Your next customer.*right here/})).toBeVisible();
   await page.screenshot({path:info.outputPath('barber-queue.png')});
-  await page.getByRole('button',{name:'Start Service',exact:true}).click();await expect(page.getByRole('img',{name:'Haircut reference',exact:true}).filter({visible:true})).toBeVisible();
+  await page.getByRole('button',{name:'Verify customer code',exact:true}).click();await expect(page.getByRole('img',{name:'Haircut reference',exact:true}).filter({visible:true})).toBeVisible();
   await page.screenshot({path:info.outputPath('start-haircut.png')});
   await page.getByRole('button',{name:'Start haircut',exact:true}).click();await expect(page.getByRole('button',{name:'Finish Service',exact:true})).toBeVisible();
   await page.screenshot({path:info.outputPath('active-haircut.png')});

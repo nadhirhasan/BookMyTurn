@@ -1,12 +1,13 @@
 import { ArrowUpRight, ChevronRight, type LucideIcon, Scissors } from 'lucide-react-native';
 import { useState, type ReactNode } from 'react';
-import { Image, Pressable, StyleSheet, Text, View, type ImageSourcePropType } from 'react-native';
+import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View, type ImageSourcePropType } from 'react-native';
 import { colors, type } from '@/theme';
 
-export function Photo({ source, label, height = 200 }: { source?: ImageSourcePropType | null; label: string; height?: number }) {
+export function Photo({ source, label, height = 200, radius = 16, square = false }: { source?: ImageSourcePropType | null; label: string; height?: number; radius?:number; square?:boolean }) {
   const identity=JSON.stringify(source);
+  const [loadedFor,setLoadedFor]=useState<string|null>(null);
   const [failed, setFailed] = useState<string|null>(null);
-  return <View style={[s.photo, { height }]}>{source && failed!==identity ? <Image source={source} accessibilityLabel={label} onError={() => setFailed(identity)} style={{ width: '100%', height: '100%' }}/> : <View style={s.placeholder}><Scissors size={32} color={colors.action}/><Text style={type.caption}>Photo coming soon</Text></View>}</View>;
+  return <View style={[s.photo, { height:square?undefined:height,aspectRatio:square?1:undefined,borderRadius:radius }]}>{source && failed!==identity ? <><Image key={identity} source={source} accessibilityLabel={label} onLoadEnd={()=>setLoadedFor(identity)} onError={() => setFailed(identity)} style={{ width: '100%', height: '100%' }}/>{loadedFor!==identity&&<View pointerEvents="none" style={[StyleSheet.absoluteFill,{alignItems:'center',justifyContent:'center',backgroundColor:colors.card}]}><ActivityIndicator accessibilityLabel={`Loading ${label}`} color={colors.action}/></View>}</> : <View style={s.placeholder}><Scissors size={height<100?24:32} color={colors.action}/>{height>=100&&<Text style={type.caption}>Photo coming soon</Text>}</View>}</View>;
 }
 export function ImageBanner({ title, subtitle, onPress, compact = false }: { title: string; subtitle: string; onPress?: () => void; compact?: boolean }) {
   const content = <><View style={{ flex: 1, padding: compact ? 16 : 20, gap: 8 }}><Text style={type.eyebrow}>YOUR NEXT LOOK</Text><Text accessibilityRole="header" style={compact ? type.section : type.title}>{title}</Text>{!!subtitle&&<Text style={type.caption}>{subtitle}</Text>}{onPress && <ArrowUpRight size={24} color={colors.action}/>}</View><View style={{ width: compact ? '32%' : '37%', alignSelf: 'stretch' }}><Image source={require('../../assets/images/salon.jpg')} accessible={false} resizeMode="cover" style={{ position: 'absolute', width: '100%', height: '100%' }}/></View></>;

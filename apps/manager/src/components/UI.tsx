@@ -2,26 +2,32 @@ import { router, useFocusEffect, usePathname } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ChevronLeft, RefreshCw, Store } from 'lucide-react-native';
-import { colors, fonts, type } from '@/theme';
+import { ChevronLeft, Store } from 'lucide-react-native';
+import { colors, fonts, shadows, type } from '@/theme';
+import { PressableMotion } from '../../../customer/src/components/PressableMotion';
+import { RefreshAction } from '../../../customer/src/components/RefreshAction';
+import { LoadingState } from '../../../customer/src/components/LoadingState';
+import { RouteMotion } from '../../../customer/src/components/RouteMotion';
 import {ActivityBell} from '@/components/StaffAlerts';
 import { useManager } from '@/providers/ManagerProvider';
+import { useSession } from '@/providers/SessionProvider';
 import { useBarber } from '@/providers/BarberProvider';
 import type { Json } from '@/lib/types';
-export function Button({ label, onPress, secondary = false, disabled = false, accessibilityLabel }: {
+export function Button({ label, onPress, secondary = false, disabled = false, accessibilityLabel, loading = false }: {
   label: string;
   onPress: () => void;
   secondary?: boolean;
   disabled?: boolean;
   accessibilityLabel?: string;
-}) { return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} accessibilityState={{ disabled }} disabled={disabled} onPress={onPress} style={({ pressed }) => [s.button, secondary && s.secondary, { opacity: disabled ? .4 : pressed ? .7 : 1 }]}><Text style={[type.label, { color: secondary ? colors.action : colors.onAction, textAlign: 'center' }]}>{label}</Text></Pressable>; }
+  loading?: boolean;
+}) { return <PressableMotion accessibilityRole="button" accessibilityLabel={accessibilityLabel??label} accessibilityState={{ busy:loading }} disabled={disabled||loading} onPress={onPress} style={[s.button, secondary && s.secondary]}><View style={{flexDirection:'row',alignItems:'center',justifyContent:'center',gap:8}}>{loading&&<ActivityIndicator accessible={false} importantForAccessibility="no" aria-hidden size="small" color={secondary?colors.action:colors.onAction}/>}<Text style={[type.label, { flexShrink:1,color: secondary ? colors.text : colors.onAction, textAlign: 'center' }]}>{label}</Text></View></PressableMotion>; }
 export function Chip({ label, selected, onPress, accessibilityLabel, disabled = false }: {
   label: string;
   selected: boolean;
   disabled?: boolean;
   accessibilityLabel?: string;
   onPress: () => void;
-}) { return <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel} accessibilityState={{ selected, disabled }} disabled={disabled} onPress={onPress} style={({pressed})=>[s.chip, selected && { backgroundColor: colors.action, borderColor: colors.action }, {opacity:disabled?.45:pressed?.7:1}]}><Text style={[type.label, selected && { color: colors.background }]}>{label}</Text></Pressable>; }
+}) { return <PressableMotion accessibilityRole="button" accessibilityLabel={accessibilityLabel??label} accessibilityState={{ selected }} disabled={disabled} onPress={onPress} style={[s.chip, selected && { backgroundColor: colors.action, borderColor: colors.action }]}><Text style={[type.label, selected && { color: colors.background }]}>{label}</Text></PressableMotion>; }
 export function Field({ label, value, onChange, multiline = false, numeric = false, maxLength = 100, error, compact = false }: {
   label: string;
   value: string;
@@ -40,7 +46,7 @@ export function Screen({ title, children, back = false, footer }: {
   children: ReactNode;
   back?: boolean;
   footer?: ReactNode;
-}) { const { refresh, error, loading, stale, lastUpdated, data } = useBarber(); const manager = useManager(); const pathname=usePathname(); const tab=['/queue','/appointments','/profile','/performance'].includes(pathname); return <SafeAreaView edges={tab?['top']:['top','bottom']} style={{ flex: 1, backgroundColor: colors.background }}><View style={s.header}>{back && <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.canGoBack() ? router.back() : router.replace('/queue')} style={s.icon}><ChevronLeft size={22} color={colors.text}/></Pressable>}<Text style={[type.section, { flex: 1, minWidth: 0 }]}>{title}</Text>{!!manager.data?.salons.length && <Pressable accessibilityRole="button" accessibilityLabel="My salons" onPress={() => router.dismissTo('/manage')} style={s.icon}><Store size={22} color={colors.action}/></Pressable>}{manager.data&&<ActivityBell/>}<Pressable accessibilityRole="button" accessibilityLabel="Refresh work" onPress={() => { void refresh(); }} style={s.icon}><RefreshCw size={19} color={colors.text}/></Pressable></View><KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS==='ios'?'padding':undefined}><ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" contentContainerStyle={s.content}>{data && <Text accessibilityRole={stale?'alert':undefined} style={type.caption}>{stale?'Data may be out of date. Refresh before making changes.':`Updated ${lastUpdated?new Date(lastUpdated).toLocaleTimeString():''}`}</Text>}{error && <Note>{error}</Note>}{loading && <ActivityIndicator color={colors.text}/>}{children}</ScrollView>{footer&&<View style={s.footer}>{footer}</View>}</KeyboardAvoidingView></SafeAreaView>; }
+}) { const session=useSession(); const { refresh, error, loading, stale, data } = useBarber(); const manager = useManager(); const pathname=usePathname(); const tab=['/queue','/appointments','/profile','/performance'].includes(pathname); return <SafeAreaView edges={tab?['top']:['top','bottom']} style={{ flex: 1, overflow:'hidden', backgroundColor: colors.background }}><View style={s.header}>{back && <Pressable accessibilityRole="button" accessibilityLabel="Go back" onPress={() => router.canGoBack() ? router.back() : router.replace('/queue')} style={s.icon}><ChevronLeft size={22} color={colors.text}/></Pressable>}<Text style={[type.section, { flex: 1, minWidth: 0 }]}>{title}</Text>{!!manager.data?.salons.length && <Pressable accessibilityRole="button" accessibilityLabel="My salons" onPress={() => router.dismissTo('/manage')} style={s.icon}><Store size={22} color={colors.action}/></Pressable>}{manager.data&&<ActivityBell/>}{session.status==='authenticated'&&<RefreshAction label="Refresh work" onRefresh={refresh}/>}</View><RouteMotion><KeyboardAvoidingView style={{flex:1}} behavior={Platform.OS==='ios'?'padding':undefined}><ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag" contentContainerStyle={s.content}>{data && stale && <Text accessibilityRole="alert" style={type.caption}>Data may be out of date. Refresh before making changes.</Text>}{error && <Note>{error}</Note>}{loading && data && <LoadingState compact label="Refreshing your chair…"/>}{children}</ScrollView>{footer&&<View style={s.footer}>{footer}</View>}</KeyboardAvoidingView></RouteMotion></SafeAreaView>; }
 export function useRefresh() { const { refresh } = useBarber(); useFocusEffect(useCallback(() => { void refresh(); }, [refresh])); }
 export function useAction() {
   const { mutate, busy, stale } = useBarber();
@@ -62,4 +68,4 @@ export function useAction() {
   };
   return { run, busy:busy||stale, error, message,clearError:()=>setError(null) };
 }
-export const s = StyleSheet.create({ header: { minHeight: 64, paddingHorizontal: 20, paddingVertical: 8, flexDirection: 'row', gap: 8, alignItems: 'center' }, icon: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }, content: { padding: 20, gap: 20, paddingBottom: 40 }, footer: {padding:16,gap:8,borderTopWidth:1,borderColor:colors.divider,backgroundColor:colors.card}, button: { minHeight: 54, borderRadius: 16, padding: 16, backgroundColor: colors.action, alignItems: 'center', justifyContent: 'center' }, secondary: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.divider }, chip: { minHeight: 48, paddingVertical: 10, borderWidth: 1, borderColor: colors.border, borderRadius: 24, paddingHorizontal: 15, alignItems: 'center', justifyContent: 'center' }, input: { minHeight: 54, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 14, fontFamily: fonts.regular, fontSize: 16, color: colors.text }, card: { padding: 16, borderWidth: 1, borderColor: colors.divider, borderRadius: 20, gap: 16, backgroundColor: colors.card }, note: { backgroundColor: colors.pendingSoft, padding: 16, borderRadius: 16 }, row: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 } });
+export const s = StyleSheet.create({ header: { minHeight: 64, paddingHorizontal: 20, paddingVertical: 8, flexDirection: 'row', gap: 8, alignItems: 'center' }, icon: { width: 48, height: 48, alignItems: 'center', justifyContent: 'center' }, content: { padding: 20, gap: 20, paddingBottom: 40 }, footer: {padding:16,gap:8,borderTopWidth:1,borderColor:colors.divider,backgroundColor:colors.card}, button: { minHeight: 52, borderRadius: 22, padding: 16, backgroundColor: colors.action, alignItems: 'center', justifyContent: 'center' }, secondary: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.divider }, chip: { minHeight: 44, paddingVertical: 8, borderWidth: 1, borderColor: colors.border, borderRadius: 22, paddingHorizontal: 14, alignItems: 'center', justifyContent: 'center' }, input: { minHeight: 54, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: 12, padding: 14, fontFamily: fonts.regular, fontSize: 16, color: colors.text }, card: { boxShadow:shadows.card,padding: 16, borderWidth: 1, borderColor: colors.divider, borderRadius: 20, gap: 16, backgroundColor: colors.card }, note: { backgroundColor: colors.pendingSoft, padding: 16, borderRadius: 16 }, row: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 8 } });

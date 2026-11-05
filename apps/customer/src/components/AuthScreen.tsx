@@ -3,7 +3,7 @@ import { Eye, EyeOff } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ImageBanner } from '@/components/Experience';
+import { BrandBanner } from '@/components/BrandBanner';
 import { Action, Header } from '@/components/UI';
 import { customerAuth } from '@/lib/supabase/auth';
 import { validateCredentials, type AuthMode, type CredentialErrors } from '@/lib/supabase/auth-actions';
@@ -60,7 +60,7 @@ export default function AuthScreen({ mode }: {
   <Header title="BookMyTurn"/>
   <KeyboardAvoidingView style={s.keyboard} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={s.content}>
-    <ImageBanner compact title={signup ? "Your next good hair day." : "A fresh start awaits."} subtitle="Your favourite salons, visits and haircut ideas in one place."/>
+    <BrandBanner subtitle="Your favourite salons, visits and haircut ideas in one place."/>
     <View style={s.intro}>
      <Text style={s.eyebrow}>YOUR ACCOUNT</Text>
      <Text accessibilityRole="header" style={s.title}>{signup ? 'Create your account' : 'Welcome back'}</Text>
@@ -87,7 +87,7 @@ export default function AuthScreen({ mode }: {
       <Text accessibilityRole="alert" style={type.body}>{error ?? (unavailable
         ? 'Account access is unavailable right now. You can still browse salons.' : session.error)}</Text>
      </View>}
-     <Action label={busy ? (signup ? 'Creating account…' : 'Signing in…') : (signup ? 'Create account' : 'Sign in')} onPress={() => { void submit(); }} disabled={busy || unavailable || session.status === 'loading'}/>
+     <Action label={busy ? (signup ? 'Creating account…' : 'Signing in…') : (signup ? 'Create account' : 'Sign in')} onPress={() => { void submit(); }} loading={busy} disabled={busy || unavailable || session.status === 'loading'}/>
      {session.status === 'loading' && <ActivityIndicator color={colors.action} accessibilityLabel="Restoring your session"/>}
     </View>
     <View style={s.switchRow}>
@@ -113,8 +113,8 @@ const s = StyleSheet.create({
   input: { minHeight: 54, borderWidth: 1, borderColor: colors.border, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 14, fontFamily: fonts.regular, fontSize: 16, color: colors.text },
   passwordRow: { minHeight: 54, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: colors.border, borderRadius: 12 },
   password: { flex: 1, minWidth: 0, paddingLeft: 16, paddingVertical: 14, fontFamily: fonts.regular, fontSize: 16, color: colors.text },
-  eye: { width: 48, minHeight: 52, alignItems: 'center', justifyContent: 'center' }, invalid: { borderColor: '#B42318', borderWidth: 2 },
-  fieldError: { ...type.caption, color: '#B42318' }, errorBox: { padding: 14, borderRadius: 12, backgroundColor: colors.surface },
+  eye: { width: 48, minHeight: 52, alignItems: 'center', justifyContent: 'center' }, invalid: { borderColor: colors.error, borderWidth: 2 },
+  fieldError: { ...type.caption, color: colors.error }, errorBox: { padding: 14, borderRadius: 12, backgroundColor: colors.surface },
   switchRow: { alignItems: 'center', gap: 2 }, link: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 12 },
   linkText: { ...type.label, textDecorationLine: 'underline' },
   guest: { borderTopWidth: 1, borderTopColor: colors.divider, paddingTop: 14, gap: 2 }, center: { textAlign: 'center' },

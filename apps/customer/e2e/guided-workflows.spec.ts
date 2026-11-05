@@ -25,7 +25,7 @@ test('appointment guidance follows status and a declined visit leads back to the
   await expect(page.getByText('They will check in this appointment', { exact: false })).toBeVisible();
   entry.status = 'declined'; await page.reload();
   await page.getByRole('button', { name: 'Choose another time', exact: true }).click();
-  await expect(page.getByText('Choose a date', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button',{name:'Choose date 2026-10-31'})).toBeVisible();
 });
 
 test('an empty hairstyle filter offers a way back to available styles', async ({ page }) => {

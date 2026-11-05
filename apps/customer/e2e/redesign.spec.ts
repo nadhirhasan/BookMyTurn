@@ -70,7 +70,7 @@ test('customer design review with realistic photo fixtures across the complete j
   f.photos.push({id:'design-p1',collection_id:'design-c1',title:'Front view',image_url:photoUrl},{id:'design-p2',collection_id:'design-c1',title:'Side view',image_url:photoUrl},{id:'design-p3',collection_id:'design-c2',title:'Inspiration',image_url:photoUrl});
   await signInFixture(page);
   for(const [name,url] of [['home','/'],['salon','/salon/royal-saloon'],['barber',`/barber/${barberId}`],['gallery','/hairstyles'],['account','/account']] as const){
-    await page.goto(url);await expect(page.getByRole('button',{name:name==='home'?'Account':'Go back',exact:true}).or(page.getByRole('button',{name:'New collection',exact:true})).first()).toBeVisible();
+    await page.goto(url);await expect(page.getByRole('button',{name:name==='home'?'Scan salon QR':'Go back',exact:true}).or(page.getByRole('button',{name:'New collection',exact:true})).first()).toBeVisible();
     await page.evaluate(()=>document.fonts.ready);
     await page.screenshot({path:info.outputPath(`${name}.png`)});
   }

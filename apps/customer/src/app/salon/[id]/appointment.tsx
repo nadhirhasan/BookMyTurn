@@ -4,7 +4,9 @@ import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-nati
 import { Action, Notice, Screen } from '@/components/UI';
 import { DataStatus, Field, PrivateGate, styles, useRefreshOnFocus, useVisitAction } from '@/components/CustomerUI';
 import { Calendar, addDays } from '@/components/Calendar';
-import { StepIndicator } from '@/components/Experience';
+import { Photo } from '@/components/Experience';
+import { CalendarDays, Clock3, UserRound, Star } from 'lucide-react-native';
+import { useMotionPreference } from '@/components/RouteMotion';
 import { useSession } from '@/providers/SessionProvider';
 import {HaircutPicker} from '@/components/HaircutPicker';
 import { VisitSelection } from '@/components/VisitSelection';
@@ -21,6 +23,7 @@ export default function AppointmentScreen() {
     stage?: string;
   }>();
   const { catalog, stale, refresh } = useCustomer();
+  const reduced=useMotionPreference();
   useRefreshOnFocus();
   const salon = catalog?.salons.find(s => s.slug === id || s.id === id);
   const service=null;
@@ -68,36 +71,36 @@ export default function AppointmentScreen() {
     setSubmitted(true); if(!canSubmit)return;
     const submission=JSON.stringify([signature,selected,haircut,name,mobile]);
     if(retry.current.signature!==submission)retry.current={signature:submission,key:requestKey()};
-    void run('request_appointment',{salon_id:salon!.id,collection_id:haircut,barber_id:barber,starts_at:selected,customer_name:name,mobile,request_key:retry.current.key},entry=>router.replace(`/appointments?created=${entry}`));
+    void run('request_appointment',{salon_id:salon!.id,collection_id:haircut,barber_id:barber,starts_at:selected,customer_name:name,mobile,request_key:retry.current.key},entry=>router.replace(`/visits?created=${entry}`));
   };
-  return <Screen title="Request Appointment" scrollRef={scrollRef} footer={salon&&catalog?<>
-    <Text style={type.label}>{selected?`${visitDate(selected)} · ${time(selected)}`:'Choose a time to continue'}</Text>
-    {step===0?<Action label="Review appointment" disabled={busy||loading||stale} onPress={()=>{setSubmitted(true);if(canSubmit)goStep(1);else scrollRef.current?.scrollTo({y:timesY.current,animated:false});}}/>:session.status==='authenticated'?<Action label={busy?'Sending request…':'Request Appointment'} disabled={busy||loading||stale||!canSubmit} onPress={confirm}/>:null}
+  return <Screen title={step===0?"Request appointment":"Review appointment"} scrollRef={scrollRef} footer={salon&&catalog?<>
+    <Text style={type.label}>{loading?'Finding available times…':selected?`${visitDate(selected)} · ${time(selected)}`:'Choose a time to continue'}</Text>
+    {step===0?<Action label="Review appointment" disabled={busy||loading||stale} onPress={()=>{setSubmitted(true);if(canSubmit)goStep(1);else scrollRef.current?.scrollTo({y:timesY.current,animated:false});}}/>:session.status==='authenticated'?<Action loading={busy} label={busy?'Sending request…':'Request Appointment'} disabled={busy||loading||stale||!canSubmit} onPress={confirm}/>:null}
   </>:undefined}>
-    <StepIndicator current={step}/><Text accessibilityRole="header" style={type.title}>{step===0?'When suits you?':'Make it your kind of haircut.'}</Text>
-    <Text style={type.body}>{salon?.name??'Choose your visit'}</Text><DataStatus/>
+    {salon&&<View style={{flexDirection:'row',alignItems:'center',gap:14,paddingVertical:6}}><View style={{width:72}}><Photo source={salon.photo_url?{uri:salon.photo_url}:null} label={`${salon.name} photo`} height={72} radius={14}/></View><View style={{flex:1,gap:5}}><Text style={type.section}>{salon.name}</Text><Text numberOfLines={1} style={type.caption}>{salon.address??'Your salon'}</Text><View style={{flexDirection:'row',alignItems:'center',gap:5}}><Star size={14} color={colors.amber}/><Text style={type.caption}>{salon.review_count?`${salon.rating} (${salon.review_count})`:'No reviews yet'}</Text></View></View></View>}<DataStatus/>
     {catalog&&!salon&&<Text style={type.body}>Salon not found. Return to salons to choose another.</Text>}
     {catalog&&salon&&<>
       {step===0?<>
         <VisitSelection compact catalog={catalog} salon={salon.id} barber={barber} onBarber={v=>{setBarber(v);setSelected(null);}}/>
         <Text accessibilityRole="header" style={type.section}>Choose a date</Text>
-        <Calendar today={catalog.today} lastDay={addDays(catalog.today,salon.booking_horizon_days)} value={date} onChange={v=>{setDay(v);setSelected(null);}}/>
-        <View onLayout={event=>{timesY.current=event.nativeEvent.layout.y;}}><Text accessibilityRole="header" style={type.section}>Available times · {visitDate(`${date}T12:00:00+05:30`)}</Text></View>
-        <Text style={type.caption}>Sri Lanka time · Unavailable times cannot be selected.</Text>
+        <Calendar today={catalog.today} lastDay={addDays(catalog.today,salon.booking_horizon_days)} value={date} onChange={v=>{setDay(v);setSelected(null);requestAnimationFrame(()=>scrollRef.current?.scrollTo({y:timesY.current,animated:!reduced}));}}/>
+        <View onLayout={event=>{timesY.current=event.nativeEvent.layout.y;}}><Text accessibilityRole="header" style={type.section}>Choose a time</Text></View>
+        <Text style={type.caption}>{visitDate(`${date}T12:00:00+05:30`)} · Sri Lanka time</Text>
         {loading&&<ActivityIndicator color={colors.action} accessibilityLabel="Loading available times"/>}
         {slotError&&<Notice>{slotError}</Notice>}
         <View style={{gap:18,borderWidth:submitted&&!canSubmit?1:0,borderColor:colors.error,borderRadius:16,padding:submitted&&!canSubmit?8:0}}>
           {['Morning','Afternoon','Evening'].map((label,i)=>{
             const group=grouped.filter(slot=>{const h=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Colombo',hour:'2-digit',hourCycle:'h23'}).format(new Date(slot.start)));return i===0?h<12:i===1?h>=12&&h<17:h>=17;});
-            return group.length?<View key={label} style={{gap:10}}><Text style={type.label}>{label}</Text><View style={styles.row}>{group.map(slot=><Pressable key={slot.start} accessibilityRole="button" accessibilityLabel={`${time(slot.start)}${slot.available?'':' unavailable'}`} accessibilityState={{disabled:!slot.available||loading,selected:slot.available&&selected===slot.start}} disabled={!slot.available||loading} onPress={()=>setSelected(slot.start)} style={({pressed})=>({minHeight:52,minWidth:96,flexGrow:1,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:selected===slot.start?colors.action:colors.border,borderRadius:14,padding:12,opacity:pressed?0.7:1,backgroundColor:!slot.available?colors.surface:selected===slot.start?colors.action:colors.card})}><Text style={[type.label,{color:selected===slot.start&&slot.available?colors.onAction:colors.text,textDecorationLine:slot.available?'none':'line-through'}]}>{time(slot.start)}</Text>{!slot.available&&<Text style={type.caption}>Unavailable</Text>}</Pressable>)}</View></View>:null;
+            return group.length?<View key={label} style={{gap:10}}><Text style={type.label}>{label}</Text><View style={styles.row}>{group.map(slot=><Pressable key={slot.start} accessibilityRole="button" accessibilityLabel={`${time(slot.start)}${slot.available?'':' unavailable'}`} accessibilityState={{disabled:!slot.available||loading,selected:slot.available&&selected===slot.start}} disabled={!slot.available||loading} onPress={()=>setSelected(slot.start)} style={({pressed})=>({minHeight:48,width:'31%',flexGrow:0,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:selected===slot.start?colors.action:colors.divider,borderRadius:22,padding:8,opacity:pressed?0.7:1,backgroundColor:!slot.available?colors.surface:selected===slot.start?colors.action:colors.card})}><Text style={[type.label,{color:selected===slot.start&&slot.available?colors.onAction:colors.text,textDecorationLine:slot.available?'none':'line-through'}]}>{time(slot.start)}</Text>{!slot.available&&<Text style={type.caption}>Unavailable</Text>}</Pressable>)}</View></View>:null;
           })}
         </View>
         {!loading&&loadedFor===signature&&!grouped.some(s=>s.available)&&<Notice>No times are available for this selection. Choose another day or barber.</Notice>}
         {submitted&&!selected&&<Text accessibilityRole="alert" style={[type.caption,{color:colors.error}]}>Choose an available time.</Text>}
         <Action label="Refresh times" secondary onPress={()=>{void refresh();}}/>
       </>:<>
-        <View style={[styles.card,{backgroundColor:colors.brandSoft}]}><Text style={type.eyebrow}>YOUR APPOINTMENT REQUEST</Text><Text style={type.section}>{salon.name}</Text><Text style={type.body}>{selected?visitDate(selected):''} · {selected?time(selected):''}</Text><Text style={type.body}>{catalog.barbers.find(b=>b.id===barber)?.display_name??'Any Available Barber'}</Text><Text style={type.caption}>Sri Lanka time</Text><Action label="Change date, time or barber" secondary onPress={()=>goStep(0)}/></View>
-        <Notice>This is a request. Your time is held while the salon reviews it. You will see their response in Bookings.</Notice>
+        <View style={styles.card}>{[{Icon:CalendarDays,label:selected?visitDate(selected):'Choose a date'},{Icon:Clock3,label:selected?`${time(selected)} · Sri Lanka time`:'Choose a time'},{Icon:UserRound,label:catalog.barbers.find(b=>b.id===barber)?.display_name??'Any Available Barber'}].map(({Icon,label},i)=><View key={i} style={{flexDirection:'row',alignItems:'center',gap:12,minHeight:36}}><Icon size={21} color={colors.action}/><Text style={[type.body,{flex:1}]}>{label}</Text></View>)}<Action label="Change date, time or barber" secondary onPress={()=>goStep(0)}/></View>
+
+        <Notice>This is a request. Your time is held while the salon reviews it. You will see their response in My visits.</Notice>
         <PrivateGate destination={`/salon/${salon.slug}/appointment?day=${date}&at=${encodeURIComponent(selected??'')}&barber=${barber??''}&stage=review`}><HaircutPicker value={haircut} onChange={setHaircut}/>
           <Text style={type.section}>Contact details</Text><Text style={type.caption}>Optional, if the salon needs to reach you.</Text>
           <Field label="Name (optional)" value={name} onChange={setName}/><Field label="Mobile (optional)" value={mobile} onChange={setMobile} maxLength={32}/>

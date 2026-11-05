@@ -8,6 +8,7 @@ type CustomerContextValue = {
   catalog: Catalog | null;
   visits: VisitState;
   loading: boolean;
+  visitsLoading: boolean;
   error: string | null;
   visitError: string | null;
   stale: boolean;
@@ -55,8 +56,11 @@ export function CustomerProvider({ children }: {
       setPrivateState({ uid, visits: privateResult.value });
       setVisitError(null);
     }
-    else
+    else {
+      // Record the failed identity too, so initial errors are visible and retryable.
+      setPrivateState(previous => previous.uid === uid ? previous : { uid, visits: emptyVisits() });
       setVisitError('Could not load your visits. Refresh to try again.');
+    }
     if (qrResult.status === 'fulfilled')
       setQrQueues(qrResult.value);
     setLoading(false);
@@ -88,7 +92,7 @@ export function CustomerProvider({ children }: {
     }
   }, [refresh]);
   const stale = !catalog || clock - new Date(catalog.observed_at).getTime() > 45000 || !!error;
-  return <Context.Provider value={{ catalog, visits: privateState.uid === uid ? privateState.visits : emptyVisits(), loading, error, visitError: privateState.uid === uid ? visitError : null, stale, busy, qrQueues, refresh, mutate }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ catalog, visits: privateState.uid === uid ? privateState.visits : emptyVisits(), loading, visitsLoading: !!uid && privateState.uid !== uid, error, visitError: privateState.uid === uid ? visitError : null, stale, busy, qrQueues, refresh, mutate }}>{children}</Context.Provider>;
 }
 export function useCustomer() { const value = useContext(Context); if (!value)
   throw new Error('CustomerProvider missing'); return value; }

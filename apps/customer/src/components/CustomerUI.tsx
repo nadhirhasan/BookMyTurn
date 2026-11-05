@@ -1,20 +1,22 @@
 import { router, useFocusEffect, usePathname } from 'expo-router';
 import { useCallback, useState, type ReactNode } from 'react';
-import { ActivityIndicator, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { SalonSkeletons, LoadingState } from './LoadingState';
 import { Action, Notice } from './UI';
 import { useCustomer } from '@/providers/CustomerProvider';
 import { useSession } from '@/providers/SessionProvider';
-import { colors, fonts, type } from '@/theme';
+import { colors, fonts, shadows, type } from '@/theme';
 export function useRefreshOnFocus() {
   const { refresh } = useCustomer();
   useFocusEffect(useCallback(() => { void refresh(); }, [refresh]));
 }
-export function DataStatus() {
+export function DataStatus({skeleton=false}:{skeleton?:boolean}={}) {
   const { catalog, loading, error, stale, refresh } = useCustomer();
+  const [retrying,setRetrying]=useState(false);
   if (loading && !catalog)
-    return <ActivityIndicator color={colors.text} accessibilityLabel="Loading salons"/>;
+    return skeleton?<SalonSkeletons/>:<LoadingState label="Loading salons" compact/>;
   if (error)
-    return <><Notice>{error}</Notice><Action label="Retry connection" secondary onPress={() => { void refresh(); }}/></>;
+    return <><Notice>{error}</Notice><Action label={retrying?'Reconnecting…':'Retry connection'} loading={retrying} secondary onPress={() => { if(retrying)return;setRetrying(true);void refresh().finally(()=>setRetrying(false)); }}/></>;
   return stale ? <Notice>Availability may be out of date. Refresh before choosing your visit.</Notice> : null;
 }
 export function PrivateGate({ children, destination }: {
@@ -24,11 +26,13 @@ export function PrivateGate({ children, destination }: {
   const session = useSession();
   const pathname = usePathname();
   const returnTo = destination ?? pathname;
-  const { visitError, refresh } = useCustomer();
+  const { visitError, visitsLoading, visits, refresh } = useCustomer();
   if (session.status === 'loading')
-    return <ActivityIndicator color={colors.text}/>;
+    return <LoadingState label="Restoring your session…"/>;
   if (session.status !== 'authenticated')
     return <><Text style={type.section}>Keep your visits together</Text><Text style={type.body}>Sign in to manage remote queue entries and appointments. At the salon, use its QR code to join without an account.</Text><Action label="Sign in" onPress={() => router.push({ pathname: '/sign-in', params: { returnTo } })}/><Action label="Create an account" secondary onPress={() => router.push({ pathname: '/sign-up', params: { returnTo } })}/></>;
+  if (visitsLoading) return <LoadingState label="Loading your visits…"/>;
+  if (visitError && !visits.queues.length && !visits.appointments.length) return <><Notice>{visitError}</Notice><Action label="Refresh visits" secondary onPress={()=>{void refresh();}}/></>;
   return <>{visitError && <><Notice>{visitError}</Notice><Action label="Refresh visits" secondary onPress={() => { void refresh(); }}/></>}{children}</>;
 }
 export function Field({ label, value, onChange, maxLength = 80, multiline = false, error }: {
@@ -39,7 +43,7 @@ export function Field({ label, value, onChange, maxLength = 80, multiline = fals
   multiline?: boolean;
   error?: string;
 }) {
-  return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput aria-invalid={!!error} accessibilityLabel={label} value={value} onChangeText={onChange} maxLength={maxLength} multiline={multiline} style={[styles.input,error&&{borderColor:'#B42318',backgroundColor:'#FFF6F5'}, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/>{error&&<Text accessibilityRole="alert" style={{...type.caption,color:'#B42318'}}>{error}</Text>}</View>;
+  return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput aria-invalid={!!error} accessibilityLabel={label} value={value} onChangeText={onChange} maxLength={maxLength} multiline={multiline} style={[styles.input,error&&{borderColor:colors.error,backgroundColor:colors.errorSurface}, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/>{error&&<Text accessibilityRole="alert" style={{...type.caption,color:colors.error}}>{error}</Text>}</View>;
 }
 export function useVisitAction() {
   const { mutate, busy } = useCustomer();
@@ -59,7 +63,7 @@ export function useVisitAction() {
   return { run, error, busy, clearError: () => setError(null) };
 }
 export const styles = StyleSheet.create({
-  card: { padding: 20, borderWidth: 1, borderColor: colors.divider, borderRadius: 20, gap: 14, backgroundColor: colors.card },
+  card: { boxShadow:shadows.card,padding: 20, borderWidth: 1, borderColor: colors.divider, borderRadius: 20, gap: 14, backgroundColor: colors.card },
   row: { flexDirection: 'row', alignItems: 'center', gap: 8, flexWrap: 'wrap' },
   photo: { width: '100%', height: 190, borderRadius: 14, backgroundColor: colors.surface },
   input: { fontFamily: fonts.regular, fontSize: 16, color: colors.text, minHeight: 54, borderWidth: 1, borderColor: colors.border, borderRadius: 14, padding: 14, backgroundColor: colors.card },

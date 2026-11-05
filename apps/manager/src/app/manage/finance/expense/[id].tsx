@@ -67,7 +67,7 @@ function ExpenseForm({ report, expense, initialSalon, stale, reload }: { report:
     </Section>
     {paidBefore && <Field label="Reason for correction" value={reason} onChange={setReason} maxLength={500} multiline error={submitted && !reason.trim() ? 'Explain the correction to this paid expense.' : undefined} />}
     {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
-    <Button label={busy ? 'Saving expense…' : original ? 'Save expense' : 'Create expense'} disabled={busy} onPress={() => { void submit(); }} />
+    <Button loading={busy} label={busy ? 'Saving expense…' : original ? 'Save expense' : 'Create expense'} disabled={busy} onPress={() => { void submit(); }} />
     {original && original.status !== 'cancelled' && <View style={{ gap: 12 }}>{cancel ? <><Note>Cancel this expense? It will be excluded from costs. The record and its audit history will be kept.</Note><Button label="Confirm cancellation" secondary disabled={busy} onPress={() => { void submit(true); }} /><Button label="Keep expense" secondary disabled={busy} onPress={() => setCancel(false)} /></> : <Button label="Cancel expense" secondary disabled={busy} onPress={() => { setCancel(true); setSubmitted(false); }} />}</View>}
     <Button label="Reload saved financial data" secondary disabled={busy} onPress={() => { void reload(); }} />
   </>;
