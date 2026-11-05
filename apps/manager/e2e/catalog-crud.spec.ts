@@ -1,5 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
-import {fixture,login,seed,createBarber,photo} from './management-fixture';
+import {fixture,login,seed,createBarber,photo,pinSalon} from './management-fixture';
 
 const renderErrors=new WeakMap<Page,string[]>();
 test.beforeEach(({page})=>{const errors:string[]=[];renderErrors.set(page,errors);page.on('console',message=>{if(message.type()==='error'&&/Unexpected text node|Text strings must|Rendered.*hooks|Invalid hook/.test(message.text()))errors.push(message.text());});});
@@ -13,7 +13,7 @@ test('salon changes, weekly team hours and cover removal persist after reload',a
 });
 
 test('salon setup creates no services or prices and highlights missing required fields',async({page})=>{
- const f=await fixture(page);await login(page);await page.getByRole('button',{name:'+ Add salon',exact:true}).click();await expect(page.getByLabel('Service name',{exact:true})).toHaveCount(0);await expect(page.getByLabel('Minimum price (Rs.)')).toHaveCount(0);await page.getByRole('button',{name:'Create salon',exact:true}).click();await expect(page.getByLabel('Salon name',{exact:true})).toHaveAttribute('aria-invalid','true');await expect(page.getByLabel('Address in Akurana')).toHaveAttribute('aria-invalid','true');await page.getByLabel('Salon name',{exact:true}).fill('Simple Studio');await page.getByLabel('Address in Akurana').fill('Main Street');await page.getByRole('button',{name:'Create salon',exact:true}).click();await expect(page.getByRole('heading',{name:'Simple Studio',exact:true})).toBeVisible();expect(f.data.salons[0]!.services).toEqual([]);await page.getByRole('button',{name:'Details',exact:true}).click();await expect(page.getByRole('button',{name:'+ Add salon service',exact:true})).toHaveCount(0);
+ const f=await fixture(page);await login(page);await page.getByRole('button',{name:'+ Add salon',exact:true}).click();await expect(page.getByLabel('Service name',{exact:true})).toHaveCount(0);await expect(page.getByLabel('Minimum price (Rs.)')).toHaveCount(0);await page.getByRole('button',{name:'Create salon',exact:true}).click();await expect(page.getByLabel('Salon name',{exact:true})).toHaveAttribute('aria-invalid','true');await expect(page.getByLabel('Address in Akurana')).toHaveAttribute('aria-invalid','true');await page.getByLabel('Salon name',{exact:true}).fill('Simple Studio');await page.getByLabel('Address in Akurana').fill('Main Street');await pinSalon(page);await page.getByRole('button',{name:'Create salon',exact:true}).click();await expect(page.getByRole('heading',{name:'Simple Studio',exact:true})).toBeVisible();expect(f.data.salons[0]!.services).toEqual([]);await page.getByRole('button',{name:'Details',exact:true}).click();await expect(page.getByRole('button',{name:'+ Add salon service',exact:true})).toHaveCount(0);
 });
 
 test('barber profile photo removal, archive, restore and deletion preserve another team',async({page})=>{
