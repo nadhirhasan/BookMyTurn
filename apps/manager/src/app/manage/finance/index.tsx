@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { ArrowDownLeft, ArrowUpRight, Plus, RefreshCw } from 'lucide-react-native';
-import { ManagementScreen, m } from '@/components/ManagementUI';
+import { ManagementScreen, MenuRow, m } from '@/components/ManagementUI';
 import { Button, Chip, Note, s } from '@/components/UI';
 import { ChoiceField, DateField } from '@/components/FinanceFields';
 import { useSession } from '@/providers/SessionProvider';
@@ -25,6 +25,7 @@ function FinanceWorkspace({ initialSalon }: { initialSalon: string | null }) {
   const report = useFinanceResource<FinanceReport>('report', filters, true, revision);
   const preset = (value: 'today' | 'week' | 'month') => { setPeriod(value); const next = periodRange(value); setRange(next); setDraft(next); setSubmitted(false); };
   return <>
+    <MenuRow label="Explore team analytics" detail="Interactive trends and individual barber performance" onPress={()=>router.push({pathname:'/manage/analytics',params:salon?{salon}:{}})}/>
     <View style={{ gap: 6 }}><Text style={type.caption}>OWNER WORKSPACE</Text><Text accessibilityRole="header" style={type.title}>Your business, in view.</Text><Text style={type.caption}>{range.from} — {range.to} · Sri Lanka time</Text></View>
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}><Text style={[type.caption, { flex: 1 }]}>{report.lastUpdated ? `Finance updated ${new Date(report.lastUpdated).toLocaleTimeString()}` : 'Loading financial records…'}</Text><Pressable accessibilityRole="button" accessibilityLabel="Refresh financial data" onPress={() => setRevision(v => v + 1)} style={m.icon}><RefreshCw size={19} color={colors.text} /></Pressable></View>
     {report.stale && report.data && <Note>Financial data may be out of date. Refresh before relying on these totals.</Note>}
