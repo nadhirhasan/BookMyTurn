@@ -16,7 +16,7 @@ export function ReviewLink({queue,appointment}:{queue?:string;appointment?:strin
  if(!session||session.status!=='completed')return null;
  return visits.reviews.some(r=>r.service_session_id===session.id)?<Text style={type.caption}>Thanks for your review.</Text>:<Action label="Review your haircut" secondary onPress={()=>router.push(`/review/${session.id}`)}/>;
 }
-function VisitCode({reference}:{reference:string}) {
+export function VisitCode({reference}:{reference:string}) {
  return <View style={{gap:5,paddingVertical:18,borderTopWidth:1,borderBottomWidth:1,borderStyle:'dashed',borderColor:colors.border}}><Text style={type.eyebrow}>YOUR VISIT CODE</Text><Text selectable style={{fontFamily:fonts.bold,fontSize:36,lineHeight:44,letterSpacing:5,color:colors.text}}>{reference}</Text><Text style={type.caption}>Show this code to your barber.</Text></View>;
 }
 function QueueProgress({status}:{status:string}) {
@@ -29,12 +29,14 @@ export function QueueCard({entry,confirmation=false,qr=false}:{entry:QueueEntry;
  const [pending,setPending]=useState(false),[qrError,setQrError]=useState<string|null>(null);
  const receiptAction=async(action:'cancel'|'link')=>{if(pending)return;setPending(true);setQrError(null);try{await qrAction(entry.id,action);await refresh();}catch(e){setQrError(e instanceof Error?e.message:'Please retry.');}finally{setPending(false);}};
  const salon=catalog?.salons.find(s=>s.id===entry.salon_id),barber=catalog?.barbers.find(b=>b.id===(entry.assigned_barber_id??entry.preferred_barber_id));
- return <View style={styles.card}>
-   {confirmation&&<Text accessibilityRole="header" style={type.title}>{activeQueue(entry)?'You’re in the queue!':'Your queue visit'}</Text>}
-   <StatusPill label={['joined','arrived'].includes(entry.status)?'Waiting':statusLabel(entry.status)} tone={['arrived','in_service','completed'].includes(entry.status)?'success':entry.status==='joined'?'warning':'neutral'}/>
-   <Text style={type.section}>{salon?.name??entry.salon_name??'Salon'}</Text><Text style={type.body}>{barber?.display_name??entry.barber_name??'Any Available Barber'} · {entry.service_name??'Haircut'}</Text>
-   <VisitCode reference={entry.reference}/>
-   {activeQueue(entry)&&<><View style={{padding:14,borderRadius:14,backgroundColor:colors.mint,gap:4}}><Text style={type.caption}>Estimated start</Text><Text style={[type.section,{color:colors.green}]}>{entry.estimated_start?time(entry.estimated_start):'Check with your salon'}</Text></View><QueueProgress status={entry.status}/></>}
+ return <View style={{gap:18}}>
+   {confirmation&&<View style={{alignItems:'center',gap:14,paddingVertical:8}}><View style={{width:62,height:62,borderRadius:31,backgroundColor:colors.brandSoft,alignItems:'center',justifyContent:'center'}}><Scissors size={28} color={colors.action}/></View><Text accessibilityRole="header" style={[type.title,{fontSize:28,lineHeight:34,textAlign:'center'}]}>{activeQueue(entry)?"You're in.\nWe'll take it from here.":'Your queue visit'}</Text><Text style={[type.caption,{textAlign:'center'}]}>Your place is saved. Show your code to your barber.</Text></View>}
+   <View style={{backgroundColor:colors.ticket,borderRadius:18,overflow:'hidden'}}>
+    <View style={{padding:22,gap:7}}><Text style={[type.eyebrow,{color:colors.ticketMuted}]}>YOUR VISIT CODE</Text><Text selectable style={{fontFamily:fonts.medium,fontSize:38,lineHeight:46,letterSpacing:5,color:colors.ticketInk}}>{entry.reference}</Text><Text style={[type.caption,{color:colors.ticketMuted}]}>Show this code to your barber.</Text></View>
+    <View style={{borderTopWidth:1,borderStyle:'dashed',borderColor:colors.ticketDivider}}><View style={{position:'absolute',left:-9,top:-9,width:18,height:18,borderRadius:9,backgroundColor:colors.background}}/><View style={{position:'absolute',right:-9,top:-9,width:18,height:18,borderRadius:9,backgroundColor:colors.background}}/></View>
+    <View style={{padding:22,gap:10}}><Text style={[type.section,{color:colors.ticketInk}]}>{salon?.name??entry.salon_name??'Salon'}</Text><Text style={[type.body,{color:colors.ticketMuted}]}>{barber?.display_name??entry.barber_name??'Any Available Barber'}{entry.service_name?` · ${entry.service_name}`:''}</Text><View style={{flexDirection:'row',gap:20,marginTop:8}}><View style={{flex:1,gap:5}}><Text style={[type.caption,{color:colors.ticketMuted}]}>Status</Text><Text style={[type.label,{color:colors.ticketInk}]}>{['joined','arrived'].includes(entry.status)?'Waiting':statusLabel(entry.status)}</Text></View>{activeQueue(entry)&&<View style={{flex:1,gap:5}}><Text style={[type.caption,{color:colors.ticketMuted}]}>Estimated start</Text><Text style={[type.label,{color:colors.ticketInk}]}>{entry.estimated_start?time(entry.estimated_start):'Check with salon'}</Text></View>}</View></View>
+   </View>
+   {activeQueue(entry)&&!confirmation&&<QueueProgress status={entry.status}/>}
    {['joined','arrived'].includes(entry.status)&&<Notice>You are in the waiting queue. Head to the salon and show this code to your barber. Staff will handle the rest; this screen updates automatically.</Notice>}
    {['joined','arrived'].includes(entry.status)&&<Action label="Cancel queue entry" secondary disabled={busy||pending} onPress={()=>{if(qr)void receiptAction('cancel');else void run('cancel_queue',{id:entry.id});}}/>}
    {qr&&session.status==='authenticated'&&entry.status==='arrived'&&<Action label="Link this visit to my account" secondary disabled={pending} onPress={()=>{void receiptAction('link');}}/>}

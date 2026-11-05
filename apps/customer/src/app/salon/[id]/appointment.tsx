@@ -74,13 +74,12 @@ export default function AppointmentScreen() {
     <Text style={type.label}>{selected?`${visitDate(selected)} · ${time(selected)}`:'Choose a time to continue'}</Text>
     {step===0?<Action label="Review appointment" disabled={busy||loading||stale} onPress={()=>{setSubmitted(true);if(canSubmit)goStep(1);else scrollRef.current?.scrollTo({y:timesY.current,animated:false});}}/>:session.status==='authenticated'?<Action label={busy?'Sending request…':'Request Appointment'} disabled={busy||loading||stale||!canSubmit} onPress={confirm}/>:null}
   </>:undefined}>
-    <StepIndicator current={step}/><Text accessibilityRole="header" style={type.title}>{step===0?'When suits you?':'Make it your kind of haircut.'}</Text>
+    {step===1&&<StepIndicator current={step}/>}<Text accessibilityRole="header" style={type.title}>{step===0?<>Make time{'\n'}<Text style={{color:colors.action}}>for yourself.</Text></>:'Make it your kind of haircut.'}</Text>
     <Text style={type.body}>{salon?.name??'Choose your visit'}</Text><DataStatus/>
     {catalog&&!salon&&<Text style={type.body}>Salon not found. Return to salons to choose another.</Text>}
     {catalog&&salon&&<>
       {step===0?<>
         <VisitSelection compact catalog={catalog} salon={salon.id} barber={barber} onBarber={v=>{setBarber(v);setSelected(null);}}/>
-        <Text accessibilityRole="header" style={type.section}>Choose a date</Text>
         <Calendar today={catalog.today} lastDay={addDays(catalog.today,salon.booking_horizon_days)} value={date} onChange={v=>{setDay(v);setSelected(null);}}/>
         <View onLayout={event=>{timesY.current=event.nativeEvent.layout.y;}}><Text accessibilityRole="header" style={type.section}>Available times · {visitDate(`${date}T12:00:00+05:30`)}</Text></View>
         <Text style={type.caption}>Sri Lanka time · Unavailable times cannot be selected.</Text>
@@ -89,7 +88,7 @@ export default function AppointmentScreen() {
         <View style={{gap:18,borderWidth:submitted&&!canSubmit?1:0,borderColor:colors.error,borderRadius:16,padding:submitted&&!canSubmit?8:0}}>
           {['Morning','Afternoon','Evening'].map((label,i)=>{
             const group=grouped.filter(slot=>{const h=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Colombo',hour:'2-digit',hourCycle:'h23'}).format(new Date(slot.start)));return i===0?h<12:i===1?h>=12&&h<17:h>=17;});
-            return group.length?<View key={label} style={{gap:10}}><Text style={type.label}>{label}</Text><View style={styles.row}>{group.map(slot=><Pressable key={slot.start} accessibilityRole="button" accessibilityLabel={`${time(slot.start)}${slot.available?'':' unavailable'}`} accessibilityState={{disabled:!slot.available||loading,selected:slot.available&&selected===slot.start}} disabled={!slot.available||loading} onPress={()=>setSelected(slot.start)} style={({pressed})=>({minHeight:52,minWidth:96,flexGrow:1,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:selected===slot.start?colors.action:colors.border,borderRadius:14,padding:12,opacity:pressed?0.7:1,backgroundColor:!slot.available?colors.surface:selected===slot.start?colors.action:colors.card})}><Text style={[type.label,{color:selected===slot.start&&slot.available?colors.onAction:colors.text,textDecorationLine:slot.available?'none':'line-through'}]}>{time(slot.start)}</Text>{!slot.available&&<Text style={type.caption}>Unavailable</Text>}</Pressable>)}</View></View>:null;
+            return group.length?<View key={label} style={{gap:10}}><Text style={type.label}>{label}</Text><View style={styles.row}>{group.map(slot=><Pressable key={slot.start} accessibilityRole="button" accessibilityLabel={`${time(slot.start)}${slot.available?'':' unavailable'}`} accessibilityState={{disabled:!slot.available||loading,selected:slot.available&&selected===slot.start}} disabled={!slot.available||loading} onPress={()=>setSelected(slot.start)} style={({pressed})=>({minHeight:48,width:'31%',flexGrow:0,alignItems:'center',justifyContent:'center',borderWidth:1,borderColor:selected===slot.start?colors.action:colors.divider,borderRadius:10,padding:8,opacity:pressed?0.7:1,backgroundColor:!slot.available?colors.surface:selected===slot.start?colors.action:colors.card})}><Text style={[type.label,{color:selected===slot.start&&slot.available?colors.onAction:colors.text,textDecorationLine:slot.available?'none':'line-through'}]}>{time(slot.start)}</Text>{!slot.available&&<Text style={type.caption}>Unavailable</Text>}</Pressable>)}</View></View>:null;
           })}
         </View>
         {!loading&&loadedFor===signature&&!grouped.some(s=>s.available)&&<Notice>No times are available for this selection. Choose another day or barber.</Notice>}

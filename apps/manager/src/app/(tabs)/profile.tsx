@@ -11,7 +11,7 @@ import { type } from '@/theme';
 import {Portrait} from '@/components/ManagementUI';
 import {experience as panels} from '@/components/StaffExperience';
 import type { State } from '@/lib/types';
-export default function Profile() { const { data } = useBarber(); useRefresh(); return <Screen title="Profile">{data && <><Button label="Join another salon" secondary onPress={()=>router.push('/invite')}/><ProfileForm key={data.barber.id} data={data}/></>}</Screen>; }
+export default function Profile() { const { data } = useBarber(); useRefresh(); return <Screen title="Profile">{data && <><Button label="My work & reviews" secondary onPress={()=>router.navigate('/performance')}/><Button label="Join another salon" secondary onPress={()=>router.push('/invite')}/><ProfileForm key={data.barber.id} data={data}/></>}</Screen>; }
 function ProfileForm({ data }: {
   data: State;
 }) {

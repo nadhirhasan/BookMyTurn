@@ -19,9 +19,9 @@ test('guest discovery loads the database catalogue and supports search, wait, na
 });
 test('salon details expose calendar booking, profiles and the QR shortcut without fake statistics', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'View Royal Saloon', exact: true }).click();
-  await expect(page.getByText('Open now', { exact: true })).toBeVisible();
-  await page.getByRole('button', { name: 'View calendar & times' }).click();
+  await page.getByRole('button', { name: 'View Royal Saloon', exact: true }).first().click();
+  await expect(page.getByText('Open now', { exact: true }).filter({visible:true}).last()).toBeVisible();
+  await page.getByRole('button', { name: 'Request a time' }).click();
 
   await expect(page.getByRole('button', { name: 'Choose date 2026-10-31' })).toBeVisible();
   await page.goto('/qr/royal-saloon');

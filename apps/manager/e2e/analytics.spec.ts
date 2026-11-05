@@ -32,7 +32,7 @@ async function analyticsFixture(page: Page) {
   });
   return { ...f, events, requests, secondBarber };
 }
-async function openAnalytics(page: Page) { await login(page); await page.getByRole('button', { name: 'Analytics', exact: true }).click(); }
+async function openAnalytics(page: Page) { await login(page); await page.getByRole('button', { name: 'Team performance', exact: true }).click(); }
 
 test('owner explores daily and weekly results and individual barber performance', async ({ page }, info) => {
   const f = await analyticsFixture(page); await openAnalytics(page);
@@ -79,7 +79,7 @@ test('date presets, salon/barber filters and calendar ranges scope the report', 
 test('zero and negative results remain honest and readable', async ({ page }, info) => {
   const f = await analyticsFixture(page); f.events.splice(0); await openAnalytics(page);
   await expect(page.getByTestId('performance-revenue')).toHaveText('Rs. 0'); await expect(page.getByTestId('performance-cuts')).toHaveText('0');
-  await expect(page.getByText('No revenue in this period yet.')).toBeVisible(); await expect(page.getByText('No previous revenue')).toBeVisible();
+  await expect(page.getByText('No revenue in this period yet.')).toBeVisible(); await expect(page.getByText('No previous revenue').filter({visible:true})).toBeVisible();
   await page.screenshot({ path: info.outputPath('analytics-empty.png') });
   f.events.push({ salon: f.salon.id, barber: f.barber, day: currentDay, amount: -50000, sale: false });
   await page.getByRole('button', { name: 'Refresh performance', exact: true }).click();
@@ -117,7 +117,7 @@ for (const width of [320, 393, 430]) test(`analytics fits ${width}px and exposes
   await analyticsFixture(page); await page.setViewportSize({ width, height: 852 }); await login(page);
   await page.getByRole('button', { name: 'Team performance', exact: true }).click();
   await expect(page.getByTestId('performance-revenue')).toBeVisible(); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await expect(page.getByRole('button', { name: 'Analytics', exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Overview', exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'View performance: Hassan', exact: true }).scrollIntoViewIfNeeded(); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: info.outputPath(`team-${width}.png`) });
   await page.getByRole('button', { name: 'Custom dates', exact: true }).click(); await page.getByRole('button', { name: 'Analytics from date', exact: true }).click(); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -126,5 +126,5 @@ for (const width of [320, 393, 430]) test(`analytics fits ${width}px and exposes
 test('an account without owner access has no financial analytics controls', async ({ page }) => {
   await fixture(page); let requests = 0; await page.route('**/rest/v1/rpc/owner_finance', r => { requests++; return r.fulfill({ status: 403, json: { code: '42501' } }); });
   await login(page); await page.goto('/manage/analytics'); await expect(page.getByText('Performance and revenue reports are available to salon owners only.')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Analytics', exact: true })).toHaveCount(0); expect(requests).toBe(0);
+  await expect(page.getByRole('button', { name: 'Team performance', exact: true })).toHaveCount(0); expect(requests).toBe(0);
 });

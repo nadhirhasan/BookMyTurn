@@ -3,10 +3,10 @@ import { useState, type ReactNode } from 'react';
 import { Image, Pressable, StyleSheet, Text, View, type ImageSourcePropType } from 'react-native';
 import { colors, type } from '@/theme';
 
-export function Photo({ source, label, height = 200 }: { source?: ImageSourcePropType | null; label: string; height?: number }) {
+export function Photo({ source, label, height = 200, radius = 16 }: { source?: ImageSourcePropType | null; label: string; height?: number; radius?:number }) {
   const identity=JSON.stringify(source);
   const [failed, setFailed] = useState<string|null>(null);
-  return <View style={[s.photo, { height }]}>{source && failed!==identity ? <Image source={source} accessibilityLabel={label} onError={() => setFailed(identity)} style={{ width: '100%', height: '100%' }}/> : <View style={s.placeholder}><Scissors size={32} color={colors.action}/><Text style={type.caption}>Photo coming soon</Text></View>}</View>;
+  return <View style={[s.photo, { height, borderRadius:radius }]}>{source && failed!==identity ? <Image source={source} accessibilityLabel={label} onError={() => setFailed(identity)} style={{ width: '100%', height: '100%' }}/> : <View style={s.placeholder}><Scissors size={32} color={colors.action}/><Text style={type.caption}>Photo coming soon</Text></View>}</View>;
 }
 export function ImageBanner({ title, subtitle, onPress, compact = false }: { title: string; subtitle: string; onPress?: () => void; compact?: boolean }) {
   const content = <><View style={{ flex: 1, padding: compact ? 16 : 20, gap: 8 }}><Text style={type.eyebrow}>YOUR NEXT LOOK</Text><Text accessibilityRole="header" style={compact ? type.section : type.title}>{title}</Text>{!!subtitle&&<Text style={type.caption}>{subtitle}</Text>}{onPress && <ArrowUpRight size={24} color={colors.action}/>}</View><View style={{ width: compact ? '32%' : '37%', alignSelf: 'stretch' }}><Image source={require('../../assets/images/salon.jpg')} accessible={false} resizeMode="cover" style={{ position: 'absolute', width: '100%', height: '100%' }}/></View></>;

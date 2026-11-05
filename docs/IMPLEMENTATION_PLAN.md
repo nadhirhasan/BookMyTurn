@@ -2,11 +2,14 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: design-first charcoal/champagne dark-theme review. The user supplied
-a neon dark reference and requested a non-neon alternative with smooth transitions.
-[Interactive design preview and approval checklist](../design/charcoal-champagne/README.md).
-Ten sample views and an eight-screen board are prepared; application implementation
-awaits the user's review. Figma editing is blocked by the account's Starter tool limit.
+Current stage: the user approved Charcoal & Champagne and requested its implementation
+in both apps. Customer discovery, visits, photo collections, queue ticket and calendar,
+owner overview/team and barber chair use the shared dark design and native transitions.
+See [the implementation checklist and validation](CHARCOAL_IMPLEMENTATION.md) and
+[running-app screenshots](../design/reviews/charcoal-implementation/README.md).
+The [interactive design reference](../design/charcoal-champagne/README.md) remains
+the visual authority. Phone acceptance follows local validation; Figma's quota does
+not block implementation of the approved preview.
 
 Previous stage: salon map pins and customer directions. Managers select and confirm
 the salon entrance on a map, optionally using their current location. Customers open

@@ -54,7 +54,8 @@ Figma tooling was available and a new file was created, but the first inspection
 - [x] Produce a non-neon dark visual direction.
 - [x] Preview customer, manager and barber screens with representative interactions and transitions.
 - [x] Verify layouts and sample flows; preserve the product rules.
-- [ ] User reviews and approves/refines the direction.
-- [ ] After approval, translate the design into shared Expo tokens/components and native navigation/motion, through separate feature PRs.
+- [x] User reviews and approves the direction (5 November 2026).
+- [x] Translate into shared Expo tokens/components and native navigation/motion on the implementation feature branch.
 
-Application implementation deliberately awaits the user's design review.
+Application implementation and its validation are tracked in
+[CHARCOAL_IMPLEMENTATION.md](../../docs/CHARCOAL_IMPLEMENTATION.md).

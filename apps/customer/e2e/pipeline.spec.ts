@@ -18,7 +18,7 @@ test('customer joins once and reviews a haircut after staff completion', async (
   await page.getByRole('button', { name: 'Sameer', exact: true }).click();
   await page.getByRole('textbox', { name: 'Name (optional)' }).fill('Fixture customer');
   await page.getByRole('button', { name: 'Join Queue' }).click();
-  await expect(page.getByRole('heading', { name: 'You’re in the queue!' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /You're in.*take it from here/ })).toBeVisible();
   await expect(page.getByText('Waiting', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('button', { name: /Arrived|Check In|physically/i })).toHaveCount(0);
   expect(fixture.catalog.salons[0]!.waiting).toBe(1);

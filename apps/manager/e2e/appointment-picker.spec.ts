@@ -37,7 +37,7 @@ async function setup(page: Page) {
       await page.getByRole('button', { name: `Manage ${salon.name}`, exact: true }).click();
       await page.getByRole('button', { name: 'Team', exact: true }).click();
       await page.getByRole('button', { name: "Open Sameer's chair", exact: true }).click();
-      await page.getByRole('tab', { name: 'Appointments', exact: true }).click();
+      await page.getByRole('tab', { name: 'Requests', exact: true }).click();
       await page.getByRole('button', { name: 'Suggest Another Time', exact: true }).click();
     }
     await expect(page.getByRole('heading', { name: 'Offer a better time.' })).toBeVisible();

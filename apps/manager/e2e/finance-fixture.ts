@@ -15,6 +15,7 @@ export async function financeFixture(page: Page) {
   const matches = (s: { salon_id: string }, p: Record<string, unknown>) => !p.salon_id || s.salon_id === p.salon_id;
   await page.route('**/rest/v1/rpc/owner_finance', r => {
     const { p_action: action, p_data: p } = r.request().postDataJSON();
+    if(action==='performance')return r.fallback();
     const selectedSales = sales.filter(s => matches(s, p) && day(s.recorded_at) >= p.from && day(s.recorded_at) <= p.to);
     const selectedExpenses = expenses.filter(e => matches(e, p) && (e.status === 'paid' ? e.paid_on! : e.due_on) >= p.from && (e.status === 'paid' ? e.paid_on! : e.due_on) <= p.to);
     if (action === 'report') {

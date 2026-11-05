@@ -1,39 +1,31 @@
 import { router } from 'expo-router';
-import { ArrowUpRight, CalendarDays, Clock3, Store } from 'lucide-react-native';
+import { ArrowUpRight, MapPin, ScanLine, Store, UserRound } from 'lucide-react-native';
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { SalonCard } from '@/components/SalonCard';
-import { Screen, SearchField, SectionHeading, StatusPill } from '@/components/UI';
-import { EmptyState, ImageBanner } from '@/components/Experience';
+import { SalonCard, SalonFeature } from '@/components/SalonCard';
+import { Chip, Screen, SearchField, SectionHeading, StatusPill } from '@/components/UI';
+import { EmptyState } from '@/components/Experience';
 import { DataStatus, useRefreshOnFocus } from '@/components/CustomerUI';
 import { salonDisplay, searchSalons } from '@/data/salons';
 import { activeAppointment, activeQueue, statusLabel, time, visitDate } from '@/lib/customer-types';
 import { useCustomer } from '@/providers/CustomerProvider';
 import { colors, type } from '@/theme';
-
 export default function HomeScreen() {
-  const [query, setQuery] = useState('');
-  const { catalog, visits, qrQueues } = useCustomer();
-  useRefreshOnFocus();
-  const salons = catalog?.salons.map(s => salonDisplay(s, catalog)).sort((a, b) => Number(b.open) - Number(a.open) || (a.wait?.[0] ?? Infinity) - (b.wait?.[0] ?? Infinity)) ?? [];
-  const results = searchSalons(salons, query);
-  const queue = [...visits.queues, ...qrQueues].find(activeQueue);
-  const booking = visits.appointments.filter(activeAppointment).sort((a,b) => (a.confirmed_start ?? a.requested_start).localeCompare(b.confirmed_start ?? b.requested_start))[0];
-  return <Screen title="BookMyTurn" home tab>
-    <SearchField value={query} onChange={setQuery} onSubmit={() => router.navigate({ pathname: '/salons', params: { q: query } })}/>
-    <DataStatus/>
-    {!query.trim() && <>
-      {queue && <Pressable accessibilityRole="button" accessibilityLabel="Track my queue" onPress={() => router.push(`/queue-entry/${queue.id}`)} style={s.active}>
-        <StatusPill label={['joined','arrived'].includes(queue.status)?'Waiting':statusLabel(queue.status)} tone="success"/><View style={s.line}><View style={{flex:1,gap:4}}><Text style={type.section}>Your turn is on its way</Text><Text style={type.caption}>{catalog?.salons.find(s=>s.id===queue.salon_id)?.name ?? queue.salon_name ?? 'Your salon'} · Code {queue.reference}</Text></View><ArrowUpRight color={colors.green} size={24}/></View>
-      </Pressable>}
-      {!queue && booking && <Pressable accessibilityRole="button" accessibilityLabel="View my appointment" onPress={() => router.navigate('/appointments')} style={s.active}><StatusPill label={statusLabel(booking.status)} tone={booking.status==='confirmed'?'success':'warning'}/><Text style={type.section}>{visitDate(booking.confirmed_start??booking.requested_start)} · {time(booking.confirmed_start??booking.requested_start)}</Text><Text style={type.caption}>View your appointment</Text></Pressable>}
-      {!queue&&!booking&&<ImageBanner compact title="Good hair. Less waiting." subtitle=""/>}
-      <View style={s.intents}>{[{title:'Go now',detail:'Compare live waits',icon:Clock3,bg:colors.mint,intent:'now'},{title:'Plan a visit',detail:'Choose a date & time',icon:CalendarDays,bg:colors.butter,intent:'plan'}].map(({title,detail,icon:Icon,bg,intent})=><Pressable key={title} accessibilityRole="button" accessibilityLabel={title} onPress={()=>router.navigate({pathname:'/salons',params:{intent}})} style={({pressed})=>[s.intent,{backgroundColor:bg,opacity:pressed?0.75:1}]}><Icon size={24} color={intent==='now'?colors.green:colors.amber}/><Text style={type.label}>{title}</Text><Text style={type.caption}>{detail}</Text></Pressable>)}</View>
-    </>}
-    <SectionHeading title={query.trim() ? 'Matching salons' : 'Find your salon'} action="See all" onPress={()=>router.navigate('/salons')}/>
-    {(query.trim() ? results : results.slice(0, 3)).map(salon => <SalonCard key={salon.id} salon={salon} featured/>)}
-    {catalog && !results.length && <EmptyState icon={Store} title={query.trim()?'No matching salons':'Salons will appear here'} description={query.trim()?'Try another salon or barber name.':'Check back as salons open their doors on BookMyTurn.'}/>}
-    {!query.trim() && <ImageBanner title="Save it. Show it. Love it." subtitle="Keep haircut ideas together and share them with your barber." onPress={()=>router.navigate('/hairstyles')}/>}
-  </Screen>;
+ const [query,setQuery]=useState(''),[filter,setFilter]=useState('All salons');
+ const {catalog,visits,qrQueues}=useCustomer();useRefreshOnFocus();
+ const salons=catalog?.salons.map(s=>salonDisplay(s,catalog)).sort((a,b)=>Number(b.open)-Number(a.open)||(a.wait?.[0]??Infinity)-(b.wait?.[0]??Infinity))??[];
+ const results=searchSalons(salons,query).filter(s=>filter==='All salons'||filter==='Open now'&&s.open||filter==='No queue'&&s.open&&s.waiting===0&&s.wait?.[0]===0);
+ const queue=[...visits.queues,...qrQueues].find(activeQueue),booking=visits.appointments.filter(activeAppointment).sort((a,b)=>(a.confirmed_start??a.requested_start).localeCompare(b.confirmed_start??b.requested_start))[0];
+ return <Screen title="BookMyTurn" home tab header={<View style={s.header}><MapPin size={18} color={colors.action}/><View style={{flex:1}}><Text style={type.caption}>YOUR NEXT GOOD HAIR DAY</Text><Text style={type.label}>Find your salon</Text></View><Pressable accessibilityRole="button" accessibilityLabel="Scan salon QR" onPress={()=>router.push('/scan')} style={s.icon}><ScanLine size={22} color={colors.text}/></Pressable><Pressable accessibilityRole="button" accessibilityLabel="Account" onPress={()=>router.navigate('/profile')} style={[s.icon,{backgroundColor:colors.card,borderRadius:24}]}><UserRound size={21} color={colors.action}/></Pressable></View>}>
+  <Text accessibilityRole="header" style={type.title}>Good hair.{'\n'}<Text style={{color:colors.action}}>Less waiting.</Text></Text>
+  <SearchField value={query} onChange={setQuery} onSubmit={()=>router.navigate({pathname:'/salons',params:{q:query}})}/><DataStatus/>
+  <View style={{flexDirection:'row',gap:8,flexWrap:'wrap'}}>{['All salons','No queue','Open now'].map(label=><Chip key={label} label={label} selected={filter===label} onPress={()=>setFilter(label)}/>)}</View>
+  {!query.trim()&&queue&&<Pressable accessibilityRole="button" accessibilityLabel="Track my queue" onPress={()=>router.push(`/queue-entry/${queue.id}`)} style={s.active}><StatusPill label={['joined','arrived'].includes(queue.status)?'Waiting':statusLabel(queue.status)} tone="success"/><View style={s.line}><View style={{flex:1,gap:4}}><Text style={type.section}>Your turn is on its way</Text><Text style={type.caption}>{catalog?.salons.find(s=>s.id===queue.salon_id)?.name??queue.salon_name??'Your salon'} · Code {queue.reference}</Text></View><ArrowUpRight color={colors.green} size={23}/></View></Pressable>}
+  {!query.trim()&&!queue&&booking&&<Pressable accessibilityRole="button" accessibilityLabel="View my appointment" onPress={()=>router.navigate('/appointments')} style={s.active}><StatusPill label={statusLabel(booking.status)} tone={booking.status==='confirmed'?'success':'warning'}/><Text style={type.section}>{visitDate(booking.confirmed_start??booking.requested_start)} · {time(booking.confirmed_start??booking.requested_start)}</Text><Text style={type.caption}>View your appointment</Text></Pressable>}
+  {!query.trim()&&results[0]&&<SalonFeature salon={results[0]}/>}
+  <SectionHeading title={query.trim()?'Matching salons':'Salons for you'} action="See all" onPress={()=>router.navigate('/salons')}/>
+  <View>{(query.trim()?results:results.slice(0,3)).map(salon=><SalonCard key={salon.id} salon={salon}/>)}</View>
+  {catalog&&!results.length&&<EmptyState icon={Store} title={query.trim()?'No matching salons':'No salons for this selection'} description="Try another name or filter, or check back as salons open their doors."/>}
+ </Screen>;
 }
-const s=StyleSheet.create({location:{flexDirection:'row',alignItems:'center',gap:6},intents:{flexDirection:'row',gap:12},intent:{flex:1,padding:16,borderRadius:20,gap:8},active:{padding:18,borderRadius:20,gap:12,backgroundColor:colors.mint},line:{flexDirection:'row',alignItems:'center',gap:12}});
+const s=StyleSheet.create({header:{paddingHorizontal:20,minHeight:68,flexDirection:'row',alignItems:'center',gap:9},icon:{width:44,height:44,alignItems:'center',justifyContent:'center'},line:{flexDirection:'row',alignItems:'center',gap:12},active:{padding:16,borderRadius:16,backgroundColor:colors.mint,gap:10}});

@@ -1,26 +1,25 @@
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
-import { CalendarDays, ChevronRight, Plus, Store, Users } from 'lucide-react-native';
+import { ChevronRight, Plus, Store } from 'lucide-react-native';
 import { Button, Chip } from '@/components/UI';
 import { Cover, ManagementScreen, MenuRow, m } from '@/components/ManagementUI';
-import { EmptyState, StatsGrid, StatusBadge } from '@/components/StaffExperience';
+import { EmptyState, StatusBadge } from '@/components/StaffExperience';
 import { useManager } from '@/providers/ManagerProvider';
 import { colors, type } from '@/theme';
+import { OwnerOverview } from '@/components/OwnerOverview';
 
 export default function SalonList() { const { revision } = useLocalSearchParams<{revision?:string}>(); return <SalonListContent key={revision??'initial'}/>; }
 function SalonListContent() {
-  const {data,live}=useManager();
+  const {data}=useManager();
   const [archived,setArchived]=useState(false);
   const all=data?.salons??[], active=all.filter(s=>!s.archived_at);
   const salons=all.filter(s=>archived?!!s.archived_at:!s.archived_at);
   return <ManagementScreen title="BookMyTurn">
-    <View style={{gap:8}}><Text style={type.eyebrow}>MANAGER WORKSPACE</Text><Text accessibilityRole="header" style={type.title}>Your salons.</Text><Text style={type.body}>{data?.profile.display_name?`Welcome back, ${data.profile.display_name}.`:'A clear view of your day.'}</Text><StatusBadge label={live?'Live updates connected':'Auto-refresh every 5 seconds'} tone={live?'success':'neutral'}/></View>
+    <View style={{gap:12}}><Text style={type.eyebrow}>MANAGER WORKSPACE</Text><Text accessibilityRole="header" style={type.title}>A clear view{'\n'}<Text style={{color:colors.action}}>of your day.</Text></Text><Text style={type.caption}>{data?.today?new Date(`${data.today}T12:00Z`).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'}):'Loading your workspace…'}</Text></View>
     {!all.length&&<View style={{gap:10,padding:18,borderRadius:20,backgroundColor:colors.brandSoft}}><Text style={type.section}>Joining an existing team?</Text><Text style={type.body}>Use the invitation your manager shared. You do not need to create a salon.</Text><Button label="Join a salon as a barber" onPress={()=>router.push('/invite')}/></View>}
-    {!!active.length&&<StatsGrid items={[
-      {label:'Waiting',value:active.reduce((n,s)=>n+s.waiting,0),icon:Users,tone:'mint'},
-      {label:'Requests',value:active.reduce((n,s)=>n+s.pending,0),icon:CalendarDays,tone:'amber'},
-    ]}/>}
+    {!!active.length&&<View style={{flexDirection:'row',gap:12,paddingVertical:8}}>{[['waiting',active.reduce((n,s)=>n+s.waiting,0)],['in service',active.reduce((n,s)=>n+(s.in_service??0),0)],['requests',active.reduce((n,s)=>n+s.pending,0)]].map(([label,value])=><View key={label} style={{flex:1,flexDirection:'row',gap:6,alignItems:'center'}}><Text style={type.label}>{value}</Text><Text style={type.caption}>{label}</Text></View>)}</View>}
+    {!!all.length&&<OwnerOverview/>}
     {!!all.length&&<MenuRow label="Team performance" detail="Haircuts, revenue and daily trends for every barber" onPress={()=>router.push('/manage/analytics')}/> }
     <View style={{flexDirection:'row',alignItems:'center',gap:12}}><Text style={[type.section,{flex:1}]}>Locations <Text style={type.caption}>{salons.length}</Text></Text><Pressable accessibilityRole="button" accessibilityLabel="+ Add salon" onPress={()=>router.push('/manage/salon/new')} style={({pressed})=>({minHeight:48,flexDirection:'row',alignItems:'center',gap:6,opacity:pressed?.7:1})}><Plus size={20} color={colors.action}/><Text style={[type.label,{color:colors.action}]}>Add salon</Text></Pressable></View>
     {all.some(s=>s.archived_at)&&<View style={{flexDirection:'row',flexWrap:'wrap',gap:8}}><Chip label={`Active locations (${active.length})`} selected={!archived} onPress={()=>setArchived(false)}/><Chip label={`Archived locations (${all.length-active.length})`} selected={archived} onPress={()=>setArchived(true)}/></View>}

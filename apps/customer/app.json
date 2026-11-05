@@ -6,17 +6,18 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "backgroundColor": "#FFFFFF",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#141613",
     "plugins": [
       "expo-router",
       "expo-status-bar",
       "expo-font",
+      ["expo-camera", { "cameraPermission": "Scan the BookMyTurn QR at your salon.", "microphonePermission": false, "recordAudioAndroid": false, "barcodeScannerEnabled": true }],
       [
         "expo-image-picker",
         {
           "photosPermission": "Choose haircut photos to save and share with your barber.",
-          "cameraPermission": false,
+          "cameraPermission": "Scan the BookMyTurn QR at your salon.",
           "microphonePermission": false
         }
       ]
@@ -27,7 +28,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#FFFFFF",
+        "backgroundColor": "#141613",
         "foregroundImage": "./assets/icon.png"
       },
       "package": "com.bookmyturn.customer"

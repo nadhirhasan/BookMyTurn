@@ -39,7 +39,7 @@ export function Field({ label, value, onChange, maxLength = 80, multiline = fals
   multiline?: boolean;
   error?: string;
 }) {
-  return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput aria-invalid={!!error} accessibilityLabel={label} value={value} onChangeText={onChange} maxLength={maxLength} multiline={multiline} style={[styles.input,error&&{borderColor:'#B42318',backgroundColor:'#FFF6F5'}, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/>{error&&<Text accessibilityRole="alert" style={{...type.caption,color:'#B42318'}}>{error}</Text>}</View>;
+  return <View style={{ gap: 8 }}><Text style={type.label}>{label}</Text><TextInput aria-invalid={!!error} accessibilityLabel={label} value={value} onChangeText={onChange} maxLength={maxLength} multiline={multiline} style={[styles.input,error&&{borderColor:colors.error,backgroundColor:colors.errorSurface}, multiline && { minHeight: 100, textAlignVertical: 'top' }]}/>{error&&<Text accessibilityRole="alert" style={{...type.caption,color:colors.error}}>{error}</Text>}</View>;
 }
 export function useVisitAction() {
   const { mutate, busy } = useCustomer();
