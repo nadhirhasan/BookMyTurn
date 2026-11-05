@@ -8,7 +8,7 @@
 - [x] Build Analytics with date presets, calendar ranges, salon filters, tappable barber rankings and accessible interactive charts.
 - [x] Expose Analytics from manager navigation and Finance. Keep payroll and barber financial access out of this change.
 - [x] Validate database reconciliation/permissions, browser interactions, narrow layouts, lint/types and native exports.
-- [ ] Open a feature PR and apply/verify the tested hosted migration.
+- [x] Open a feature PR and apply/verify the tested hosted migration.
 
 ## Research and design decisions
 
@@ -37,4 +37,7 @@ Read through the existing owner_finance RPC with a new performance action. Check
 - Both apps pass lint and TypeScript. Manager iOS, Android and web production exports passed with placeholder API configuration. Physical device acceptance remains for the owner.
 - Visual review: [overview](../design/reviews/owner-analytics/overview.png), [interactive chart](../design/reviews/owner-analytics/daily-chart.png), [barber detail](../design/reviews/owner-analytics/barber.png). Screenshots contain test fixtures only.
 - Hosted preflight security advisory: existing leaked-password-protection warning. Performance baseline: eight pre-existing unindexed foreign keys and 27 informational unused indexes; these belong to existing tables and are outside this read-only API change.
-- Hosted migration and PR: pending rollout below.
+- [PR #24](https://github.com/nadhirhasan/BookMyTurn/pull/24) is stacked on #23. No automatic merge.
+- Hosted migration `20261105062209_owner_performance_analytics` applied successfully. The unchanged SQL file was renamed from the CLI's preparation timestamp (`20261104113504`) to the hosted history version so future CLI pushes do not apply it twice.
+- The complete owner-performance SQL suite passed against hosted Supabase roles, Auth and ledger tables, with all fixture work rolled back. Independent cleanup/grant checks confirmed zero fixture accounts/salons, no anonymous Finance RPC access and a security-invoker public wrapper. Existing financial write paths remain unchanged.
+- Hosted postflight security advisor matches the preflight baseline; no new findings.

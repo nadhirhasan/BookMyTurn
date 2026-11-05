@@ -5,8 +5,9 @@ Plan prepared: 29 October 2026 (Asia/Colombo).
 Current stage: owner barber performance analytics, with daily/weekly haircut counts,
 generated revenue, charts, calendar filters and individual barber results. See
 [the research, implementation and validation checklist](OWNER_PERFORMANCE_ANALYTICS.md).
-Local database, mobile browser, lint/types and native-export validation passed;
-hosted rollout and feature PR are in progress. Phone acceptance pending.
+Local database, mobile browser, lint/types and native-export validation passed in
+[PR #24](https://github.com/nadhirhasan/BookMyTurn/pull/24). Hosted analytics migration
+applied and SQL/permission/fixture-cleanup checks passed. Phone acceptance pending.
 
 Previous stage: calendar and database-backed time selection for barber appointment alternatives.
 See [the picker plan and validation](BARBER_APPOINTMENT_PICKER.md).
