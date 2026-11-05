@@ -29,8 +29,9 @@ async function fixture(page:Page,empty=false){
  return {data,calls,user};
 }
 async function login(page:Page){await page.goto('/');await page.getByLabel('Email address',{exact:true}).fill('barber@example.invalid');await page.getByLabel('Password',{exact:true}).fill('Fixture password 123');await page.getByRole('button',{name:'Sign in',exact:true}).click();}
-test('new manager signs up without verification and lands in the salon list',async({page})=>{
- await fixture(page,true);await page.goto('/');await page.getByRole('button',{name:'New here? Create an account'}).click();await page.getByLabel('Email address',{exact:true}).fill('new-salon@example.invalid');await page.getByLabel('Password',{exact:true}).fill('Fixture password 123');await page.getByRole('button',{name:'Create account',exact:true}).click();
+test('new manager signs up without verification and lands in the salon list',async({page},info)=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await fixture(page,true);await page.goto('/');await expect(page.getByRole('button',{name:'Sign in',exact:true})).toBeVisible();await page.screenshot({path:info.outputPath('staff-sign-in.png')});await page.getByRole('button',{name:'New here? Create an account'}).click();await page.getByLabel('Email address',{exact:true}).fill('new-salon@example.invalid');await page.getByLabel('Password',{exact:true}).fill('Fixture password 123');await page.getByRole('button',{name:'Create account',exact:true}).click();
  await expect(page.getByRole('heading',{name:/A clear view.*of your day/})).toBeVisible();await expect(page.getByRole('button',{name:'+ Add salon',exact:true})).toBeVisible();await expect(page.getByText('Start with your first salon.')).toBeVisible();
 });
 test('walk-in starts without a service or price and records price once at completion',async({page},info)=>{

@@ -1,5 +1,8 @@
 # Implemented Charcoal & Champagne screens
 
+Historical screenshots. See [the current cream and teal screens](../cream-teal/README.md)
+for the latest user-approved direction.
+
 5 November 2026. These screenshots come from the running Expo applications at
 393 × 852 CSS pixels, with the bundled DM Sans fonts and isolated API fixtures.
 They are application screens, not the earlier HTML prototype or Figma renders.

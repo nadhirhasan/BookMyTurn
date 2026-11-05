@@ -6,8 +6,8 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "../customer/assets/icon.png",
-    "userInterfaceStyle": "dark",
-    "backgroundColor": "#141613",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#FCF6ED",
     "plugins": [
       "expo-router",
       "expo-status-bar",
@@ -36,7 +36,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#141613",
+        "backgroundColor": "#087F80",
         "foregroundImage": "../customer/assets/icon.png"
       },
       "package": "com.bookmyturn.barber"

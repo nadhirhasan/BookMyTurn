@@ -1,11 +1,13 @@
 import { Tabs } from 'expo-router/js-tabs';
 import { CalendarDays, House, UserRound, Images } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMotionPreference } from '@/components/RouteMotion';
 import { colors, fonts } from '@/theme';
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  const reduced = useMotionPreference();
   return <Tabs screenOptions={{
-    headerShown: false, tabBarActiveTintColor: colors.action, tabBarInactiveTintColor: colors.muted,
+    headerShown: false, animation: reduced ? 'none' : 'fade', transitionSpec: { animation: 'timing', config: { duration: 180 } }, tabBarActiveTintColor: colors.action, tabBarInactiveTintColor: colors.muted,
     tabBarLabelPosition: 'below-icon',
     tabBarIconStyle: { width: 24, height: 24 },
     tabBarLabelStyle: { fontFamily: fonts.semibold, fontSize: 11, lineHeight: 15, marginTop: 4, marginHorizontal: 0, paddingHorizontal: 0 },

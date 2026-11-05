@@ -20,7 +20,7 @@ export function OwnerOverview() {
   {report.stale&&data&&<Note>Reports may be out of date. Refresh before relying on these figures.</Note>}
   {report.error&&<><Text accessibilityRole="alert" style={type.caption}>{report.error}</Text><Button label="Retry overview" secondary onPress={()=>{void report.refresh();}}/></>}
   <View style={{flexDirection:'row',gap:10}}>
-   <View style={s.revenue}><Text style={[type.caption,{color:colors.ticketInk}]}>Completed haircut revenue</Text><Text style={[s.amount,{color:colors.ticketInk}]}>{data?money(data.summary.revenue_minor):'—'}</Text><Text style={[type.caption,{color:colors.ticketInk}]}>{data?comparison(data.summary.revenue_minor,data.previous.revenue_minor):'Loading report…'}</Text></View>
+   <View style={s.revenue}><Text style={[type.caption,{color:colors.onAction}]}>Completed haircut revenue</Text><Text style={[s.amount,{color:colors.onAction}]}>{data?money(data.summary.revenue_minor):'—'}</Text><Text style={[type.caption,{color:colors.onAction}]}>{data?comparison(data.summary.revenue_minor,data.previous.revenue_minor):'Loading report…'}</Text></View>
    <View style={s.cuts}><Text style={type.caption}>Haircuts completed</Text><Text style={s.amount}>{data?.summary.completed_count??'—'}</Text><Text style={type.caption}>{data?`${data.previous.completed_count} in previous period`:'Loading report…'}</Text></View>
   </View>
   <View style={{flexDirection:'row',gap:7}}>{(['today','week','month'] as const).map(p=><View key={p} style={{flex:1}}><Chip label={{today:'Today',week:'This week',month:'This month'}[p]} selected={period===p} onPress={()=>setPeriod(p)}/></View>)}</View>

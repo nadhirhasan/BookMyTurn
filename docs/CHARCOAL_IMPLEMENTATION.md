@@ -1,5 +1,9 @@
 # Approved Charcoal & Champagne implementation
 
+Historical direction. The user's later cream and teal reference supersedes this
+palette and its screenshots. See [the current implementation](CREAM_TEAL_DESIGN.md).
+The results below describe the earlier dark commits, not the current app theme.
+
 5 November 2026. User approved the interactive design in PR #26 and requested that the real apps match it. The design files in `design/charcoal-champagne/` and their final screenshots are the visual authority.
 
 ## Plan and validation gates
@@ -65,3 +69,15 @@ and no microphone permission. The image-picker plugin no longer blocks the camer
 Implementation commit: `6725f9b`. PR #27 is stacked on #26's design branch because
 the approved design PR remains open. CI runs the full browser suites on Linux and
 the existing isolated PostgreSQL migration/permission suites. No feature PRs were merged.
+
+## Follow-up: interaction feedback and square previews
+
+User requested smoother interactions, proper loading states and square salon previews
+in Customer and Manager. This continues the same design PR; the approved colours and
+database workflows remain in place.
+
+- [x] Two-column salon grids with square photos in both apps; keep honest photo fallbacks and live status/counts.
+- [x] Shared animated press/release feedback and tab fades, with one OS motion preference per app.
+- [x] Initial-load skeletons, photo-loading indicators, busy submit buttons and refresh feedback.
+- [x] Keep initial private visits loading/error/retry distinct from a genuinely empty account.
+- Validation and delivery of this follow-up continue in [the current cream and teal checklist](CREAM_TEAL_DESIGN.md).

@@ -1,5 +1,8 @@
 # BookMyTurn — Charcoal & Champagne
 
+Historical prototype. The user's later cream and teal reference replaces this
+visual direction. See [the current app screenshots](../reviews/cream-teal/README.md).
+
 Design review, 5 November 2026. **Design-only prototype: no application, Supabase, account or live business-data changes.**
 
 The user supplied a neon/cyan dark mockup as a quality reference, requested a dark alternative without neon, and asked to preview the design before application implementation. This direction uses warm charcoal, layered olive-charcoal surfaces, ivory typography, muted champagne actions and real salon photography. The provided composition informs the visual ambition; BookMyTurn's actual workflow determines the screens.

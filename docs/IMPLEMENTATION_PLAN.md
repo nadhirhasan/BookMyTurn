@@ -2,14 +2,16 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: the user approved Charcoal & Champagne and requested its implementation
-in both apps. Customer discovery, visits, photo collections, queue ticket and calendar,
-owner overview/team and barber chair use the shared dark design and native transitions.
-See [the implementation checklist and validation](CHARCOAL_IMPLEMENTATION.md) and
-[running-app screenshots](../design/reviews/charcoal-implementation/README.md).
-The [interactive design reference](../design/charcoal-champagne/README.md) remains
-the visual authority. Phone acceptance follows local validation; Figma's quota does
-not block implementation of the approved preview.
+Current stage: implement the user's new cream and teal mobile reference across
+Customer, Manager and Barber. It replaces the earlier dark direction. The apps share
+warm surfaces, teal actions, square salon grids, calendar/time selection, smooth
+interaction feedback and explicit loading/retry states. See [the current checklist
+and validation](CREAM_TEAL_DESIGN.md) and [running-app screenshots](../design/reviews/cream-teal/README.md).
+Phone acceptance follows local validation. Existing Supabase workflows and
+completion-only pricing are preserved; no hosted schema or data changes are needed.
+
+Previous visual direction: [Charcoal & Champagne implementation](CHARCOAL_IMPLEMENTATION.md),
+now superseded by the supplied cream and teal reference in the same PR #27.
 
 Previous stage: salon map pins and customer directions. Managers select and confirm
 the salon entrance on a map, optionally using their current location. Customers open

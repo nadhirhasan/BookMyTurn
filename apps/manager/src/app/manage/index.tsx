@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
-import { ChevronRight, Plus, Store } from 'lucide-react-native';
+import { Plus, Store } from 'lucide-react-native';
 import { Button, Chip } from '@/components/UI';
 import { Cover, ManagementScreen, MenuRow, m } from '@/components/ManagementUI';
 import { EmptyState, StatusBadge } from '@/components/StaffExperience';
 import { useManager } from '@/providers/ManagerProvider';
+import { SquareGrid } from '../../../../customer/src/components/SquareGrid';
+import { PressableMotion } from '../../../../customer/src/components/PressableMotion';
 import { colors, type } from '@/theme';
 import { OwnerOverview } from '@/components/OwnerOverview';
 
@@ -24,10 +26,10 @@ function SalonListContent() {
     <View style={{flexDirection:'row',alignItems:'center',gap:12}}><Text style={[type.section,{flex:1}]}>Locations <Text style={type.caption}>{salons.length}</Text></Text><Pressable accessibilityRole="button" accessibilityLabel="+ Add salon" onPress={()=>router.push('/manage/salon/new')} style={({pressed})=>({minHeight:48,flexDirection:'row',alignItems:'center',gap:6,opacity:pressed?.7:1})}><Plus size={20} color={colors.action}/><Text style={[type.label,{color:colors.action}]}>Add salon</Text></Pressable></View>
     {all.some(s=>s.archived_at)&&<View style={{flexDirection:'row',flexWrap:'wrap',gap:8}}><Chip label={`Active locations (${active.length})`} selected={!archived} onPress={()=>setArchived(false)}/><Chip label={`Archived locations (${all.length-active.length})`} selected={archived} onPress={()=>setArchived(true)}/></View>}
     {!salons.length&&<EmptyState icon={Store} title={archived?'No archived salons.':'Start with your first salon.'} detail={archived?'Restore a location to bring it back to your workspace.':'Create a location, add your team, and see every customer here.'}/>}
-    {salons.map(salon=><Pressable key={salon.id} accessibilityRole="button" accessibilityLabel={`Manage ${salon.name}`} onPress={()=>router.push(`/manage/salon/${salon.id}`)} style={({pressed})=>[m.salonCard,{opacity:pressed?.8:1}]}>
-      <Cover uri={salon.photo_url} name={salon.name}/>
-      <View style={m.cardBody}><View style={{flexDirection:'row',gap:12,alignItems:'flex-start'}}><View style={{flex:1,gap:4}}><Text style={type.section}>{salon.name}</Text><Text style={type.caption}>{salon.address||'Address not provided'}</Text></View><ChevronRight size={22} color={colors.action}/></View><StatusBadge label={salon.archived_at?'Archived':salon.is_open?'Open':'Closed'} tone={salon.is_open&&!salon.archived_at?'success':'neutral'}/><Text style={type.body}>{salon.waiting} waiting · {salon.barbers.filter(b=>b.is_active).length} barbers</Text><View style={{borderTopWidth:1,borderColor:colors.divider,paddingTop:12,gap:4}}><Text style={type.caption}>{salon.in_service??0} in service</Text><Text style={[type.label,{color:salon.pending?colors.pending:colors.action}]}>{salon.pending?`${salon.pending} request${salon.pending===1?'':'s'} to review`:'Open salon workspace'}</Text></View></View>
-    </Pressable>)}
+    <SquareGrid>{salons.map(salon=><PressableMotion key={salon.id} accessibilityRole="button" accessibilityLabel={`Manage ${salon.name}`} onPress={()=>router.push(`/manage/salon/${salon.id}`)} style={[m.salonCard,{flex:1,borderRadius:16}]}>
+      <View style={{width:'100%',aspectRatio:1}}><Cover square uri={salon.photo_url} name={salon.name}/><View style={{position:'absolute',left:10,top:10}}><StatusBadge label={salon.archived_at?'Archived':salon.is_open?'Open':'Closed'} tone={salon.is_open&&!salon.archived_at?'success':'neutral'}/></View></View>
+      <View style={{padding:12,gap:8}}><Text numberOfLines={2} style={type.label}>{salon.name}</Text><Text numberOfLines={1} style={type.caption}>{salon.address||'Address not provided'}</Text><Text style={type.caption}>{salon.waiting} waiting · {salon.in_service??0} in service</Text><Text style={type.caption}>{salon.barbers.filter(b=>b.is_active).length} barbers</Text><Text style={[type.caption,{color:salon.pending?colors.pending:colors.action}]}>{salon.pending?`${salon.pending} request${salon.pending===1?'':'s'} to review`:'Open workspace'}</Text></View>
+    </PressableMotion>)}</SquareGrid>
     <Text style={type.caption}>Waiting counts every queue join. Staff verify the customer code before starting the haircut.</Text>
     {!!all.length&&<Button label="Join a salon as a barber" secondary onPress={()=>router.push('/invite')}/>}
   </ManagementScreen>;

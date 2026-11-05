@@ -1,2 +1,2 @@
-// One approved theme for Customer, Manager and Barber.
-export { colors, fonts, layout, motion, type } from '../../customer/src/theme';
+// One Cream & Teal theme for Customer, Manager and Barber.
+export { colors, fonts, layout, motion, shadows, type } from '../../customer/src/theme';

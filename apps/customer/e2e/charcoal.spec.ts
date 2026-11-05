@@ -7,9 +7,9 @@ async function settled(page:import('@playwright/test').Page){
  await page.evaluate(()=>document.fonts.ready);
  await expect.poll(()=>page.evaluate(()=>document.getAnimations().filter(a=>a.playState==='running').length)).toBe(0);
  // RN Animated updates styles on animation frames rather than Web Animations.
- await expect.poll(()=>page.getByRole('heading').first().evaluate(el=>{let opacity=1;for(let p:Element|null=el;p;p=p.parentElement)opacity*=Number(getComputedStyle(p).opacity);return opacity;})).toBe(1);
+ await expect.poll(()=>page.getByRole('heading').last().evaluate(el=>{let opacity=1;for(let p:Element|null=el;p;p=p.parentElement)opacity*=Number(getComputedStyle(p).opacity);return opacity;})).toBe(1);
 }
-test('approved customer navigation, fixed actions, private decks and paper ticket use real records',async({page},info)=>{
+test('cream and teal customer navigation, fixed actions, private decks and paper ticket use real records',async({page},info)=>{
  const f=await mockDatabase(page);await signInFixture(page);
  const photo=readFileSync(path.resolve(__dirname,'../assets/images/salon.jpg'));
  await page.route('**/charcoal-photo.jpg',r=>r.fulfill({contentType:'image/jpeg',body:photo}));

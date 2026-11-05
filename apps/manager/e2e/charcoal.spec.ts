@@ -1,8 +1,8 @@
 import {test,expect,type Page} from '@playwright/test';
 import {randomUUID} from 'node:crypto';
 import {fixture,login,seed} from './management-fixture';
-async function settled(page:Page){await page.evaluate(()=>document.fonts.ready);await expect.poll(()=>page.getByRole('heading').first().evaluate(el=>{let opacity=1;for(let p:Element|null=el;p;p=p.parentElement)opacity*=Number(getComputedStyle(p).opacity);return opacity;})).toBe(1);}
-test('approved owner overview shows database totals and scoped team invitations',async({page},info)=>{
+async function settled(page:Page){await page.evaluate(()=>document.fonts.ready);await expect.poll(()=>page.getByRole('heading').last().evaluate(el=>{let opacity=1;for(let p:Element|null=el;p;p=p.parentElement)opacity*=Number(getComputedStyle(p).opacity);return opacity;})).toBe(1);}
+test('cream and teal owner overview shows database totals and scoped team invitations',async({page},info)=>{
  // RN Animated uses Date.now; the fixed report date must not freeze a screenshot mid-transition.
  await page.emulateMedia({reducedMotion:'reduce'});
  await page.clock.setFixedTime(new Date('2026-11-05T08:00:00Z'));
@@ -15,7 +15,7 @@ test('approved owner overview shows database totals and scoped team invitations'
  await page.getByRole('button',{name:'Team workspace',exact:true}).click();await expect(page.getByText('Invitation needed',{exact:true})).toBeVisible();await settled(page);await page.screenshot({path:info.outputPath('manager-team.png')});
  await page.getByRole('button',{name:'Invite barber',exact:true}).click();await expect(page.getByRole('button',{name:'Create invitation',exact:true})).toBeVisible();await settled(page);await page.screenshot({path:info.outputPath('manager-invitation.png')});
 });
-test('approved barber chair exposes queue and personal metrics without requesting owner reports',async({page},info)=>{
+test('cream and teal barber chair exposes queue and personal metrics without requesting owner reports',async({page},info)=>{
  const f=await fixture(page),salon=seed(),barber=randomUUID();salon.waiting=1;
  salon.barbers.push({id:barber,salon_id:salon.id,display_name:'Amir',bio:'Thoughtful cuts.',photo_url:null,experience_years:5,specialities:[],is_active:true,availability:'available',service_ids:[]});salon.queues=[{id:randomUUID(),reference:'123456',customer_name:'Nadeem',mobile:null,service_id:null,status:'arrived',source:'remote',estimated_start:new Date().toISOString(),barber_id:barber,preferred_barber_id:barber,assigned_barber_id:barber,created_at:new Date().toISOString(),arrived_at:new Date().toISOString()}];f.data.salons.push(salon);
  await login(page);await page.getByRole('button',{name:`Manage ${salon.name}`,exact:true}).click();await page.getByRole('button',{name:'Team',exact:true}).click();await page.getByRole('button',{name:"Open Amir's chair",exact:true}).click();await expect(page.getByText('123456',{exact:true})).toBeVisible();await settled(page);await page.screenshot({path:info.outputPath('barber-chair.png')});

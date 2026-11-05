@@ -1,7 +1,10 @@
-import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useCallback, useEffect, useState, type ReactNode } from 'react';
 import { AccessibilityInfo, Animated, Easing, Platform } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { motion } from '@/theme';
+const MotionPreference = createContext(true);
+export function MotionPreferenceProvider({ reduced, children }: { reduced: boolean; children: ReactNode }) { return <MotionPreference value={reduced}>{children}</MotionPreference>; }
+export function useMotionPreference() { return useContext(MotionPreference); }
 export function useReduceMotion() {
   const [reduced, setReduced] = useState(true);
   useEffect(() => { let active = true; void AccessibilityInfo.isReduceMotionEnabled().then(value => { if (active) setReduced(value); }); const sub = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduced); return () => { active = false; sub.remove(); }; }, []);
@@ -9,7 +12,7 @@ export function useReduceMotion() {
 }
 // Native stacks own iOS/Android movement. Web receives the same short glide.
 export function RouteMotion({ children }: { children: ReactNode }) {
-  const reduced = useReduceMotion(), [progress] = useState(() => new Animated.Value(1));
+  const reduced = useMotionPreference(), [progress] = useState(() => new Animated.Value(1));
   useFocusEffect(useCallback(() => {
     if (Platform.OS !== 'web' || reduced) { progress.setValue(1); return; }
     progress.setValue(0);

@@ -65,14 +65,14 @@ export default function JoinQueue() {
 {salon && catalog && <>{qr ? <>
  <Text style={type.body}>Join {salon.name} and get your queue code. No app or account needed.</Text>
  {qrError && <Text accessibilityRole="alert" style={type.body}>{qrError}</Text>}
- <Action label={qrBusy ? 'Joining…' : 'Join Queue'} disabled={qrBusy || stale || !salon.open_now} onPress={() => { void submitQr(); }}/>
+ <Action label={qrBusy ? 'Joining…' : 'Join Queue'} loading={qrBusy} disabled={qrBusy || stale || !salon.open_now} onPress={() => { void submitQr(); }}/>
  <Text style={type.caption}>One join records one person waiting. Your receipt stays on this device; keep this page to track your turn.</Text>
  <Notice>{salon.waiting} waiting. Tap Join Queue once to get your code. Repeat taps on this device reuse your active entry.</Notice>
  {details}
 </> : <><Notice>{salon.waiting} waiting. Joining adds you to the queue immediately. Head to the salon and show your code to staff.</Notice><PrivateGate>{existing ? <><Text style={type.section}>You already have an active visit here.</Text><Action label="View my queue entry" onPress={() => router.replace(`/queue-entry/${existing.id}`)}/></> : <>
  {details}
  {error && <Text accessibilityRole="alert" style={type.body}>{error}</Text>}
- <Action label={busy ? 'Joining…' : 'Join Queue'} disabled={busy || stale || !salon.open_now} onPress={() => { void run('join_queue', { salon_id: salon.id, collection_id:haircut, barber_id: barber, customer_name: name, mobile, present: true, source: 'remote', request_key: key }, entry => router.replace(`/queue-entry/${entry}`)); }}/>
+ <Action loading={busy} label={busy ? 'Joining…' : 'Join Queue'} disabled={busy || stale || !salon.open_now} onPress={() => { void run('join_queue', { salon_id: salon.id, collection_id:haircut, barber_id: barber, customer_name: name, mobile, present: true, source: 'remote', request_key: key }, entry => router.replace(`/queue-entry/${entry}`)); }}/>
 </>}</PrivateGate></>}
 {!salon.open_now && <Notice>The salon is currently closed. Request a future appointment instead.</Notice>}
 

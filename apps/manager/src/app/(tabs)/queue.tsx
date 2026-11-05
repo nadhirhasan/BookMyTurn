@@ -8,6 +8,7 @@ import { Portrait } from '@/components/ManagementUI';
 import { EmptyState, StatusBadge, TaskRow, experience } from '@/components/StaffExperience';
 import { useBarber } from '@/providers/BarberProvider';
 import { statusLabel, time } from '@/lib/types';
+import { LoadingState } from '../../../../customer/src/components/LoadingState';
 import { colors, type } from '@/theme';
 
 export default function QueueScreen() {
@@ -15,7 +16,7 @@ export default function QueueScreen() {
   const {run,error,busy,message,clearError}=useAction();
   const [reference,setReference]=useState(''),[submitted,setSubmitted]=useState(false),[showAvailability,setShowAvailability]=useState(false),[showCheckIn,setShowCheckIn]=useState(false);
   const valid=/^\d{6}$/.test(reference);
-  if(!data)return <Screen title="My Queue"><Text style={type.body}>Loading your chair…</Text></Screen>;
+  if(!data)return <Screen title="My Queue"><LoadingState label="Opening your chair…"/></Screen>;
   const current=data.sessions.find(ss=>ss.status==='in_service');
   const waiting=data.queues.filter(q=>q.status==='arrived');
   const completed=data.performance.today_count;

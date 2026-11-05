@@ -61,16 +61,18 @@ async function fillCredentials(page: Page) {
   await page.getByLabel('Email address', { exact: true }).fill(email);
   await page.getByLabel('Password', { exact: true }).fill(password);
 }
-test('account entry offers simple forms, validation, password visibility and guest browsing', async ({ page }) => {
+test('account entry offers simple forms, validation, password visibility and guest browsing', async ({ page },info) => {
   const calls = await authApi(page);
   await page.goto('/');
   await page.getByRole('button', { name: 'Account', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Welcome back' })).toBeVisible();
+  await page.screenshot({path:info.outputPath('customer-sign-in.png')});
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   await expect(page.getByText('Enter a valid email address.')).toBeVisible();
   await expect(page.getByText('Enter your password.', { exact: true })).toBeVisible();
   await page.getByRole('link', { name: 'Create an account', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible();
+  await page.screenshot({path:info.outputPath('customer-sign-up.png')});
   await page.getByLabel('Email address', { exact: true }).fill(email);
   await page.getByLabel('Password', { exact: true }).fill('short');
   await page.getByRole('button', { name: 'Show password', exact: true }).click();
@@ -81,7 +83,7 @@ test('account entry offers simple forms, validation, password visibility and gue
   await expect(page.getByText('Use at least 8 characters.')).toBeVisible();
   expect(calls.signups + calls.signins).toBe(0);
   await page.getByRole('button', { name: 'Continue without an account', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Good hair. Less waiting.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /^Hi there/ })).toBeVisible();
 });
 test('signup signs in immediately, restores after reload and signs out on this device', async ({ page }, testInfo) => {
   const calls = await authApi(page);

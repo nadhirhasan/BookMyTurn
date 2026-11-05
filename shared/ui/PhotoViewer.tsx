@@ -1,4 +1,4 @@
-import {useReduceMotion} from '../../apps/customer/src/components/RouteMotion';
+import {useMotionPreference} from '../../apps/customer/src/components/RouteMotion';
 import {colors} from '../../apps/customer/src/theme';
 import {useEffect,useState}from 'react';
 
@@ -16,7 +16,7 @@ export function PhotoViewer(props:Props){return props.index!==null&&props.photos
 
 function ViewerSession({photos,initial,onClose,resolve}:Props&{initial:number}){
 
- const reduced=useReduceMotion();
+ const reduced=useMotionPreference();
  const [position,setPosition]=useState(Math.min(initial,photos.length-1));
 
  const [uri,setUri]=useState<string|null>(null),[loading,setLoading]=useState(true),[failed,setFailed]=useState(false),[retry,setRetry]=useState(0);

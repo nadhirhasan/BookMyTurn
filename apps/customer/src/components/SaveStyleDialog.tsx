@@ -1,4 +1,4 @@
-import {useReduceMotion} from './RouteMotion';
+import {useMotionPreference} from './RouteMotion';
 import {useState}from 'react';
 import {Modal,ScrollView,Text}from 'react-native';
 import {SafeAreaView}from 'react-native-safe-area-context';
@@ -7,7 +7,7 @@ import {Field}from './CustomerUI';
 import type {CollectionGallery}from '@/hooks/useHaircutCollections';
 import {colors,type}from '@/theme';
 export function SaveStyleDialog({style,gallery,onClose}:{style:{id:string;title:string}|null;gallery:CollectionGallery;onClose:()=>void}){
- const reduced=useReduceMotion();
+ const reduced=useMotionPreference();
  const [name,setName]=useState(''),[submitted,setSubmitted]=useState(false);
  if(!style)return null;
  const save=async(id:string)=>{if(await gallery.saveStyle(id,style.id,style.title))onClose();};
