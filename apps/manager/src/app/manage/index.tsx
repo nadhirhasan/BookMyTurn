@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, Text, View } from 'react-native';
 import { CalendarDays, ChevronRight, Plus, Store, Users } from 'lucide-react-native';
 import { Button, Chip } from '@/components/UI';
-import { Cover, ManagementScreen, m } from '@/components/ManagementUI';
+import { Cover, ManagementScreen, MenuRow, m } from '@/components/ManagementUI';
 import { EmptyState, StatsGrid, StatusBadge } from '@/components/StaffExperience';
 import { useManager } from '@/providers/ManagerProvider';
 import { colors, type } from '@/theme';
@@ -21,6 +21,7 @@ function SalonListContent() {
       {label:'Waiting',value:active.reduce((n,s)=>n+s.waiting,0),icon:Users,tone:'mint'},
       {label:'Requests',value:active.reduce((n,s)=>n+s.pending,0),icon:CalendarDays,tone:'amber'},
     ]}/>}
+    {!!all.length&&<MenuRow label="Team performance" detail="Haircuts, revenue and daily trends for every barber" onPress={()=>router.push('/manage/analytics')}/> }
     <View style={{flexDirection:'row',alignItems:'center',gap:12}}><Text style={[type.section,{flex:1}]}>Locations <Text style={type.caption}>{salons.length}</Text></Text><Pressable accessibilityRole="button" accessibilityLabel="+ Add salon" onPress={()=>router.push('/manage/salon/new')} style={({pressed})=>({minHeight:48,flexDirection:'row',alignItems:'center',gap:6,opacity:pressed?.7:1})}><Plus size={20} color={colors.action}/><Text style={[type.label,{color:colors.action}]}>Add salon</Text></Pressable></View>
     {all.some(s=>s.archived_at)&&<View style={{flexDirection:'row',flexWrap:'wrap',gap:8}}><Chip label={`Active locations (${active.length})`} selected={!archived} onPress={()=>setArchived(false)}/><Chip label={`Archived locations (${all.length-active.length})`} selected={archived} onPress={()=>setArchived(true)}/></View>}
     {!salons.length&&<EmptyState icon={Store} title={archived?'No archived salons.':'Start with your first salon.'} detail={archived?'Restore a location to bring it back to your workspace.':'Create a location, add your team, and see every customer here.'}/>}
