@@ -2,7 +2,13 @@
 
 Plan prepared: 29 October 2026 (Asia/Colombo).
 
-Current stage: salon map pins and customer directions. Managers select and confirm
+Current stage: design-first charcoal/champagne dark-theme review. The user supplied
+a neon dark reference and requested a non-neon alternative with smooth transitions.
+[Interactive design preview and approval checklist](../design/charcoal-champagne/README.md).
+Ten sample views and an eight-screen board are prepared; application implementation
+awaits the user's review. Figma editing is blocked by the account's Starter tool limit.
+
+Previous stage: salon map pins and customer directions. Managers select and confirm
 the salon entrance on a map, optionally using their current location. Customers open
 the saved coordinates in Google Maps or Apple Maps. See [the location plan](SALON_LOCATION_PLAN.md).
 Local database, browser, unit and native/web export validation passed in
