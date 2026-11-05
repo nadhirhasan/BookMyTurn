@@ -9,8 +9,9 @@
 - [x] Match customer discovery, salon detail/fixed actions, calendar/fixed request action, queue ticket, visits, collections and account. Keep every displayed business value from the existing database APIs.
 - [x] Match manager dashboard/analytics, salon/team/invitation screens and barber chair/service/profile screens. Keep owner finances restricted and preserve CRUD, maps, notifications and all existing routes.
 - [x] Compare running web screens to the approved preview, fix visual differences, and verify narrow screens, enlarged text, fixed actions and API interactions through fixtures. Native keyboard/sheet acceptance remains below.
-- [ ] Run lint/types, relevant/full customer and staff browser suites, existing unit tests and iPhone/Android/web exports. Record native-device limits honestly.
-- [ ] Open the implementation feature PR; preserve all hosted data and schema. User phone acceptance follows.
+- [x] Run lint/types, full customer and staff browser suites, existing unit tests and iPhone/Android/web exports. Record native-device limits honestly.
+- [x] Open [implementation PR #27](https://github.com/nadhirhasan/BookMyTurn/pull/27); preserve all hosted data and schema.
+- [ ] User phone acceptance of the implemented UI, camera, keyboard and native sheets.
 
 ## Implementation constraints
 
@@ -51,10 +52,16 @@ and no microphone permission. The image-picker plugin no longer blocks the camer
 
 - Lint and TypeScript passed for both workspaces; 24 existing customer unit checks passed.
 - All 40 customer browser tests passed, including the new design/scan checks.
-- Final staff regression results are recorded below when the complete run finishes.
+- All 81 staff browser tests passed in the final full run (3.8 minutes), including
+  salon/barber CRUD, invitations, code verification, references, completion pricing,
+  financial isolation, stale data, real-time cross-app updates, calendars and maps.
 - Both apps exported successfully for iOS, Android and web with placeholder credentials.
 - [Ten real-app screenshots](../design/reviews/charcoal-implementation/README.md) use
   isolated fixtures; no hosted records or schema were changed.
 - Physical iPhone/Android acceptance is pending: transitions, native sheets, keyboard,
   camera permission/QR detection and Maps handoff. Exports verify compilation, not
   hardware behavior or pixel identity across different safe areas and font settings.
+
+Implementation commit: `6725f9b`. PR #27 is stacked on #26's design branch because
+the approved design PR remains open. CI runs the full browser suites on Linux and
+the existing isolated PostgreSQL migration/permission suites. No feature PRs were merged.
